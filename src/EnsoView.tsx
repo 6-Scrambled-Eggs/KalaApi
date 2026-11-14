@@ -21,7 +21,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
     if (!el.current || !enso) return;
     const map = new maplibregl.Map({
       container: el.current,
-      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#e8eef3" } }] },
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#0d1324" } }] },
       bounds: [[94, -11.5], [141.5, 6.5]], fitBoundsOptions: { padding: 12 }, attributionControl: false,
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -35,9 +35,9 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       });
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: {
-        "fill-color": ["case", ["<", ["get", "rho"], -5], "#ccc", ["interpolate", ["linear"], ["get", "rho"], -0.2, "#d9d9d9", 0, "#f0f0f0", 0.3, "#c6dbef", 0.6, "#6a51a3", 0.9, "#3f007d"],],
+        "fill-color": ["case", ["<", ["get", "rho"], -5], "#3b4060", ["interpolate", ["linear"], ["get", "rho"], -0.2, "#26304d", 0, "#26304d", 0.3, "#3c5a96", 0.6, "#6f97dd", 0.9, "#d6e6ff"],],
         "fill-opacity": 0.92 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fff", "line-width": 0.8 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#0d1324", "line-width": 0.8 } });
       setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });
       map.on("mousemove", "fill", (e) => {
@@ -60,26 +60,26 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
     <section>
       <h1>{id ? "Kaitan El Niño dengan api" : "El Niño link"}</h1>
       <p className="lead">{id
-        ? "Di setiap provinsi, apakah tahun dengan El Niño juga tahun dengan lebih banyak hari-api? Warna gelap berarti kaitan kuat. Abu-abu berarti tidak ada kaitan jelas."
-        : "In each province, are El Niño years also years with more fire-days? Dark means a strong link. Grey means no clear link."}</p>
+        ? "Di setiap provinsi, apakah tahun dengan El Niño juga tahun dengan lebih banyak hari-api? Warna terang berarti kaitan kuat. Warna gelap berarti tidak ada kaitan jelas."
+        : "In each province, are El Niño years also years with more fire-days? Bright means a strong link. Dark means no clear link."}</p>
       <div className="mapWrap">
         <div className="mapBox">
           <div ref={el} className="map" role="img" aria-label="Map of provinces shaded by the El Niño link of yearly fire activity" />
           {!ready && <div className="mapLoad">{id ? "Memuat peta…" : "Loading map…"}</div>}
           <div className="mapTip">{tip || (id ? "Klik provinsi untuk melihat grafiknya." : "Click a province for its chart.")}</div>
         </div>
-        <Legend title={id ? "Seberapa kuat api mengikuti El Niño (ρ)" : "How strongly fire follows El Niño (ρ)"} stops={[["#f0f0f0", 0], ["#c6dbef", 33], ["#6a51a3", 66], ["#3f007d", 100]]} low={id ? "tidak ada kaitan jelas" : "no clear link"} high={id ? "kaitan kuat" : "strong link"} extra={id ? "tanpa data" : "no data"} />
+        <Legend title={id ? "Seberapa kuat api mengikuti El Niño (ρ)" : "How strongly fire follows El Niño (ρ)"} stops={[["#26304d", 0], ["#3c5a96", 33], ["#6f97dd", 66], ["#d6e6ff", 100]]} low={id ? "tidak ada kaitan jelas" : "no clear link"} high={id ? "kaitan kuat" : "strong link"} extra={id ? "tanpa data" : "no data"} ticks={[[0, "ρ 0"], [33, "0.3"], [66, "0.6"], [100, "0.9"]]} />
       </div>
       <p className="note">{id
         ? `Warna: korelasi peringkat (ρ) antara hari-api tahunan 2001–2025 dan ONI Juli–September. Hanya ${n} tahun El Niño dalam 25 tahun, jadi baca sebagai petunjuk, bukan bukti. ${o26 != null ? `ONI Juli–September 2026: ${o26 > 0 ? "+" : ""}${o26}.` : ""} Ini bukan prakiraan 2027.`
         : `Colour: rank correlation (ρ) of yearly fire-days (2001–2025) with the July–September ONI. Only ${n} El Niño years in 25, so read this as a lead, not proof. ${o26 != null ? `July–September 2026 ONI: ${o26 > 0 ? "+" : ""}${o26}.` : ""} This is not a forecast for 2027.`}</p>
       <h2>{id ? "Provinsi, dari kaitan terkuat" : "Provinces, strongest link first"}</h2>
-      <table>
-        <thead><tr><th>{id ? "Provinsi" : "Province"}</th><th>ρ</th><th>p</th><th>{id ? "Kaitan" : "Link"}</th><th>{id ? "El Niño vs netral" : "El Niño vs neutral"}</th></tr></thead>
+      <div className="tablewrap"><table>
+        <thead><tr><th>{id ? "Provinsi" : "Province"}</th><th className="num">ρ</th><th className="num">p</th><th>{id ? "Kaitan" : "Link"}</th><th className="num">{id ? "El Niño vs netral" : "El Niño vs neutral"}</th></tr></thead>
         <tbody>{rows.map(({ a, e }) => (
-          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
+          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td className="num">{e.rho}</td><td className="num">{fmtP(e.p).replace("p ", "")}</td><td><span className={`pill ${ensoLabel(e)}`}>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</span></td><td className="num">{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
         ))}</tbody>
-      </table>
+      </table></div>
       <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear (jelas) = p < 0,01 dan ρ ≥ 0,4; suggestive (indikasi) = p < 0,05 dan ρ ≥ 0,4; lemah (weak) = p < 0,15. Hanya 5 tahun El Niño: baca sebagai petunjuk." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.01 and ρ ≥ 0.4; suggestive = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15. With only 5 El Niño years, read all of this as a lead, not proof."}</p>
     </section>
   );

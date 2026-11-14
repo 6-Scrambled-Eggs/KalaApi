@@ -3,7 +3,7 @@ import AreaPicker from "./AreaPicker";
 import type { Mode } from "./Calendar";
 import HomeHero from "./HomeHero";
 import OnVisible from "./OnVisible";
-import HomeWatch from "./HomeWatch";
+import { WatchList, WeekCard } from "./HomeWatch";
 import { AreaIndex, dateLocale, loadIndex } from "./data";
 import ProvList from "./ProvList";
 import { Lang, LangCtx, makeT } from "./i18n";
@@ -46,19 +46,27 @@ export default function App() {
     <LangCtx.Provider value={{ lang, t }}>
       <a className="skip" href="#main-content" onClick={(e) => { e.preventDefault(); document.getElementById("main-content")?.focus(); }}>{lang === "id" ? "Lewati ke isi" : "Skip to content"}</a>
       <header className="top noprint">
-        <a className="brand" href="#/"><b>KalaApi</b><span>{t("tagline")}</span></a>
-        <nav>
-          <a href="#/" className={route === "home" ? "on" : ""}>{t("home")}</a>
-          <a href="#/surge" className={route === "surge" ? "on" : ""}>{t("surge")}</a>
-          <a href="#/enso" className={route === "enso" ? "on" : ""}>{t("enso")}</a>
-          <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
-          <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>
-        </nav>
-        <AreaPicker index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
+        <div className="topin">
+          <a className="brand" href="#/">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#993404" /><path d="M16 5c1 5 7 8 7 15a7 7 0 0 1-14 0c0-3 2-5 3-7 1 2 2 3 3 3-1-4-1-7 1-11z" fill="#fec44f" /></svg>
+            <span className="bt"><b>KalaApi</b><span>{t("tagline")}</span></span>
+          </a>
+          <nav className="mainnav" aria-label={t("mainNav")}>
+            <a href="#/" className={route === "home" ? "on" : ""} aria-current={route === "home" ? "page" : undefined}>{t("home")}</a>
+            <a href="#/surge" className={route === "surge" ? "on" : ""} aria-current={route === "surge" ? "page" : undefined}><span className="lg">{t("surge")}</span><span className="sm">{t("surgeShort")}</span></a>
+            <a href="#/enso" className={route === "enso" ? "on" : ""} aria-current={route === "enso" ? "page" : undefined}><span className="lg">{t("enso")}</span><span className="sm">{t("ensoShort")}</span></a>
+            <a href="#/method" className={route === "method" ? "on" : ""} aria-current={route === "method" ? "page" : undefined}><span className="lg">{t("method")}</span><span className="sm">{t("methodShort")}</span></a>
+          </nav>
+          <AreaPicker index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
+          <div className="lang" role="group" aria-label={t("language")}>
+            <button aria-pressed={lang === "en"} onClick={() => setLang("en")} aria-label="EN: English">EN</button>
+            <button aria-pressed={lang === "id"} onClick={() => setLang("id")} aria-label="ID: Bahasa Indonesia">ID</button>
+          </div>
+        </div>
       </header>
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<p>{t("loading")}</p>}>
-        {!index ? (["area","surge","story","card","brief","compare","enso","method"].includes(route) ? <p>{t("loading")}</p> : <section><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p><div className="homehero" aria-busy="true"><div className="hh" /><div className="hh" /><div className="hh" /><p className="note hhnote">{t("heroNote")}</p></div></section>) : route === "area" ? (
+        {!index ? (["area","surge","story","card","brief","compare","enso","method"].includes(route) ? <p>{t("loading")}</p> : <section><div className="intro"><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p></div><HomeHero index={[]} /></section>) : route === "area" ? (
           <AreaPage id={id} index={index} year={year} mode={mode} setYear={(y) => setQ("y", String(y))} setMode={(m) => setQ("m", m)} go={go} />
         ) : route === "surge" ? <Hero areaId={path[1] || "indonesia"} index={index} onPick={(a) => go(`/surge/${a}`)} />
         : route === "story" ? <Story id={id} />
@@ -69,19 +77,25 @@ export default function App() {
         : route === "method" ? <Method index={index} />
         : (
           <section>
-            <h1>{t("tagline")}</h1>
-            <p className="lead">{t("lead")}</p>
+            <div className="intro"><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p></div>
             <HomeHero index={index} />
-            <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/surge">{t("ctaStep")}</a> <a className="cta alt" href="#/enso">{t("ctaEnso")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
-            <OnVisible minHeight={520}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
-            <Suspense fallback={null}><LiveStrip /></Suspense>
+            <p className="cta-row"><a className="cta primary" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta" href="#/surge">{t("ctaStep")}</a> <a className="cta" href="#/enso">{t("ctaEnso")}</a> <a className="cta" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
+            <div className="homegrid">
+              <div className="hg-main">
+                <OnVisible minHeight={540}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
+                <Suspense fallback={null}><LiveStrip /></Suspense>
+              </div>
+              <aside className="hg-side">
+                <WatchList index={index} />
+                <WeekCard index={index} />
+              </aside>
+            </div>
             <ProvList index={index} />
-            <HomeWatch index={index} />
           </section>
         )}
         </Suspense>
       </main>
-      <footer className="noprint">{lang === "id" ? "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Dibuat dengan bantuan AI (Claude), diungkapkan di halaman proyek." : "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Built with AI assistance (Claude), disclosed on the project page."}</footer>
+      <footer className="noprint"><div className="footin">{lang === "id" ? "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Dibuat dengan bantuan AI (Claude), diungkapkan di halaman proyek." : "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Built with AI assistance (Claude), disclosed on the project page."}</div></footer>
     </LangCtx.Provider>
   );
 }

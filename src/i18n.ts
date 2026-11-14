@@ -34,6 +34,7 @@ const dict = {
     peatOnly: "Peat only", mineralOnly: "Mineral only", csv: "Download CSV", png: "Download PNG", copyLink: "Copy link", copied: "Link copied",
     vsRecent: "vs last 10 years (VIIRS only)", oniNote: "Dot beside each year: El Niño (red), La Niña (blue), neutral (grey), from the July–September ONI.",
     brief: "BPBD brief", compare: "Compare", enso: "El Niño link", readyTitle: "Readiness window", ensoTitle: "El Niño link", analogTitle: "2026 is most like",
+    readyBy: "Be ready by", medianOnsetWk: "median onset week {0}", surgeShort: "2012 step", ensoShort: "El Niño", methodShort: "Method", language: "Language", mainNav: "Main", viewAll: "Views",
   },
   id: {
     lead: "25 tahun deteksi titik panas MODIS dan VIIRS diubah menjadi satu kalender aktivitas pembakaran yang bisa dibandingkan untuk wilayah mana pun di Indonesia.",
@@ -67,6 +68,7 @@ const dict = {
     peatOnly: "Hanya gambut", mineralOnly: "Hanya tanah mineral", csv: "Unduh CSV", png: "Unduh PNG", copyLink: "Salin tautan", copied: "Tautan disalin",
     vsRecent: "vs 10 tahun terakhir (hanya VIIRS)", oniNote: "Titik di samping tahun: El Niño (merah), La Niña (biru), netral (abu-abu), dari ONI Juli–September.",
     brief: "Ringkasan BPBD", compare: "Bandingkan", enso: "Kaitan El Niño", readyTitle: "Jendela kesiapsiagaan", ensoTitle: "Kaitan El Niño", analogTitle: "2026 paling mirip dengan",
+    readyBy: "Siap paling lambat", medianOnsetWk: "median awal musim minggu {0}", surgeShort: "Lompatan 2012", ensoShort: "El Niño", methodShort: "Metode", language: "Bahasa", mainNav: "Utama", viewAll: "Tampilan",
   },
 };
 export type Key = keyof typeof dict.en;

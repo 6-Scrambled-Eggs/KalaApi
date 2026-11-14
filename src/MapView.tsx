@@ -15,7 +15,7 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
     if (!el.current) return;
     const map = new maplibregl.Map({
       container: el.current,
-      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#e8eef3" } }] },
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#0d1324" } }] },
       bounds: [[94, -11.5], [141.5, 6.5]], fitBoundsOptions: { padding: 12 }, attributionControl: false,
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -29,9 +29,9 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
       });
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: {
-        "fill-color": ["case", ["<", ["get", "pct"], 0], "#ccc", ["interpolate", ["linear"], ["get", "pct"], 0, "#fff7bc", 50, "#fe9929", 90, "#d95f0e", 100, "#4d1a02"]],
+        "fill-color": ["case", ["<", ["get", "pct"], 0], "#3b4060", ["interpolate", ["linear"], ["get", "pct"], 0, "#4d1a02", 50, "#d95f0e", 90, "#fe9929", 100, "#fff7bc"]],
         "fill-opacity": 0.92 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fff", "line-width": 0.8 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#0d1324", "line-width": 0.8 } });
       setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });
       map.on("mousemove", "fill", (e) => {
@@ -55,7 +55,7 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
         {!ready && <div className="mapLoad">{t("loadingMap")}</div>}
         <div className="mapTip">{tip || t("mapHint")}</div>
       </div>
-      <Legend title={t("legMapTitle")} stops={[["#fff7bc", 0], ["#fe9929", 50], ["#d95f0e", 90], ["#4d1a02", 100]]} low={t("legQuiet")} high={t("legBusy")} extra={t("legNoData")} />
+      <Legend title={t("legMapTitle")} stops={[["#4d1a02", 0], ["#d95f0e", 50], ["#fe9929", 90], ["#fff7bc", 100]]} low={t("legQuiet")} high={t("legBusy")} extra={t("legNoData")} ticks={[[0, "0"], [50, "50"], [100, "100"]]} />
     </div>
   );
 }

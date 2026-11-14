@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Calendar, { Mode } from "./Calendar";
 import Analog from "./Analog";
 import EnsoPanel from "./EnsoPanel";
-import Readiness from "./Readiness";
+import Readiness, { LEAD } from "./Readiness";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, readiness, seasonal, weekLabel } from "./data";
 import { fmt, useT } from "./i18n";
 import { ensoLabel } from "./EnsoPanel";
 
@@ -42,6 +42,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const tp = area.typical_period;
   const hasSplit = !!(area.h_peat && area.h_min);
   const e0 = enso?.areas[area.id];
+  const rd = readiness(area);
   const summary = (() => {
     const bits: string[] = [];
     if (area.ytd_ratio != null) {
@@ -64,7 +65,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   };
   const exportPng = () => {
     const c = chart.current; if (!c) return;
-    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#fff" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
+    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#1a2238" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
   };
   const copyLink = () => { navigator.clipboard?.writeText(window.location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined); };
 
@@ -75,43 +76,55 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <h1>{area.name}</h1>
           <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
         </div>
-        <div className="togglegrp"><div className="toggles" role="group" aria-label={t("dataView")}>
-          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
-          </div>
-          <div className="toggles" role="group" aria-label={t("actions")}>
-          <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
-          <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
-          <button onClick={() => go(`/card/${id}`)}>{t("card")}</button>
-          <button onClick={() => go(`/story/${id}`)}>{t("story")}</button>
-          <button onClick={exportCsv}>{t("csv")}</button>
-          <button onClick={exportPng}>{t("png")}</button>
-          <button onClick={copyLink}>{copied ? t("copied") : t("copyLink")}</button>
-          </div>
+        <div className="actions" role="group" aria-label={t("actions")}>
+          <button className="btn sm" onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
+          <button className="btn sm primary" onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
+          <button className="btn sm" onClick={() => go(`/card/${id}`)}>{t("card")}</button>
+          <button className="btn sm" onClick={() => go(`/story/${id}`)}>{t("story")}</button>
+          <span className="sep" aria-hidden="true" />
+          <button className="btn sm" onClick={exportCsv}>{t("csv")}</button>
+          <button className="btn sm" onClick={exportPng}>{t("png")}</button>
+          <button className="btn sm" onClick={copyLink}>{copied ? t("copied") : t("copyLink")}</button>
         </div>
       </div>
       {summary && <p className="summary">{summary}</p>}
-      {area.low_data && <div className="warn">{t("lowData")}</div>}
-      <div className="tiles">
-        <div className="tile"><div className="k">{t("ytd")}</div><div className="v">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</div><div className="s">{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</div><div className="s">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")} · {t("pctile")} {Math.round(area.ytd_pct_recent)}</div></div>
-        <div className="tile"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · {t("onsetWord")} {weekLabel(tp.onset)} · {t("endWord")} {weekLabel(tp.end)}</div></div>
-        <div className="tile"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} {fmt(t("vsTypical"), tp.onset)}</div></div>
+      {area.low_data && <div className="notice">{t("lowData")}</div>}
+      <div className="kpis k4">
+        <div className="kpi main"><div className="k">{t("ytd")}</div><div className="v">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</div><div className="s">{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</div><div className="s">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")} · {t("pctile")} {Math.round(area.ytd_pct_recent)}</div></div>
+        <div className="kpi"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · {t("onsetWord")} {weekLabel(tp.onset)} · {t("endWord")} {weekLabel(tp.end)}</div></div>
+        <div className="kpi"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} {fmt(t("vsTypical"), tp.onset)}</div></div>
+        <div className="kpi"><div className="k">{t("readyBy")}</div>{rd ? <><div className="v">{weekLabel(Math.max(1, rd.p10 - LEAD))}</div><div className="s">{fmt(t("medianOnsetWk"), rd.median)} ({weekLabel(rd.median)})</div></> : <div className="v na">—</div>}</div>
       </div>
-      <Readiness area={area} />
-      <Analog area={area} />
-      <EnsoPanel area={area} enso={enso} oni={oni} />
-      <h2>{t("calendar")}</h2>
+      <div className="sechead">
+        <h2>{t("calendar")}</h2>
+        <div className="seg" role="group" aria-label={t("dataView")}>
+          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} aria-pressed={m === mode} onClick={() => setMode(m)}>{t(k)}</button>)}
+        </div>
+      </div>
       <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
       <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
-      <h2>{t("profile")}: {y}</h2>
-      <Seasonal area={area} year={y} />
-      <h2>{t("anomalies")}: {y}</h2>
-      {flagged.length === 0 ? <p className="note">{fmt(t("noFlags"), y)}</p> : (
-        <ul className="flags">{flagged.map((f) => (
-          <li key={f.w}><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</button>
-            <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span>
-            <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
-      )}
-      {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
+      <div className="split s21">
+        <div>
+          <h2>{t("profile")}: {y}</h2>
+          <div className="chartbox"><Seasonal area={area} year={y} /></div>
+        </div>
+        <div>
+          <h2>{t("anomalies")}: {y}</h2>
+          {flagged.length === 0 ? <p className="flags empty">{fmt(t("noFlags"), y)}</p> : (
+            <ul className="flags">{flagged.map((f) => (
+              <li key={f.w}>
+                <div className="l1"><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</button>
+                  <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span></div>
+                <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
+          )}
+        </div>
+      </div>
+      <Readiness area={area} />
+      <div className="split s12">
+        <Analog area={area} />
+        <EnsoPanel area={area} enso={enso} oni={oni} />
+      </div>
+      {area.level === "province" && <p className="note" style={{ marginTop: 28 }}>{fmt(t("kabHint"), area.name)}</p>}
     </section>
   );
 }

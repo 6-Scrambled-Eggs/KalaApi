@@ -22,7 +22,7 @@ export default function Brief({ id }: { id: string }) {
     const M = matrix(a.h);
     const cum = (y: number) => { let s = 0; return (M[y - a.start_year] || []).map((v) => (v == null ? null : (s += v))); };
     return {
-      grid: { left: 56, right: 12, top: 28, bottom: 28 }, legend: { top: 0 }, animation: false,
+      grid: { left: 56, right: 12, top: 28, bottom: 28 }, legend: { top: 0, icon: "roundRect" }, animation: false,
       xAxis: { type: "category", data: Array.from({ length: WPY }, (_, i) => String(i + 1)), name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 20 },
       yAxis: { type: "value", name: L ? "hari-api kumulatif" : "cumulative fire-days" },
       series: YEARS.map((y) => ({ name: String(y), type: "line", showSymbol: false, data: cum(y).map((v) => (v == null ? "-" : Math.round(v))), lineStyle: { color: COL[y], width: y === 2026 ? 3 : 2 }, itemStyle: { color: COL[y] } })),
@@ -44,9 +44,10 @@ export default function Brief({ id }: { id: string }) {
     if (p + m > 0) peatShare = `${Math.round((p / (p + m)) * 100)}%`;
   }
   return (
-    <section className="card a4 brief">
-      <button className="noprint" onClick={() => window.print()}>{L ? "Cetak atau simpan PDF" : "Print or save as PDF"}</button>
-      <h1>{a.name}: {L ? "ringkasan kesiapsiagaan api" : "fire readiness brief"}</h1>
+    <>
+      <div className="sheetbar noprint"><button className="btn primary" onClick={() => window.print()}>{L ? "Cetak atau simpan PDF" : "Print or save as PDF"}</button></div>
+      <section className="card a4 brief">
+        <h1>{a.name}: {L ? "ringkasan kesiapsiagaan api" : "fire readiness brief"}</h1>
       <p className="note">{L ? "Bukan produk resmi. Dibuat untuk NASA Space Apps Challenge dari data NASA FIRMS. Belum disahkan oleh BPBD atau lembaga mana pun." : "Not an official product. Made for the NASA Space Apps Challenge from NASA FIRMS data. Not endorsed by BPBD or any agency."}</p>
       <p className="note">{L ? "Untuk BPBD, Manggala Agni, dan pengelola gambut. Data per minggu" : "For BPBD, Manggala Agni and peat managers. Data as of week"} {w} {L ? "tahun" : "of"} {a.last_year} · NASA FIRMS MODIS + VIIRS</p>
       <table><tbody>
@@ -54,7 +55,7 @@ export default function Brief({ id }: { id: string }) {
         <tr><th>{L ? "Dibanding tahun besar" : "Against big years"}</th><td>{L ? `Sampai minggu ${w}, ${a.last_year} adalah ${rr(u15)} dari 2015 dan ${rr(u19)} dari 2019 (hari-api).` : `Up to week ${w}, ${a.last_year} is ${rr(u15)} of 2015 and ${rr(u19)} of 2019 (fire-days).`}</td></tr>
         {peatShare && <tr><th>{L ? "Gambut" : "Peat"}</th><td>{L ? `${peatShare} hari-api 2016–2025 terjadi di sel gambut (≥50% gambut).` : `${peatShare} of fire-days in 2016–2025 were in peat cells (≥50% peat).`}</td></tr>}
       </tbody></table>
-      <Chart option={chart} height={150} label={`${a.name} cumulative fire-days`} />
+      <div className="chartbox"><Chart option={chart} height={150} label={`${a.name} cumulative fire-days`} /></div>
       <Readiness area={a} />
       <Analog area={a} />
       <EnsoPanel area={a} enso={enso} oni={oni} compact />
@@ -67,5 +68,6 @@ export default function Brief({ id }: { id: string }) {
       </ol>
       <p className="foot">KalaApi · {typeof window !== "undefined" ? window.location.href : ""}</p>
     </section>
+    </>
   );
 }

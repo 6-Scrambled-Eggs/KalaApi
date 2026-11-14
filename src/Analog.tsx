@@ -15,7 +15,7 @@ export default function Analog({ area }: { area: Area }) {
     return `${x.year}${x.year < 2012 ? (id ? " (perkiraan dari MODIS)" : " (estimated from MODIS)") : ""}, ×${Number.isFinite(r) ? r.toFixed(2) : "n/a"}`;
   };
   return (
-    <div>
+    <div className="analog">
       <h2>{t("analogTitle")}: {a[0].year}</h2>
       <p>
         {id ? `Sampai minggu ${w}, ${area.last_year} paling mirip dengan ` : `Up to week ${w}, ${area.last_year} is closest to `}

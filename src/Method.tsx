@@ -18,10 +18,10 @@ function Three({ index }: { index: AreaIndex[] }) {
       <h3>{L("One week, three ways", "Satu minggu, tiga cara")}</h3>
       <label className="row">{L("Area", "Wilayah")}: <select value={id} onChange={(e) => setId(e.target.value)}>
         {index.filter((x) => x.level === "province").map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-      <table><thead><tr><th>{L("Week", "Minggu")}</th><th>{L("Raw MODIS (Aqua fire-days)", "MODIS mentah (hari-api Aqua)")}</th><th>{L("Raw VIIRS (S-NPP fire-days)", "VIIRS mentah (hari-api S-NPP)")}</th><th>{L("Harmonized", "Terharmonisasi")}</th></tr></thead>
+      <div className="tablewrap"><table><thead><tr><th>{L("Week", "Minggu")}</th><th className="num">{L("Raw MODIS (Aqua fire-days)", "MODIS mentah (hari-api Aqua)")}</th><th className="num">{L("Raw VIIRS (S-NPP fire-days)", "VIIRS mentah (hari-api S-NPP)")}</th><th>{L("Harmonized", "Terharmonisasi")}</th></tr></thead>
         <tbody>{ex.map(({ y, w, r }) => r && (
-          <tr key={y}><td>{y}, {L("week", "minggu")} {w} ({L("from", "mulai")} {weekLabel(w)})</td><td>{r.m ?? "n/a"}</td><td>{r.v ?? L("not flown yet", "belum mengorbit")}</td>
-            <td>{r.harm ?? "n/a"}{y < 2012 && r.lo != null ? (lang === "id" ? ` (90%: ${r.lo} sampai ${r.hi}), perkiraan` : ` (90%: ${r.lo} to ${r.hi}), estimated`) : (lang === "id" ? ", VIIRS teramati" : ", observed VIIRS")}</td></tr>))}</tbody></table>
+          <tr key={y}><td>{y}, {L("week", "minggu")} {w} ({L("from", "mulai")} {weekLabel(w)})</td><td className="num">{r.m ?? "n/a"}</td><td className="num">{r.v ?? L("not flown yet", "belum mengorbit")}</td>
+            <td>{r.harm ?? "n/a"}{y < 2012 && r.lo != null ? (lang === "id" ? ` (90%: ${r.lo} sampai ${r.hi}), perkiraan` : ` (90%: ${r.lo} to ${r.hi}), estimated`) : (lang === "id" ? ", VIIRS teramati" : ", observed VIIRS")}</td></tr>))}</tbody></table></div>
       <p className="note">{L("Before 2012 only MODIS exists, so the harmonized value is an estimate with a band. From 2012 the harmonized value is the observed VIIRS fire-day count.", "Sebelum 2012 hanya ada MODIS, jadi nilai terharmonisasi adalah perkiraan dengan rentang. Mulai 2012 nilai terharmonisasi adalah jumlah hari-api VIIRS yang teramati.")}</p>
     </>
   );
@@ -39,7 +39,7 @@ export default function Method({ index }: { index: AreaIndex[] }) {
   const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
   const errs = (h: Validation["V1_holdout"]) => Object.entries(h.national_err_pct).map(([y, e]) => `${y}: ${e > 0 ? "+" : ""}${e.toFixed(1)}%`).join(", ");
   return (
-    <section>
+    <section className="prose">
       <h1>{L("Method and data", "Metode dan data")}</h1>
       <p className="lead">{L("We harmonize fire-days, not hotspot counts, and calibrate MODIS to VIIRS on the 2012–2026 overlap. The output unit is the VIIRS-equivalent fire-day.", "Kami menyelaraskan hari-api, bukan jumlah titik panas, dan mengkalibrasi MODIS ke VIIRS pada periode tumpang tindih 2012–2026. Satuan keluarannya adalah hari-api setara VIIRS.")}</p>
       <Three index={index} />
@@ -70,8 +70,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
       ) : <p>{L("Validation results are not available.", "Hasil validasi belum tersedia.")}</p>}
       {meta && (<>
         <h2>{L("Calibration ratios", "Rasio kalibrasi")}</h2>
-        <table><thead><tr><th>{L("Stratum", "Strata")}</th><th>{L("Peat", "Gambut")}</th><th>k (VIIRS ÷ MODIS)</th><th>{L("90% interval", "Interval 90%")}</th></tr></thead>
-          <tbody>{meta.strata.map((s) => <tr key={s.stratum + s.peat}><td>{s.stratum}</td><td>{s.peat}</td><td>{s.k.toFixed(2)}</td><td>{s.k_lo.toFixed(2)} {L("to", "sampai")} {s.k_hi.toFixed(2)}</td></tr>)}</tbody></table>
+        <div className="tablewrap"><table><thead><tr><th>{L("Stratum", "Strata")}</th><th>{L("Peat", "Gambut")}</th><th className="num">k (VIIRS ÷ MODIS)</th><th className="num">{L("90% interval", "Interval 90%")}</th></tr></thead>
+          <tbody>{meta.strata.map((s) => <tr key={s.stratum + s.peat}><td>{s.stratum}</td><td>{s.peat}</td><td className="num">{s.k.toFixed(2)}</td><td className="num">{s.k_lo.toFixed(2)} {L("to", "sampai")} {s.k_hi.toFixed(2)}</td></tr>)}</tbody></table></div>
         <p className="note">{L("Data as of", "Data per")} {meta.data_end}. {L("Baseline for anomalies", "Baseline untuk anomali")}: {meta.baseline}. {L("Built", "Dibuat")} {meta.generated}.</p>
       </>)}
       <h2>{L("Readiness, El Niño link and analog year", "Kesiapsiagaan, kaitan El Niño, dan tahun analog")}</h2>

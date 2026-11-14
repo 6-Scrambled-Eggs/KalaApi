@@ -3,7 +3,7 @@ import Chart from "./Chart";
 import { Area, WPY, loadArea, matrix } from "./data";
 
 const YEARS = [2015, 2019, 2023, 2026];
-const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2023: "#2e86c1", 2026: "#000000" };
+const COL: Record<number, string> = { 2015: "#ff7a6b", 2019: "#fec44f", 2023: "#8fb8ff", 2026: "#f2f0eb" };
 
 /** FR-15: cumulative fire-days for the four reference years, with narrated cards. */
 export default function Story({ id }: { id: string }) {
@@ -20,13 +20,13 @@ export default function Story({ id }: { id: string }) {
     const fupto = (y: number, wk: number) => (F[y - area.start_year] || []).slice(0, wk).reduce<number>((a, v) => a + (v ?? 0), 0);
     const rows = YEARS.map((y) => ({ y, ytd: upto(y, w), total: upto(y, WPY), fytd: fupto(y, w), ftotal: fupto(y, WPY) }));
     const foption = {
-      grid: { left: 70, right: 16, top: 30, bottom: 36 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+      grid: { left: 70, right: 16, top: 30, bottom: 36 }, legend: { top: 4, icon: "roundRect" }, tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: Array.from({ length: WPY }, (_, i) => String(i + 1)), name: "week", nameLocation: "middle", nameGap: 24 },
       yAxis: { type: "value", name: "cumulative FRP (MW)" },
       series: YEARS.map((y) => ({ name: String(y), type: "line", showSymbol: false, data: fcum(y).map((v) => (v == null ? "-" : Math.round(v))), lineStyle: { color: COL[y], width: y === 2026 ? 3 : 2 }, itemStyle: { color: COL[y] } })),
     } as any;
     const option = {
-      grid: { left: 60, right: 16, top: 30, bottom: 36 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+      grid: { left: 60, right: 16, top: 30, bottom: 36 }, legend: { top: 4, icon: "roundRect" }, tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: Array.from({ length: WPY }, (_, i) => String(i + 1)), name: "week", nameLocation: "middle", nameGap: 24 },
       yAxis: { type: "value", name: "cumulative fire-days" },
       series: YEARS.map((y) => ({ name: String(y), type: "line", showSymbol: false, data: cum(y).map((v) => (v == null ? "-" : Math.round(v))), lineStyle: { color: COL[y], width: y === 2026 ? 3 : 2 }, itemStyle: { color: COL[y] } })),
@@ -39,11 +39,11 @@ export default function Story({ id }: { id: string }) {
   const fratio = r15.fytd > 0 ? r26.fytd / r15.fytd : null;
   return (
     <section>
-      <h1>Story mode: {area.name}</h1>
-      <p className="lead">2015, 2019, 2023 and 2026, measured in harmonized fire-days.</p>
-      <Chart option={d.option} height={360} label="Cumulative fire-days for 2015, 2019, 2023 and 2026" />
+      <div className="intro"><h1>Story mode: {area.name}</h1>
+      <p className="lead">2015, 2019, 2023 and 2026, measured in harmonized fire-days.</p></div>
+      <div className="chartbox"><Chart option={d.option} height={340} label="Cumulative fire-days for 2015, 2019, 2023 and 2026" /></div>
       <h2>Fire radiative power (VIIRS era)</h2>
-      <Chart option={d.foption} height={320} label="Cumulative fire radiative power for 2015, 2019, 2023 and 2026" />
+      <div className="chartbox"><Chart option={d.foption} height={300} label="Cumulative fire radiative power for 2015, 2019, 2023 and 2026" /></div>
       <div className="cards">
         <div className="tile"><div className="k">1. The yardstick</div><div className="s">2015 is the reference fire year: {Math.round(r15.total).toLocaleString()} fire-days over the full year, {Math.round(r15.ytd).toLocaleString()} by week {d.w}.</div></div>
         <div className="tile"><div className="k">2. The other years</div><div className="s">2019: {Math.round(d.rows[1].total).toLocaleString()}. 2023: {Math.round(d.rows[2].total).toLocaleString()}. Full-year totals.</div></div>

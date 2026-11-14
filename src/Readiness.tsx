@@ -1,7 +1,7 @@
 import { Area, readiness, weekLabel } from "./data";
 import { useT } from "./i18n";
 
-const LEAD = 4;
+export const LEAD = 4;
 
 /** Readiness window: when the fire season usually starts here, and a simple "be ready by" date. */
 export default function Readiness({ area }: { area: Area }) {
@@ -11,14 +11,14 @@ export default function Readiness({ area }: { area: Area }) {
   if (!r) return <p className="note">{id ? "Terlalu sedikit tahun dengan musim api yang jelas di wilayah ini." : "Too few years with a clear fire season in this area."}</p>;
   const ready = Math.max(1, r.p10 - LEAD);
   return (
-    <div>
+    <div className="readiness">
       <h2>{t("readyTitle")}</h2>
       <p className="note">{t("notOfficial")}</p>
-      <div className="tiles">
-        <div className="tile"><div className="k">{id ? "Paling awal" : "Earliest onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.earliest}</div><div className="s">{weekLabel(r.earliest)}</div></div>
-        <div className="tile"><div className="k">{id ? "Tengah (median)" : "Median onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.median}</div><div className="s">{weekLabel(r.median)}</div></div>
-        <div className="tile"><div className="k">{id ? "Paling akhir" : "Latest onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.latest}</div><div className="s">{weekLabel(r.latest)}</div></div>
-        <div className="tile"><div className="k">{id ? "Siap paling lambat" : "Be ready by"}</div><div className="v">{weekLabel(ready)}</div><div className="s">{id ? `${LEAD} minggu sebelum awal musim yang dini (minggu ${r.p10})` : `${LEAD} weeks before the early-onset week (week ${r.p10})`}</div></div>
+      <div className="kpis k4">
+        <div className="kpi"><div className="k">{id ? "Paling awal" : "Earliest onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.earliest}</div><div className="s">{weekLabel(r.earliest)}</div></div>
+        <div className="kpi"><div className="k">{id ? "Tengah (median)" : "Median onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.median}</div><div className="s">{weekLabel(r.median)}</div></div>
+        <div className="kpi"><div className="k">{id ? "Paling akhir" : "Latest onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.latest}</div><div className="s">{weekLabel(r.latest)}</div></div>
+        <div className="kpi main"><div className="k">{id ? "Siap paling lambat" : "Be ready by"}</div><div className="v">{weekLabel(ready)}</div><div className="s">{id ? `${LEAD} minggu sebelum awal musim yang dini (minggu ${r.p10})` : `${LEAD} weeks before the early-onset week (week ${r.p10})`}</div></div>
       </div>
       <p className="note">
         {id

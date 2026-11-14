@@ -15,9 +15,10 @@ export default function Card({ id }: { id: string }) {
   const pct = P[wk];
   const tp = a.typical_period;
   return (
-    <section className="card a4">
-      <button className="noprint" onClick={() => window.print()}>{L("Print", "Cetak")}</button>
-      <h1>{a.name}: {L("fire readiness card", "kartu kesiapsiagaan api")}</h1>
+    <>
+      <div className="sheetbar noprint"><button className="btn primary" onClick={() => window.print()}>{L("Print", "Cetak")}</button></div>
+      <section className="card a4">
+        <h1>{a.name}: {L("fire readiness card", "kartu kesiapsiagaan api")}</h1>
       <p className="note">{L("Not an official product. Made for the NASA Space Apps Challenge from NASA FIRMS data.", "Bukan produk resmi. Dibuat untuk NASA Space Apps Challenge dari data NASA FIRMS.")}</p>
       <table><tbody>
         <tr><th>{L("Fire season, typical", "Musim api, tipikal")}</th><td>{L("starts", "mulai")} {weekLabel(tp.onset)} · {L("peaks", "puncak")} {weekLabel(tp.peak)} · {L("ends", "berakhir")} {weekLabel(tp.end)}</td></tr>
@@ -32,5 +33,6 @@ export default function Card({ id }: { id: string }) {
       </ol>
       <p className="foot">{L("Data as of week", "Data per minggu")} {a.last_week} {L("of", "tahun")} {a.last_year} · NASA FIRMS MODIS {L("and", "dan")} VIIRS · {typeof window !== "undefined" ? window.location.href : ""}</p>
     </section>
+    </>
   );
 }

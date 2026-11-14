@@ -4,7 +4,7 @@ import { ensoLabel } from "./EnsoPanel";
 import { Area, AreaIndex, Enso, WPY, loadArea, loadEnso, matrix, readiness, seasonal, upto, weekLabel } from "./data";
 import { useT } from "./i18n";
 
-const COLS = ["#b03a12", "#1f6fa8"];
+const COLS = ["#fe9929", "#8fb8ff"];
 
 /** Compare two places: typical season shape, 2026 vs 2015 curves, and the key numbers side by side. */
 export default function Compare({ idA, idB, index, go }: { idA: string; idB: string; index: AreaIndex[]; go: (p: string) => void }) {
@@ -35,7 +35,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
       return Array.from({ length: WPY }, (_, w) => { const c = rows.map((r) => r[w]).sort((x, y) => x - y); return c.length ? Math.round(c[Math.floor(c.length / 2)] * 100) / 100 : 0; });
     });
     const shapeOpt = {
-      grid: { left: 52, right: 12, top: 36, bottom: 34 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+      grid: { left: 52, right: 12, top: 36, bottom: 34 }, legend: { top: 4, icon: "roundRect" }, tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: weeks, name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 22 },
       yAxis: { type: "value", name: "%", nameGap: 10 },
       series: areas.map((a, i) => ({ name: a.name, type: "line", showSymbol: false, data: shape[i], lineStyle: { color: COLS[i], width: 2.5 }, itemStyle: { color: COLS[i] } })),
@@ -51,7 +51,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
         series.push({ name: `${a.name} 2015`, type: "line", showSymbol: false, data: cum(2015), lineStyle: { color: COLS[i], width: 1.8, type: "dashed" }, itemStyle: { color: COLS[i] } });
       });
       return {
-        grid: { left: 52, right: 12, top: 56, bottom: 34 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+        grid: { left: 52, right: 12, top: 84, bottom: 34 }, legend: { top: 4 }, tooltip: { trigger: "axis" },
         xAxis: { type: "category", data: weeks, name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 22 },
         yAxis: { type: "value", name: L ? "% dari total 2015" : "% of own 2015 total", nameGap: 10 },
         series,
@@ -83,11 +83,11 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
     <section className="cmp">
       <h1>{L ? "Bandingkan dua wilayah" : "Compare two places"}</h1>
       <div className="row">{sel(idA, idB, (v) => pick(v, idB))} <span>{L ? "dan" : "and"}</span> {sel(idB, idA, (v) => pick(idA, v))}
-        <button className="cta alt" onClick={() => pick(idB, idA)}>{L ? "Tukar" : "Swap"}</button></div>
+        <button className="btn" onClick={() => pick(idB, idA)}>{L ? "Tukar" : "Swap"}</button></div>
       {!A || !B || !charts || !ra || !rb ? <p>{L ? "Memuat…" : "Loading…"}</p> : (
         <>
-          <table>
-            <thead><tr><th></th><th style={{ color: COLS[0] }}>{A.name}</th><th style={{ color: COLS[1] }}>{B.name}</th></tr></thead>
+          <div className="tablewrap"><table>
+            <thead><tr><th></th><th><span className="dot" style={{ background: COLS[0] }} />{A.name}</th><th><span className="dot" style={{ background: COLS[1] }} />{B.name}</th></tr></thead>
             <tbody>
               <tr><th>{L ? "Tahun ini vs normal" : "This year vs normal"}</th><td>{ra.ytd}</td><td>{rb.ytd}</td></tr>
               <tr><th>{L ? `${A.last_year} dibanding 2015 (minggu ${A.last_week})` : `${A.last_year} vs 2015 (same weeks)`}</th><td>{ra.vs15}</td><td>{rb.vs15}</td></tr>
@@ -96,13 +96,19 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
               <tr><th>{L ? "Kaitan El Niño" : "El Niño link"}</th><td>{ra.enso}</td><td>{rb.enso}</td></tr>
               <tr><th>{L ? "Hari-api rata-rata per tahun" : "Fire-days in an average year"}</th><td>{ra.mean}</td><td>{rb.mean}</td></tr>
             </tbody>
-          </table>
-          <h2>{L ? "Bentuk musim yang biasa" : "Typical season shape"}</h2>
-          <p className="note">{L ? "Median bagian hari-api tahunan per minggu, 2001–2025. Dinormalkan, jadi wilayah besar dan kecil bisa dibandingkan." : "Median share of each year's fire-days by week, 2001–2025. Normalized, so a big and a small area can be compared."}</p>
-          <Chart option={charts.shapeOpt} height={260} label="Typical season shape of both areas" />
-          <h2>{A.last_year} {L ? "dibanding 2015" : "against 2015"}</h2>
-          <p className="note">{L ? "Hari-api kumulatif sebagai persen dari total 2015 wilayah itu sendiri. Garis putus-putus: 2015." : "Cumulative fire-days as a percent of each area's own 2015 total. Dashed lines: 2015."}</p>
-          <Chart option={charts.cumOpt} height={300} label="Current year against 2015 for both areas" />
+          </table></div>
+          <div className="split s11">
+            <div>
+              <h2>{L ? "Bentuk musim yang biasa" : "Typical season shape"}</h2>
+              <p className="note">{L ? "Median bagian hari-api tahunan per minggu, 2001–2025. Dinormalkan, jadi wilayah besar dan kecil bisa dibandingkan." : "Median share of each year's fire-days by week, 2001–2025. Normalized, so a big and a small area can be compared."}</p>
+              <div className="chartbox"><Chart option={charts.shapeOpt} height={300} label="Typical season shape of both areas" /></div>
+            </div>
+            <div>
+              <h2>{A.last_year} {L ? "dibanding 2015" : "against 2015"}</h2>
+              <p className="note">{L ? "Hari-api kumulatif sebagai persen dari total 2015 wilayah itu sendiri. Garis putus-putus: 2015." : "Cumulative fire-days as a percent of each area's own 2015 total. Dashed lines: 2015."}</p>
+              <div className="chartbox"><Chart option={charts.cumOpt} height={300} label="Current year against 2015 for both areas" /></div>
+            </div>
+          </div>
           <p className="note">{L ? "Titik panas menunjukkan panas, bukan luas terbakar. Tahun sebelum 2012 diperkirakan dari MODIS." : "Hotspots show heat, not area burned. Years before 2012 are estimated from MODIS."} <a href={`#/area/${idA}`}>{A.name}</a> · <a href={`#/area/${idB}`}>{B.name}</a></p>
         </>
       )}

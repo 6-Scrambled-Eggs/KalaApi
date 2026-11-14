@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Chart from "./Chart";
 import { Area, Oni, WPY, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
@@ -7,6 +7,15 @@ export type Mode = "h" | "m" | "v" | "p" | "n" | "a";
 
 export default function Calendar({ area, mode, year, onYear, oni, onReady }: { area: Area; mode: Mode; year: number; onYear: (y: number) => void; oni?: Oni | null; onReady?: (c: any) => void }) {
   const { t } = useT();
+  const box = useRef<HTMLDivElement>(null);
+  // On narrow screens the calendar scrolls sideways; open it on the area's fire season, not on January.
+  useEffect(() => {
+    const el = box.current;
+    if (!el || el.scrollWidth <= el.clientWidth) return;
+    const w = el.scrollWidth, left = 52, right = 16;
+    const x = left + ((area.typical_period.peak - 0.5) / WPY) * (w - left - right);
+    el.scrollLeft = Math.max(0, x - el.clientWidth / 2);
+  }, [area]);
   const option = useMemo(() => {
     const years: number[] = [];
     for (let y = area.start_year; y <= area.last_year; y++) years.push(y);
@@ -41,7 +50,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       yAxis: {
         type: "category", data: years.map(String), inverse: true,
         axisLabel: {
-          interval: 0, fontSize: 11, rich: { n: { color: "#bbb" }, e: { color: "#c0392b" }, l: { color: "#2471a3" } },
+          interval: 0, fontSize: 11, color: "#a9adc0", rich: { n: { color: "#6f7591" }, e: { color: "#ff7a6b" }, l: { color: "#8fb8ff" } },
           formatter: (v: string) => {
             const o = oni?.jas?.[v];
             const m = o == null ? "n" : o >= 0.5 ? "e" : o <= -0.5 ? "l" : "n";
@@ -49,16 +58,16 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           },
         },
       },
-      visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: anom ? [t("busiest"), t("quietest")] : [`${vmax}+ ${t("fireDays")}`, "0"], inRange: { color: anom ? ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] : ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
+      visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: anom ? [t("busiest"), t("quietest")] : [`${vmax}+ ${t("fireDays")}`, "0"], inRange: { color: anom ? ["#8fb8ff", "#3c5a96", "#222b45", "#c2541a", "#fec44f"] : ["#241f33", "#4d1a02", "#993404", "#d95f0e", "#fe9929", "#fec44f", "#fff7bc"] } },
       series: [{
         type: "heatmap", data, progressive: 0,
-        itemStyle: { borderColor: "#fff", borderWidth: 0.5 },
-        markArea: { silent: true, itemStyle: { color: "rgba(255,255,255,0.35)" }, label: { show: true, position: "insideTopRight", color: "#555", fontSize: 11, formatter: t("estimate") }, data: [[{ yAxis: String(years[0]) }, { yAxis: String(years[Math.min(lastBack, years.length - 1)] - 1) }]] },
-        markLine: { silent: true, symbol: "none", lineStyle: { color: "#111", type: "dashed" }, label: { formatter: "VIIRS", position: "insideEndTop" }, data: [{ yAxis: String(area.start_year + lastBack) }] },
-        emphasis: { itemStyle: { borderColor: "#000", borderWidth: 1 } },
+        itemStyle: { borderColor: "#1a2238", borderWidth: 0.5 },
+        markArea: { silent: true, itemStyle: { color: "rgba(232,226,212,0.10)" }, label: { show: true, position: "insideTopRight", color: "#c9ccda", fontSize: 11.5, fontWeight: 500, formatter: t("estimate") }, data: [[{ yAxis: String(years[0]) }, { yAxis: String(years[Math.min(lastBack, years.length - 1)] - 1) }]] },
+        markLine: { silent: true, symbol: "none", lineStyle: { color: "#f2f0eb", type: "dashed", width: 1.2 }, label: { formatter: "VIIRS", position: "insideStartTop", color: "#f2f0eb", fontSize: 11.5, fontWeight: 600 }, data: [{ yAxis: String(area.start_year + lastBack) }] },
+        emphasis: { itemStyle: { borderColor: "#f2f0eb", borderWidth: 1 } },
       }],
     } as any;
   }, [area, mode, t, oni]);
   const onClick = useMemo(() => (p: any) => { if (p?.value) onYear(area.start_year + (p.value as number[])[1]); }, [area, onYear]);
-  return <div className="calscroll"><div className="calinner"><Chart option={option} height={640} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} /></div></div>;
+  return <div className="calscroll" ref={box}><div className="calinner"><Chart option={option} height={640} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} /></div></div>;
 }

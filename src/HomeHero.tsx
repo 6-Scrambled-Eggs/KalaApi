@@ -19,12 +19,14 @@ export default function HomeHero({ index }: { index: AreaIndex[] }) {
   }, []);
   const nat = index.find((a) => a.id === "indonesia");
   return (
-    <div className="homehero">
-      <div className="hh bad"><span className="big">{step ? `×${step.raw.toFixed(1)}` : "…"}</span><span>{t("heroRaw")}</span></div>
-      <div className="hh good"><span className="big">{step ? `×${step.h.toFixed(1)}` : "…"}</span><span>{t("heroH")}</span></div>
-      <div className="hh"><span className="big">{nat?.ytd_ratio != null ? `×${nat.ytd_ratio}` : "…"}</span><span>{fmt(t("heroNow"), week ?? "")}</span>
-        <span className="sm">{nat?.ytd_ratio_recent != null ? `×${nat.ytd_ratio_recent} ${t("heroRecent")}` : "\u00a0"}</span></div>
+    <>
+      <div className="kpis homehero" aria-busy={step == null}>
+        <div className="kpi bad"><span className="k">{t("heroRaw")}</span><span className="v">{step ? `×${step.raw.toFixed(1)}` : "…"}</span></div>
+        <div className="kpi good"><span className="k">{t("heroH")}</span><span className="v">{step ? `×${step.h.toFixed(1)}` : "…"}</span></div>
+        <div className="kpi"><span className="k">{fmt(t("heroNow"), week ?? "")}</span><span className="v">{nat?.ytd_ratio != null ? `×${nat.ytd_ratio}` : "…"}</span>
+          <span className="s">{nat?.ytd_ratio_recent != null ? `×${nat.ytd_ratio_recent} ${t("heroRecent")}` : " "}</span></div>
+      </div>
       <p className="note hhnote">{t("heroNote")}</p>
-    </div>
+    </>
   );
 }

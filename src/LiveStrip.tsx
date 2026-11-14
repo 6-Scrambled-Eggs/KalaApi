@@ -19,7 +19,7 @@ export default function LiveStrip() {
     grid: { left: 44, right: 12, top: 10, bottom: 26 }, tooltip: { trigger: "axis" },
     xAxis: { type: "category", data: d.daily.map((r) => r.date.slice(5)) },
     yAxis: { type: "value", name: L ? "hari-api" : "fire-days" },
-    series: [{ type: "bar", data: d.daily.map((r) => r.fire_days), itemStyle: { color: "#d95f0e" } }],
+    series: [{ type: "bar", data: d.daily.map((r) => r.fire_days), itemStyle: { color: "#fe9929" } }],
   };
   return (
     <div className="live">

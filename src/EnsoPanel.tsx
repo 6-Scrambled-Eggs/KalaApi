@@ -6,7 +6,7 @@ import { useT } from "./i18n";
 /** Display label: "clear" needs p <= 0.01 because p is not corrected for the many tests; p up to 0.05 is only "suggestive". */
 export const ensoLabel = (e: { label: string; p: number }) => (e.label === "clear" && e.p > 0.01 ? "suggestive" : e.label);
 export const fmtP = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(3)}`);
-const COLORS = { el: "#c0392b", la: "#2e86c1", neu: "#9aa5ad" };
+const COLORS = { el: "#e5564a", la: "#4a8ad6", neu: "#8e93aa" };
 
 /** El Nino link per area: yearly fire-days coloured by ONI class, plus a plain verdict with n and p. */
 export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; enso: Enso | null; oni: Oni | null; compact?: boolean }) {
@@ -28,7 +28,7 @@ export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; en
     return {
       grid: { left: 64, right: 12, top: 28, bottom: 30 },
       tooltip: { trigger: "item", formatter: (p: any) => `${years[p.dataIndex]}: ${p.value.toLocaleString()} ${t("fireDays")}<br/>ONI Jul–Sep ${p.data.oni > 0 ? "+" : ""}${p.data.oni}` },
-      xAxis: { type: "category", data: years.map(String), axisLabel: { interval: 1 } },
+      xAxis: { type: "category", data: years.map(String), axisLabel: { interval: "auto", hideOverlap: true } },
       yAxis: { type: "value", name: t("fireDays"), nameGap: 8 },
       series: [{ type: "bar", data: vals, barCategoryGap: "25%" }],
     } as any;
@@ -44,12 +44,12 @@ export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; en
     reverse: id ? "Kaitannya terbalik: tahun El Niño cenderung lebih sedikit api." : "The link runs the other way: El Niño years tend to have fewer fires.",
   }[ensoLabel(e)];
   return (
-    <div>
+    <div className="ensop">
       <h2>{t("ensoTitle")}</h2>
       <p><b>{verdict}</b> ρ = {e.rho}, {fmtP(e.p)}.{e.ratio_el_neu ? (id ? ` Tahun El Niño: tipikalnya ×${e.ratio_el_neu} hari-api tahun netral.` : ` In El Niño years the typical year had ×${e.ratio_el_neu} the fire-days of a neutral year.`) : ""}</p>
-      <Chart option={option} height={compact ? 150 : 200} label={`${t("ensoTitle")} ${area.name}`} />
+      <div className="chartbox"><Chart option={option} height={compact ? 150 : 200} label={`${t("ensoTitle")} ${area.name}`} /></div>
       <p className="note">
-        <span style={{ color: COLORS.el }}>■</span> El Niño ({nEl}) <span style={{ color: COLORS.neu }}>■</span> {id ? "netral" : "neutral"} ({nNeu}) <span style={{ color: COLORS.la }}>■</span> La Niña ({nLa}) · ONI Jul–Sep. {o26 != null ? (id ? `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. ` : `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. `) : ""}
+        <span className="dot" style={{ background: COLORS.el, borderRadius: 2 }} />El Niño ({nEl}) <span className="dot" style={{ background: COLORS.neu, borderRadius: 2, marginLeft: 8 }} />{id ? "netral" : "neutral"} ({nNeu}) <span className="dot" style={{ background: COLORS.la, borderRadius: 2, marginLeft: 8 }} />La Niña ({nLa}) · ONI Jul–Sep. {o26 != null ? (id ? `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. ` : `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. `) : ""}
         {id
           ? `Eksploratif: korelasi peringkat atas 25 tahun (2001–2025), hanya ${nEl} tahun El Niño. Bukan prakiraan dan bukan uji sebab-akibat.`
           : `Exploratory: rank correlation over 25 years (2001–2025), only ${nEl} El Niño years. Not a forecast and not a test of cause.`}
