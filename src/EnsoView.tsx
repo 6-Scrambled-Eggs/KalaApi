@@ -65,7 +65,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       <table>
         <thead><tr><th>{id ? "Provinsi" : "Province"}</th><th>ρ</th><th>p</th><th>{id ? "Kaitan" : "Link"}</th><th>{id ? "El Niño vs netral" : "El Niño vs neutral"}</th></tr></thead>
         <tbody>{rows.map(({ a, e }) => (
-          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{e.label}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
+          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[e.label] : e.label}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
         ))}</tbody>
       </table>
       <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear = p < 0,05 dan ρ ≥ 0,4; weak = p < 0,15." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15."}</p>

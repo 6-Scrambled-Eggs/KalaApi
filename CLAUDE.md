@@ -51,6 +51,8 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - Readiness window, BPBD brief (`#/brief/<id>`, 1 A4 page), El Niño link (`pipeline/08_enso_signal.py` -> `public/data/enso.json`; panel + `#/enso` map), analog year. See `docs/WINNING-IDEAS.md` and `docs/BUILD-LOG.md`.
 - Honest numbers: 300 of 422 areas show a clear El Niño link, 41 weak, 81 none; only 5 El Niño years in 2001-2025; p not corrected for multiple tests. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
 
+- Compare view `#/compare/<a>/<b>`. Papers verified (Giglio 2016 RSE 178:31-41; Schroeder 2014 RSE 143:85-96).
+
 ## Open items (see backlog in the Claude Project)
 - MCD64A1 burned-area check (V-7). Needs Earthdata login.
 - Row-count check against FIRMS yearly country CSVs.

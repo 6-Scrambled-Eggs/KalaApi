@@ -3,6 +3,7 @@ import AreaPage from "./AreaPage";
 import AreaPicker from "./AreaPicker";
 import Brief from "./Brief";
 import Card from "./Card";
+import Compare from "./Compare";
 import EnsoView from "./EnsoView";
 import { Mode } from "./Calendar";
 import Hero from "./Hero";
@@ -54,6 +55,7 @@ export default function App() {
         : route === "story" ? <Story id={id} />
         : route === "card" ? <Card id={id} />
         : route === "brief" ? <Brief id={id} />
+        : route === "compare" ? <Compare idA={path[1] || "papua-selatan"} idB={path[2] || "kalimantan-barat"} index={index} go={go} />
         : route === "enso" ? <EnsoView index={index} onSelect={(a) => go(`/area/${a}`)} />
         : route === "method" ? <Method index={index} />
         : (
@@ -61,7 +63,7 @@ export default function App() {
             <h1>{t("tagline")}</h1>
             <p className="lead">25 years of MODIS and VIIRS hotspot detections turned into one comparable burning-activity calendar for any area in Indonesia.</p>
             <MapView index={index} onSelect={(a) => go(`/area/${a}`)} />
-            <p><a className="cta" href="#/area/indonesia">Open the national calendar</a> <a className="cta alt" href="#/surge">See the 2012 fake surge</a> <a className="cta alt" href="#/enso">Does El Niño matter here?</a></p>
+            <p><a className="cta" href="#/area/indonesia">Open the national calendar</a> <a className="cta alt" href="#/surge">See the 2012 fake surge</a> <a className="cta alt" href="#/enso">Does El Niño matter here?</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">Compare two places</a></p>
           </section>
         )}
       </main>

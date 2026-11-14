@@ -50,9 +50,9 @@ Code: https://github.com/6-Scrambled-Eggs/KalaApi
 We built KalaApi with AI assistance. Claude (Anthropic) helped write the Python data pipeline, the React web app, the tests and the documentation, and helped plan the method and review the results. The team chose the challenge, set the requirements, and reviewed the code and numbers. [Add: which team members checked which parts. Add: any AI-made image or video, with its watermark.] No NASA logos appear in AI-made content.
 
 ## References
-1. Giglio, L., Schroeder, W., Justice, C. O. (2016). The collection 6 MODIS active fire detection algorithm and fire products. Remote Sensing of Environment, 178, 31-41.
-2. Schroeder, W., et al. (2014). The new VIIRS 375 m active fire detection data product. Remote Sensing of Environment, 143, 85-96.
-3. NASA FIRMS: https://firms.modaps.eosdis.nasa.gov/
+1. Giglio, L., Schroeder, W., Justice, C. O. (2016). The collection 6 MODIS active fire detection algorithm and fire products. Remote Sensing of Environment, 178, 31-41. https://doi.org/10.1016/j.rse.2016.02.054 (checked against the paper PDF on 14 Nov 2026)
+2. Schroeder, W., Oliva, P., Giglio, L., Csiszar, I. A. (2014). The new VIIRS 375 m active fire detection data product: Algorithm description and initial assessment. Remote Sensing of Environment, 143, 85-96. https://doi.org/10.1016/j.rse.2013.12.008 (checked against the paper PDF and the FIRMS FAQ on 14 Nov 2026)
+3. NASA FIRMS (part of NASA ESDIS, LANCE): https://firms.modaps.eosdis.nasa.gov/ . We acknowledge the use of data from NASA LANCE FIRMS. Check the FIRMS site for any newer "how to cite" wording before you submit.
 4. geoBoundaries: https://www.geoboundaries.org/
 5. Global Forest Watch, Global Peatlands: https://data.globalforestwatch.org/
 6. NOAA CPC, Oceanic Nino Index: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php

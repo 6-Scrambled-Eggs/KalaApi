@@ -45,3 +45,8 @@ table { border-collapse:collapse; width:100%; font-size:14px; margin:8px 0; } th
   .brief table { font-size: 11px; margin: 4px 0; } .brief th, .brief td { padding: 3px 6px; }
   .brief .note { font-size: 10.5px; margin: 2px 0; } .brief .foot { margin-top: 8px; }
 }
+
+.cmp .row { display:flex; flex-wrap:wrap; }
+.cmp select { max-width:100%; }
+.cmp table { table-layout:fixed; }
+.cmp th, .cmp td { overflow-wrap:anywhere; }

@@ -62,6 +62,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
         </div>
         <div className="toggles" role="group" aria-label="Data view">
           {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
+          <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
           <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
           <button onClick={() => go(`/card/${id}`)}>{t("card")}</button>
           <button onClick={() => go(`/story/${id}`)}>{t("story")}</button>
