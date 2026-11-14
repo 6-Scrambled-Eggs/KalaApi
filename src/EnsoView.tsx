@@ -58,9 +58,11 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
         ? "Di setiap provinsi, apakah tahun dengan El Niño juga tahun dengan lebih banyak hari-api? Warna gelap berarti kaitan kuat. Abu-abu berarti tidak ada kaitan jelas."
         : "In each province, are El Niño years also years with more fire-days? Dark means a strong link. Grey means no clear link."}</p>
       <div className="mapWrap">
-        <div ref={el} className="map" role="img" aria-label="Map of provinces shaded by the El Niño link of yearly fire activity" />
-        {!ready && <div className="mapLoad">{id ? "Memuat peta…" : "Loading map…"}</div>}
-        <div className="mapTip">{tip || (id ? "Klik provinsi untuk melihat grafiknya." : "Click a province for its chart.")}</div>
+        <div className="mapBox">
+          <div ref={el} className="map" role="img" aria-label="Map of provinces shaded by the El Niño link of yearly fire activity" />
+          {!ready && <div className="mapLoad">{id ? "Memuat peta…" : "Loading map…"}</div>}
+          <div className="mapTip">{tip || (id ? "Klik provinsi untuk melihat grafiknya." : "Click a province for its chart.")}</div>
+        </div>
         <Legend title={id ? "Seberapa kuat api mengikuti El Niño (ρ)" : "How strongly fire follows El Niño (ρ)"} stops={[["#f0f0f0", 0], ["#c6dbef", 33], ["#6a51a3", 66], ["#3f007d", 100]]} low={id ? "tidak ada kaitan jelas" : "no clear link"} high={id ? "kaitan kuat" : "strong link"} extra={id ? "tanpa data" : "no data"} />
       </div>
       <p className="note">{id

@@ -34,6 +34,7 @@ jobs:
         run: |
           pip install shapely
           python pipeline/11_live_fire.py || true
+          test -f public/data/live.json || echo '{"generated":"2000-01-01T00:00:00","sources":[],"days":0,"national":0,"daily":[],"provinces":[]}' > public/data/live.json
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3

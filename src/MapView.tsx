@@ -45,9 +45,11 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
   }, [index]);
   return (
     <div className="mapWrap">
-      <div ref={el} className="map" role="img" aria-label="Map of Indonesian provinces shaded by this year's fire activity" />
-      {!ready && <div className="mapLoad">{t("loadingMap")}</div>}
-      <div className="mapTip">{tip || t("mapHint")}</div>
+      <div className="mapBox">
+        <div ref={el} className="map" role="img" aria-label="Map of Indonesian provinces shaded by this year's fire activity" />
+        {!ready && <div className="mapLoad">{t("loadingMap")}</div>}
+        <div className="mapTip">{tip || t("mapHint")}</div>
+      </div>
       <Legend title={t("legMapTitle")} stops={[["#fff7bc", 0], ["#fe9929", 50], ["#d95f0e", 90], ["#4d1a02", 100]]} low={t("legQuiet")} high={t("legBusy")} extra={t("legNoData")} />
     </div>
   );

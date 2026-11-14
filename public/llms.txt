@@ -1,0 +1,14 @@
+# KalaApi
+
+> One fire record for Indonesia, from MODIS to VIIRS. A free web app that joins 25 years of NASA FIRMS MODIS and VIIRS hotspot detections into one comparable weekly burning-activity calendar for Indonesia (422 areas: the nation, 38 provinces, kabupaten). Made for the NASA Space Apps Challenge 2026. Not an official product.
+
+## Pages
+- [Home map and provinces to watch](https://6-scrambled-eggs.github.io/KalaApi/): this year compared with the same weeks in 2001-2025
+- [Method and data](https://6-scrambled-eggs.github.io/KalaApi/#/method): how fire-days are counted, how the back-cast works, tests and limits
+- [Sensor step 2012](https://6-scrambled-eggs.github.io/KalaApi/#/surge): raw hotspot counts versus harmonized fire-days
+- [El Nino link](https://6-scrambled-eggs.github.io/KalaApi/#/enso): how strongly yearly fire activity follows El Nino, by province
+
+## Notes
+- Fire-days are heat detections, not burned area.
+- Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries, Global Forest Watch peatlands, NOAA ONI.
+- Code: https://github.com/6-Scrambled-Eggs/KalaApi

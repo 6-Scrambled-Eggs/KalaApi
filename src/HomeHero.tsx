@@ -23,7 +23,7 @@ export default function HomeHero({ index }: { index: AreaIndex[] }) {
       <div className="hh bad"><span className="big">{step ? `×${step.raw.toFixed(1)}` : "…"}</span><span>{t("heroRaw")}</span></div>
       <div className="hh good"><span className="big">{step ? `×${step.h.toFixed(1)}` : "…"}</span><span>{t("heroH")}</span></div>
       <div className="hh"><span className="big">{nat?.ytd_ratio != null ? `×${nat.ytd_ratio}` : "…"}</span><span>{fmt(t("heroNow"), week ?? "")}</span>
-        {nat?.ytd_ratio_recent != null && <span className="sm">×{nat.ytd_ratio_recent} {t("heroRecent")}</span>}</div>
+        <span className="sm">{nat?.ytd_ratio_recent != null ? `×${nat.ytd_ratio_recent} ${t("heroRecent")}` : "\u00a0"}</span></div>
       <p className="note hhnote">{t("heroNote")}</p>
     </div>
   );

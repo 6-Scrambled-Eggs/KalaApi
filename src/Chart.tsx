@@ -18,7 +18,10 @@ export default function Chart({ option, height, onClick, label, onReady }: Props
     onReady?.(inst.current);
     const onResize = () => inst.current?.resize();
     window.addEventListener("resize", onResize);
-    return () => { window.removeEventListener("resize", onResize); inst.current?.dispose(); inst.current = null; };
+    window.addEventListener("orientationchange", onResize);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onResize) : null;
+    ro?.observe(ref.current);
+    return () => { ro?.disconnect(); window.removeEventListener("resize", onResize); window.removeEventListener("orientationchange", onResize); inst.current?.dispose(); inst.current = null; };
   }, []);
   useEffect(() => { inst.current?.setOption(option, true); }, [option]);
   useEffect(() => {
@@ -27,5 +30,5 @@ export default function Chart({ option, height, onClick, label, onReady }: Props
     c.off("click");
     c.on("click", onClick);
   }, [onClick]);
-  return <div ref={ref} style={{ width: "100%", height }} role="img" aria-label={label} />;
+  return <div ref={ref} style={{ width: "100%", maxWidth: "100%", height, overflow: "hidden", position: "relative" }} role="img" aria-label={label} />;
 }

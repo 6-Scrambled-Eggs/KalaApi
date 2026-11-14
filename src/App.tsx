@@ -1,21 +1,23 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import AreaPage from "./AreaPage";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import AreaPicker from "./AreaPicker";
-import Brief from "./Brief";
-import Card from "./Card";
-import Compare from "./Compare";
-import EnsoView from "./EnsoView";
-import { Mode } from "./Calendar";
-import Hero from "./Hero";
-import LiveStrip from "./LiveStrip";
-import MapView from "./MapView";
-import Method from "./Method";
-import Story from "./Story";
+import type { Mode } from "./Calendar";
 import HomeHero from "./HomeHero";
+import OnVisible from "./OnVisible";
 import HomeWatch from "./HomeWatch";
 import { AreaIndex, dateLocale, loadIndex } from "./data";
 import ProvList from "./ProvList";
 import { Lang, LangCtx, makeT } from "./i18n";
+
+const AreaPage = lazy(() => import("./AreaPage"));
+const Brief = lazy(() => import("./Brief"));
+const Card = lazy(() => import("./Card"));
+const Compare = lazy(() => import("./Compare"));
+const EnsoView = lazy(() => import("./EnsoView"));
+const Hero = lazy(() => import("./Hero"));
+const LiveStrip = lazy(() => import("./LiveStrip"));
+const MapView = lazy(() => import("./MapView"));
+const Method = lazy(() => import("./Method"));
+const Story = lazy(() => import("./Story"));
 
 function useHash() {
   const [h, setH] = useState(window.location.hash.slice(1) || "/");
@@ -49,12 +51,13 @@ export default function App() {
           <a href="#/surge" className={route === "surge" ? "on" : ""}>{t("surge")}</a>
           <a href="#/enso" className={route === "enso" ? "on" : ""}>{t("enso")}</a>
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
-          <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label="Switch language">{lang === "en" ? "ID" : "EN"}</button>
+          <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>
         </nav>
-        {index && <AreaPicker index={index} onPick={(a) => go(`/area/${a}`)} />}
+        <AreaPicker index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
       </header>
       <main id="main-content" tabIndex={-1}>
-        {!index ? <p>{t("loading")}</p> : route === "area" ? (
+        <Suspense fallback={<p>{t("loading")}</p>}>
+        {!index ? (["area","surge","story","card","brief","compare","enso","method"].includes(route) ? <p>{t("loading")}</p> : <section><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p><div className="homehero" aria-busy="true"><div className="hh" /><div className="hh" /><div className="hh" /><p className="note hhnote">{t("heroNote")}</p></div></section>) : route === "area" ? (
           <AreaPage id={id} index={index} year={year} mode={mode} setYear={(y) => setQ("y", String(y))} setMode={(m) => setQ("m", m)} go={go} />
         ) : route === "surge" ? <Hero areaId={path[1] || "indonesia"} index={index} onPick={(a) => go(`/surge/${a}`)} />
         : route === "story" ? <Story id={id} />
@@ -69,12 +72,13 @@ export default function App() {
             <p className="lead">{t("lead")}</p>
             <HomeHero index={index} />
             <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/surge">{t("ctaStep")}</a> <a className="cta alt" href="#/enso">{t("ctaEnso")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
-            <MapView index={index} onSelect={(a) => go(`/area/${a}`)} />
-            <LiveStrip />
+            <OnVisible minHeight={520}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
+            <Suspense fallback={null}><LiveStrip /></Suspense>
             <ProvList index={index} />
             <HomeWatch index={index} />
           </section>
         )}
+        </Suspense>
       </main>
       <footer className="noprint">NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Built with AI assistance (Claude), disclosed on the project page.</footer>
     </LangCtx.Provider>

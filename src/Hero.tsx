@@ -23,11 +23,11 @@ export default function Hero({ areaId, index, onPick }: { areaId: string; index:
       mean(a.filter((r) => r.year >= y0 && r.year <= y1).map((r) => r.total));
     const stepRaw = pick(cnt, 2012, 2014) / pick(cnt, 2009, 2011);
     const stepH = pick(h, 2012, 2014) / pick(h, 2009, 2011);
-    const mk = { silent: true, symbol: "none", lineStyle: { color: "#111", type: "dashed" }, label: { formatter: "2012: VIIRS starts" }, data: [{ xAxis: 2012.06 }] };
-    const base = { grid: { left: 60, right: 16, top: 30, bottom: 30 }, xAxis: { type: "value", min: area.start_year, max: area.last_year + 1, axisLabel: { formatter: (v: number) => String(v) } }, yAxis: { type: "value" }, tooltip: { trigger: "axis", valueFormatter: (v: number) => String(v) } };
-    const rawOpt = { ...base, title: { text: "Raw hotspot counts, stitched (MODIS to 2011, VIIRS from 2012)", textStyle: { fontSize: 13 } },
+    const mk = { silent: true, symbol: "none", lineStyle: { color: "#111", type: "dashed" }, label: { formatter: "2012: VIIRS starts", position: "end", distance: 4 }, data: [{ xAxis: 2012.06 }] };
+    const base = { grid: { left: 60, right: 16, top: 66, bottom: 30 }, xAxis: { type: "value", min: area.start_year, max: area.last_year + 1, axisLabel: { formatter: (v: number) => String(v) } }, yAxis: { type: "value" }, tooltip: { trigger: "axis", valueFormatter: (v: number) => String(v) } };
+    const rawOpt = { ...base, title: { text: "Raw counts, stitched (MODIS to 2011, VIIRS from 2012)", textStyle: { fontSize: 13, width: 300, overflow: "break" } },
       series: [{ type: "line", showSymbol: false, data: pts(area.cnt), lineStyle: { color: "#c0392b", width: 1.4 }, markLine: mk }] };
-    const hOpt = { ...base, title: { text: "Harmonized fire-days (VIIRS-equivalent, 90% band to 2011, ratio uncertainty only)", textStyle: { fontSize: 13 } },
+    const hOpt = { ...base, title: { text: "Harmonized fire-days (VIIRS-equivalent, 90% band to 2011, ratio uncertainty only)", textStyle: { fontSize: 13, width: 300, overflow: "break" } },
       series: [
         { type: "line", showSymbol: false, data: pts(area.hi), lineStyle: { opacity: 0 }, areaStyle: { color: "#2e86c1", opacity: 0.2 }, z: 1, tooltip: { show: false } },
         { type: "line", showSymbol: false, data: pts(area.lo), lineStyle: { opacity: 0 }, areaStyle: { color: "#fff", opacity: 1 }, z: 2, tooltip: { show: false } },
