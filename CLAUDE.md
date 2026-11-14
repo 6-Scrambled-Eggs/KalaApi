@@ -47,6 +47,10 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - ONI marker (step 07, `public/data/oni.json`), FRP in story mode, CSV/PNG export and copy-link, "vs last 10 years" tile, GitHub Pages deploy (`.github/workflows/deploy.yml`), `docs/video-script.md`, `docs/project-page.md`.
 - 2026 vs 2015 at week 43: nation 76% (fire-days), South Papua 116%, West Kalimantan 112%, Central Kalimantan 67%, South Sumatra 43%, Riau 13%.
 
+## Added 14 Nov evening (from the winning-factor research)
+- Readiness window, BPBD brief (`#/brief/<id>`, 1 A4 page), El Niño link (`pipeline/08_enso_signal.py` -> `public/data/enso.json`; panel + `#/enso` map), analog year. See `docs/WINNING-IDEAS.md` and `docs/BUILD-LOG.md`.
+- Honest numbers: 300 of 422 areas show a clear El Niño link, 41 weak, 81 none; only 5 El Niño years in 2001-2025; p not corrected for multiple tests. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
+
 ## Open items (see backlog in the Claude Project)
 - MCD64A1 burned-area check (V-7). Needs Earthdata login.
 - Row-count check against FIRMS yearly country CSVs.

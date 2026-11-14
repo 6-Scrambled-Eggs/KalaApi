@@ -64,6 +64,12 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <tbody>{meta.strata.map((s) => <tr key={s.stratum + s.peat}><td>{s.stratum}</td><td>{s.peat}</td><td>{s.k.toFixed(2)}</td><td>{s.k_lo.toFixed(2)} to {s.k_hi.toFixed(2)}</td></tr>)}</tbody></table>
         <p className="note">Data as of {meta.data_end}. Baseline for anomalies: {meta.baseline}. Built {meta.generated}.</p>
       </>)}
+      <h2>Readiness, El Niño link and analog year</h2>
+      <ul>
+        <li><b>Readiness window</b>: onset = the first week when 10% of a year's fire-days have happened, over 2001 to the last complete year. It marks the start of hotspot activity, not of drought or ignition. "Be ready by" is the early-onset week (10th percentile) minus 4 weeks. The 4 weeks is our assumption.</li>
+        <li><b>El Niño link</b>: Spearman rank correlation of yearly harmonized fire-days (2001–2025) with the July–September ONI, with a 5000-shuffle permutation p-value (<code>pipeline/08_enso_signal.py</code>). Only 5 of the 25 years are El Niño years. p is not corrected for the many areas tested. This is exploratory. It is not a forecast and not a test of cause.</li>
+        <li><b>Analog year</b>: the past year whose cumulative fire-day curve up to the current week is closest (root-mean-square gap) to this year. It is a likeness of the curve so far. It does not predict the rest of the year.</li>
+      </ul>
       <h2>Limits</h2>
       <ul>
         <li>Hotspots are heat detections, not area burned. Cloud and thick haze can hide fires, so the worst weeks may be undercounted.</li>

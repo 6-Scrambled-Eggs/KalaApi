@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AreaPage from "./AreaPage";
 import AreaPicker from "./AreaPicker";
+import Brief from "./Brief";
 import Card from "./Card";
+import EnsoView from "./EnsoView";
 import { Mode } from "./Calendar";
 import Hero from "./Hero";
 import MapView from "./MapView";
@@ -39,6 +41,7 @@ export default function App() {
         <nav>
           <a href="#/" className={route === "home" ? "on" : ""}>{t("home")}</a>
           <a href="#/surge" className={route === "surge" ? "on" : ""}>{t("surge")}</a>
+          <a href="#/enso" className={route === "enso" ? "on" : ""}>{t("enso")}</a>
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
           <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label="Switch language">{lang === "en" ? "ID" : "EN"}</button>
         </nav>
@@ -50,13 +53,15 @@ export default function App() {
         ) : route === "surge" ? <Hero areaId={path[1] || "indonesia"} index={index} onPick={(a) => go(`/surge/${a}`)} />
         : route === "story" ? <Story id={id} />
         : route === "card" ? <Card id={id} />
+        : route === "brief" ? <Brief id={id} />
+        : route === "enso" ? <EnsoView index={index} onSelect={(a) => go(`/area/${a}`)} />
         : route === "method" ? <Method index={index} />
         : (
           <section>
             <h1>{t("tagline")}</h1>
             <p className="lead">25 years of MODIS and VIIRS hotspot detections turned into one comparable burning-activity calendar for any area in Indonesia.</p>
             <MapView index={index} onSelect={(a) => go(`/area/${a}`)} />
-            <p><a className="cta" href="#/area/indonesia">Open the national calendar</a> <a className="cta alt" href="#/surge">See the 2012 fake surge</a></p>
+            <p><a className="cta" href="#/area/indonesia">Open the national calendar</a> <a className="cta alt" href="#/surge">See the 2012 fake surge</a> <a className="cta alt" href="#/enso">Does El Niño matter here?</a></p>
           </section>
         )}
       </main>

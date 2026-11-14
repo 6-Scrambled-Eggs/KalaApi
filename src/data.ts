@@ -95,3 +95,42 @@ export function annualTotals(s: Series, startYear: number): { year: number; tota
     return { year: startYear + i, total: complete ? vals.reduce((a, b) => a + b, 0) : null };
   });
 }
+
+export type EnsoArea = { rho: number; p: number; label: "clear" | "weak" | "none" | "reverse"; med_el: number | null; med_neu: number | null; med_la: number | null; ratio_el_neu: number | null };
+export type Enso = { years: { el: number[]; la: number[]; neu: number[] }; n_perm: number; areas: Record<string, EnsoArea> };
+export const loadEnso = () => load<Enso>("enso.json");
+
+/** Readiness window: spread of the season onset week over complete years 2001..last_year-1.
+ *  Onset = first week when 10% of the year's fire-days have happened (hotspot onset, not drought onset). */
+export function readiness(area: Area) {
+  const ons: number[] = [];
+  for (let y = area.start_year; y < area.last_year; y++) {
+    const p = area.periods[String(y)];
+    if (p) ons.push(p[0]);
+  }
+  ons.sort((a, b) => a - b);
+  if (ons.length < 5) return null;
+  return { earliest: ons[0], p10: Math.round(quantile(ons, 0.1)), median: Math.round(quantile(ons, 0.5)), p90: Math.round(quantile(ons, 0.9)), latest: ons[ons.length - 1], n: ons.length };
+}
+
+/** Past year whose cumulative curve up to the current week is closest to the current year (RMS gap). A similarity, not a forecast. */
+export function analogYears(area: Area, topN = 2) {
+  const M = matrix(area.h);
+  const w = area.last_week;
+  const cum = (y: number) => { let s = 0; const out: number[] = []; for (let i = 0; i < w; i++) { const v = M[y - area.start_year]?.[i]; if (v == null) return null; out.push((s += v)); } return out; };
+  const now = cum(area.last_year);
+  if (!now) return [];
+  const res: { year: number; rms: number; ratio: number }[] = [];
+  for (let y = area.start_year; y < area.last_year; y++) {
+    const c = cum(y);
+    if (!c) continue;
+    const rms = Math.sqrt(c.reduce((a, v, i) => a + (v - now[i]) ** 2, 0) / w);
+    res.push({ year: y, rms, ratio: c[w - 1] > 0 ? now[w - 1] / c[w - 1] : NaN });
+  }
+  return res.sort((a, b) => a.rms - b.rms).slice(0, topN);
+}
+
+/** Fire-days up to week w in year y. */
+export function upto(area: Area, y: number, w: number): number {
+  return (matrix(area.h)[y - area.start_year] || []).slice(0, w).reduce<number>((a, v) => a + (v ?? 0), 0);
+}

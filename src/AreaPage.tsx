@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Calendar, { Mode } from "./Calendar";
+import Analog from "./Analog";
+import EnsoPanel from "./EnsoPanel";
+import Readiness from "./Readiness";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Oni, WPY, loadArea, loadOni, matrix, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
 
 const modes: [Mode, "harmonized" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
@@ -14,8 +17,9 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const [err, setErr] = useState("");
   const [oni, setOni] = useState<Oni | null>(null);
   const [copied, setCopied] = useState(false);
+  const [enso, setEnso] = useState<Enso | null>(null);
   const chart = useRef<any>(null);
-  useEffect(() => { loadOni().then(setOni).catch(() => setOni(null)); }, []);
+  useEffect(() => { loadOni().then(setOni).catch(() => setOni(null)); loadEnso().then(setEnso).catch(() => setEnso(null)); }, []);
   useEffect(() => { setArea(null); setErr(""); loadArea(id).then(setArea).catch((e) => setErr(String(e))); }, [id]);
   const y = year ?? area?.last_year ?? 2026;
 
@@ -58,6 +62,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
         </div>
         <div className="toggles" role="group" aria-label="Data view">
           {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
+          <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
           <button onClick={() => go(`/card/${id}`)}>{t("card")}</button>
           <button onClick={() => go(`/story/${id}`)}>{t("story")}</button>
           <button onClick={exportCsv}>{t("csv")}</button>
@@ -71,6 +76,9 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
         <div className="tile"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · onset {weekLabel(tp.onset)} · end {weekLabel(tp.end)}</div></div>
         <div className="tile"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? "on time" : `${Math.abs(onsetDiff)} wk ${onsetDiff < 0 ? "early" : "late"}`}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} vs typical {tp.onset}</div></div>
       </div>
+      <Readiness area={area} />
+      <Analog area={area} />
+      <EnsoPanel area={area} enso={enso} oni={oni} />
       <h2>{t("calendar")}</h2>
       <p className="note">One row per year, one column per 7-day block. Rows before 2012 are estimated from MODIS and shown with a pale overlay. Click a row to compare that year below. {t("oniNote")}</p>
       <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />

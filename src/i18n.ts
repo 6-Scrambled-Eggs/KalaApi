@@ -16,6 +16,7 @@ const dict = {
     week: "week", year: "Year", fireDays: "fire-days", pctile: "percentile",
     peatOnly: "Peat only", mineralOnly: "Mineral only", csv: "Download CSV", png: "Download PNG", copyLink: "Copy link", copied: "Link copied",
     vsRecent: "vs last 10 years", oniNote: "Dot beside each year: El Niño (red), La Niña (blue), neutral (grey), from the July–September ONI.",
+    brief: "BPBD brief", enso: "El Niño link", readyTitle: "Readiness window", ensoTitle: "Does El Niño matter here?", analogTitle: "2026 is most like",
   },
   id: {
     tagline: "Satu rekam jejak api untuk Indonesia, dari MODIS ke VIIRS.",
@@ -31,6 +32,7 @@ const dict = {
     week: "minggu", year: "Tahun", fireDays: "hari-api", pctile: "persentil",
     peatOnly: "Hanya gambut", mineralOnly: "Hanya tanah mineral", csv: "Unduh CSV", png: "Unduh PNG", copyLink: "Salin tautan", copied: "Tautan disalin",
     vsRecent: "vs 10 tahun terakhir", oniNote: "Titik di samping tahun: El Niño (merah), La Niña (biru), netral (abu-abu), dari ONI Juli–September.",
+    brief: "Ringkasan BPBD", enso: "Kaitan El Niño", readyTitle: "Jendela kesiapsiagaan", ensoTitle: "Apakah El Niño berpengaruh di sini?", analogTitle: "2026 paling mirip dengan",
   },
 };
 export type Key = keyof typeof dict.en;
