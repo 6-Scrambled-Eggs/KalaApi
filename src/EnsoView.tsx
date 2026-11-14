@@ -51,7 +51,8 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
     ro?.observe(el.current);
     window.addEventListener("orientationchange", fit);
-    return () => { ro?.disconnect(); window.removeEventListener("orientationchange", fit); map.remove(); };
+    window.addEventListener("resize", fit);
+    return () => { ro?.disconnect(); window.removeEventListener("orientationchange", fit); window.removeEventListener("resize", fit); map.remove(); };
   }, [enso]);
   const n = enso ? enso.years.el.length : 0;
   const o26 = oni?.jas["2026"];

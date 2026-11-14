@@ -30,7 +30,7 @@ export default function Card({ id }: { id: string }) {
         <li>{L("Years before 2012 are estimated from MODIS and carry uncertainty. Sensors differ, so raw counts are not comparable across 2012.", "Tahun sebelum 2012 diperkirakan dari MODIS dan memiliki ketidakpastian. Sensornya berbeda, sehingga jumlah mentah tidak sebanding sebelum dan sesudah 2012.")}</li>
         <li>{a.low_data ? L("This area has few fires in an average year. Read the percentiles with care.", "Wilayah ini jarang terbakar pada tahun rata-rata. Baca persentil dengan hati-hati.") : L("Percentiles compare each week with the same week in 2001–2025.", "Persentil membandingkan tiap minggu dengan minggu yang sama pada 2001–2025.")}</li>
       </ol>
-      <p className="foot">{L("Data as of week", "Data per minggu")} {a.last_week} {L("of", "tahun")} {a.last_year} · NASA FIRMS MODIS and VIIRS · {typeof window !== "undefined" ? window.location.href : ""}</p>
+      <p className="foot">{L("Data as of week", "Data per minggu")} {a.last_week} {L("of", "tahun")} {a.last_year} · NASA FIRMS MODIS {L("and", "dan")} VIIRS · {typeof window !== "undefined" ? window.location.href : ""}</p>
     </section>
   );
 }

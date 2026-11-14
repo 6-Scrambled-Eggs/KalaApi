@@ -45,7 +45,8 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
     ro?.observe(el.current);
     window.addEventListener("orientationchange", fit);
-    return () => { ro?.disconnect(); window.removeEventListener("orientationchange", fit); map.remove(); };
+    window.addEventListener("resize", fit);
+    return () => { ro?.disconnect(); window.removeEventListener("orientationchange", fit); window.removeEventListener("resize", fit); map.remove(); };
   }, [index]);
   return (
     <div className="mapWrap">

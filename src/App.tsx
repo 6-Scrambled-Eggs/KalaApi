@@ -32,7 +32,8 @@ export default function App() {
   const { path, params } = useHash();
   const t = useMemo(() => makeT(lang), [lang]);
   useEffect(() => { loadIndex().then(setIndex); }, []);
-  useEffect(() => { dateLocale.v = lang === "id" ? "id-ID" : "en-GB"; document.documentElement.lang = lang; localStorageSet("lang", lang); }, [lang]);
+  dateLocale.v = lang === "id" ? "id-ID" : "en-GB";
+  useEffect(() => { document.documentElement.lang = lang; localStorageSet("lang", lang); }, [lang]);
 
   const go = useCallback((p: string, q?: URLSearchParams) => { window.location.hash = p + (q && q.toString() ? `?${q}` : ""); }, []);
   const route = path[0] || "home";
@@ -80,7 +81,7 @@ export default function App() {
         )}
         </Suspense>
       </main>
-      <footer className="noprint">NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Built with AI assistance (Claude), disclosed on the project page.</footer>
+      <footer className="noprint">{lang === "id" ? "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Dibuat dengan bantuan AI (Claude), diungkapkan di halaman proyek." : "NASA Space Apps 2026 · Data: NASA FIRMS (MODIS, VIIRS), geoBoundaries · Built with AI assistance (Claude), disclosed on the project page."}</footer>
     </LangCtx.Provider>
   );
 }
