@@ -12,8 +12,8 @@ import numpy as np
 
 from config import REPO
 from geo_lib import load_admin, slug
-from harmonize_lib import (NSLOT, WPY, Y0, Y1, area_groups, area_series, build, calibrate, percentile_rank,
-                           periods)
+from harmonize_lib import (NSLOT, WPY, Y0, Y1, area_groups, area_series, backcast, boot_paths, build, calibrate,
+                           calibrate_power, percentile_rank, periods)
 
 PUB = REPO / "public" / "data"
 BASE = list(range(2001, 2026))  # baseline for anomalies (PRD: 2001-2025)
@@ -31,10 +31,15 @@ def main():
     D = build()
     print(f"slots: A0={D.A0} S0={D.S0} LAST={D.LAST}; peat known: {D.peat_known}; strata: {len(D.strata)}")
     train = np.arange(D.S0, D.LAST + 1)
-    k, kb = calibrate(D, train, boot=NBOOT)
+    k, kb = calibrate(D, train, boot=NBOOT)  # average V/M ratio per stratum (reported in the strata table)
+    b, alpha, bb, ab = calibrate_power(D, train, boot=NBOOT)  # the model that is actually used for the back-cast
+    b_lo, b_hi = np.quantile(bb, [0.05, 0.95])
+    print(f"power-law exponent b = {b:.3f} (90% interval {b_lo:.3f} to {b_hi:.3f})")
+    vhat = backcast(D, b, alpha)
+    bootp = boot_paths(D, bb, ab)
     lo_k, hi_k = np.nanquantile(kb, [0.05, 0.95], axis=1)
-    strata_tbl = [dict(stratum=a, peat=b, k=round(float(k[i]), 3), k_lo=round(float(lo_k[i]), 3),
-                       k_hi=round(float(hi_k[i]), 3)) for i, (a, b) in enumerate(D.strata)]
+    strata_tbl = [dict(stratum=a, peat=pt, k=round(float(k[i]), 3), k_lo=round(float(lo_k[i]), 3),
+                       k_hi=round(float(hi_k[i]), 3), alpha=round(float(alpha[i]), 4)) for i, (a, pt) in enumerate(D.strata)]
     for s in strata_tbl:
         print(s)
 
@@ -43,7 +48,7 @@ def main():
     index = []
     for level in ["nation", "province", "kabupaten"]:
         for aid, name, parent, idx in groups[level]:
-            ser = area_series(D, idx, k, kb)
+            ser = area_series(D, idx, vhat, bootp)
             h = ser["h"]
             Hm = h.reshape(-1, WPY)
             annual = np.nanmean(np.nansum(Hm[: len(BASE)], axis=1))
@@ -65,8 +70,8 @@ def main():
             pk = D.combos["peat"].to_numpy()[idx]
             split = {}
             if D.peat_known and (pk == "peat").any() and (pk == "mineral").any():
-                split["h_peat"] = r(area_series(D, idx[pk == "peat"], k)["h"])
-                split["h_min"] = r(area_series(D, idx[pk == "mineral"], k)["h"])
+                split["h_peat"] = r(area_series(D, idx[pk == "peat"], vhat)["h"])
+                split["h_min"] = r(area_series(D, idx[pk == "mineral"], vhat)["h"])
             # Fire radiative power (MW, sum of daily cell maxima), S-NPP era only.
             frp = np.full(NSLOT, np.nan)
             frp[D.S0 : D.LAST + 1] = D.frp["snpp"][idx].sum(0)[D.S0 : D.LAST + 1]
@@ -91,9 +96,10 @@ def main():
         weeks_per_year=WPY, last_complete_year=last_year, last_complete_week=last_w,
         viirs_first_slot=D.S0, aqua_first_slot=D.A0, peat_split=D.peat_known,
         baseline="2001-2025", sensitivity_baseline="2012-2025", n_boot=NBOOT, strata=strata_tbl,
+        model="power", exponent=dict(b=round(float(b), 3), lo=round(float(b_lo), 3), hi=round(float(b_hi), 3)),
         notes=["Week 52 covers the last 8-9 days of each year.",
                "Slots before the Aqua start use Terra scaled to Aqua per stratum.",
-               "Slots before the first full S-NPP week are back-cast; later slots are observed S-NPP VIIRS.",
+               "Slots before the first full S-NPP week are back-cast with V = alpha * M^b per stratum; later slots are observed S-NPP VIIRS.",
                "Peat split is off when no peat polygon file was available." if not D.peat_known else "Peat split on."],
     )
     (PUB / "meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")

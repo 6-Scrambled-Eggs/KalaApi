@@ -81,7 +81,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <Analog area={area} />
       <EnsoPanel area={area} enso={enso} oni={oni} />
       <h2>{t("calendar")}</h2>
-      <p className="note">One row per year, one column per 7-day block. Rows before 2012 are estimated from MODIS and shown with a pale overlay (yearly totals are typically within ±14%, quiet years about 17% too low). Click a row to compare that year below. {t("oniNote")}</p>
+      <p className="note">One row per year, one column per 7-day block. Rows before 2012 are estimated from MODIS and shown with a pale overlay (yearly totals are typically within ±10%, and 9 in 10 within ±30%). Click a row to compare that year below. {t("oniNote")}</p>
       <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
       <h2>{t("profile")}: {y}</h2>
       <Seasonal area={area} year={y} />

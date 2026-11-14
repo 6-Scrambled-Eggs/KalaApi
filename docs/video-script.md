@@ -14,10 +14,10 @@ Record at 1280x720 or larger, browser zoom 100%, language set to EN. Record the 
 | 24-30 | Story mode chart for Papua Selatan, 2026 line above 2015. Then cut to `#/brief/papua-selatan` (readiness window tile). | "Is 2026 worse than 2015? Not in all of Indonesia, but in South Papua and West Kalimantan, yes. And KalaApi tells BPBD when to be ready: a one-page brief for every area." |
 
 ## Facts behind each line (all from the app data, week 43 of 2026)
-- National fire-days, 2026 vs 2015, same weeks: 130,628 vs 171,995 (**76% of 2015**). FRP: 69%.
-- South Papua: 17,977 vs 15,484 (**116% of 2015**; about 4.5 times 2019).
-- West Kalimantan: 17,869 vs 15,915 (**112% of 2015**). 2026 flagged weeks: 3-5, 12, 13 and 43.
-- Central Kalimantan 67%, South Sumatra 43%, Riau 13% of 2015.
+- National fire-days, 2026 vs 2015, same weeks: 129,519 vs 171,995 (**75% of 2015**). FRP: 69%.
+- South Papua: 17,877 vs 15,484 (**115% of 2015**; about 4.5 times 2019).
+- West Kalimantan: 17,656 vs 15,915 (**111% of 2015**). 2026 flagged weeks: 3-5, 12, 13 and 43.
+- Central Kalimantan 66%, South Sumatra 42%, Riau 13% of 2015.
 - Fire-days are heat detections. They are not burned area. Do not say "hectares" in the video.
 
 ## Checks before you record

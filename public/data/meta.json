@@ -18,335 +18,388 @@
    "peat": "mineral",
    "k": 5.821,
    "k_lo": 5.36,
-   "k_hi": 6.493
+   "k_hi": 6.493,
+   "alpha": 8.1466
   },
   {
    "stratum": "Aceh",
    "peat": "peat",
    "k": 4.021,
    "k_lo": 3.644,
-   "k_hi": 4.665
+   "k_hi": 4.665,
+   "alpha": 5.2994
   },
   {
    "stratum": "Bangka Belitung",
    "peat": "mineral",
    "k": 4.029,
    "k_lo": 3.754,
-   "k_hi": 4.379
+   "k_hi": 4.379,
+   "alpha": 6.0631
   },
   {
    "stratum": "Bangka Belitung",
    "peat": "peat",
-   "k": 3.414,
-   "k_lo": 3.04,
-   "k_hi": 3.692
+   "k": 3.41,
+   "k_lo": 3.028,
+   "k_hi": 3.692,
+   "alpha": 4.1418
   },
   {
    "stratum": "Jambi",
    "peat": "mineral",
    "k": 3.508,
    "k_lo": 3.28,
-   "k_hi": 3.941
+   "k_hi": 3.941,
+   "alpha": 5.4935
   },
   {
    "stratum": "Jambi",
    "peat": "peat",
    "k": 3.123,
    "k_lo": 2.454,
-   "k_hi": 3.659
+   "k_hi": 3.659,
+   "alpha": 4.382
   },
   {
    "stratum": "Java-Bali",
    "peat": "mineral",
-   "k": 10.049,
-   "k_lo": 9.478,
-   "k_hi": 10.671
+   "k": 10.043,
+   "k_lo": 9.465,
+   "k_hi": 10.671,
+   "alpha": 14.6631
   },
   {
    "stratum": "Java-Bali",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Kalimantan Barat",
    "peat": "mineral",
    "k": 3.204,
    "k_lo": 3.011,
-   "k_hi": 3.45
+   "k_hi": 3.45,
+   "alpha": 6.3378
   },
   {
    "stratum": "Kalimantan Barat",
    "peat": "peat",
-   "k": 3.181,
-   "k_lo": 3.052,
-   "k_hi": 3.345
+   "k": 3.186,
+   "k_lo": 3.057,
+   "k_hi": 3.348,
+   "alpha": 5.1065
   },
   {
    "stratum": "Kalimantan Selatan",
    "peat": "mineral",
-   "k": 4.058,
-   "k_lo": 3.741,
-   "k_hi": 4.534
+   "k": 4.063,
+   "k_lo": 3.752,
+   "k_hi": 4.534,
+   "alpha": 6.864
   },
   {
    "stratum": "Kalimantan Selatan",
    "peat": "peat",
    "k": 3.812,
    "k_lo": 3.548,
-   "k_hi": 4.149
+   "k_hi": 4.149,
+   "alpha": 5.589
   },
   {
    "stratum": "Kalimantan Tengah",
    "peat": "mineral",
    "k": 3.127,
-   "k_lo": 2.998,
-   "k_hi": 3.286
+   "k_lo": 2.999,
+   "k_hi": 3.286,
+   "alpha": 5.7379
   },
   {
    "stratum": "Kalimantan Tengah",
    "peat": "peat",
-   "k": 3.152,
-   "k_lo": 2.993,
-   "k_hi": 3.308
+   "k": 3.153,
+   "k_lo": 2.994,
+   "k_hi": 3.308,
+   "alpha": 5.8912
   },
   {
    "stratum": "Kalimantan Timur",
    "peat": "mineral",
    "k": 3.398,
    "k_lo": 3.136,
-   "k_hi": 3.845
+   "k_hi": 3.845,
+   "alpha": 5.8642
   },
   {
    "stratum": "Kalimantan Timur",
    "peat": "peat",
    "k": 3.679,
    "k_lo": 3.403,
-   "k_hi": 4.164
+   "k_hi": 4.164,
+   "alpha": 5.031
   },
   {
    "stratum": "Kalimantan Utara",
    "peat": "mineral",
    "k": 3.816,
    "k_lo": 3.492,
-   "k_hi": 4.301
+   "k_hi": 4.301,
+   "alpha": 5.3273
   },
   {
    "stratum": "Kalimantan Utara",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Lampung",
    "peat": "mineral",
-   "k": 4.574,
-   "k_lo": 4.086,
-   "k_hi": 5.148
+   "k": 4.583,
+   "k_lo": 4.101,
+   "k_hi": 5.148,
+   "alpha": 6.6324
   },
   {
    "stratum": "Lampung",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 4.512
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 4.512,
+   "alpha": 5.2301
   },
   {
    "stratum": "Maluku",
    "peat": "mineral",
-   "k": 5.595,
-   "k_lo": 5.073,
-   "k_hi": 6.787
+   "k": 5.593,
+   "k_lo": 5.068,
+   "k_hi": 6.787,
+   "alpha": 8.6294
   },
   {
    "stratum": "Maluku",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Nusa Tenggara Barat",
    "peat": "mineral",
    "k": 9.342,
    "k_lo": 8.877,
-   "k_hi": 9.957
+   "k_hi": 9.957,
+   "alpha": 13.4893
   },
   {
    "stratum": "Nusa Tenggara Timur",
    "peat": "mineral",
    "k": 6.244,
    "k_lo": 6.04,
-   "k_hi": 6.5
+   "k_hi": 6.5,
+   "alpha": 10.2507
   },
   {
    "stratum": "Nusa Tenggara Timur",
    "peat": "unknown",
-   "k": 6.614,
-   "k_lo": 6.291,
-   "k_hi": 7.081
+   "k": 6.617,
+   "k_lo": 6.294,
+   "k_hi": 7.086,
+   "alpha": 8.9428
   },
   {
    "stratum": "Papua",
    "peat": "mineral",
    "k": 5.003,
    "k_lo": 4.226,
-   "k_hi": 6.585
+   "k_hi": 6.585,
+   "alpha": 7.2817
   },
   {
    "stratum": "Papua",
    "peat": "peat",
-   "k": 3.142,
+   "k": 3.143,
    "k_lo": 2.981,
-   "k_hi": 3.667
+   "k_hi": 3.667,
+   "alpha": 5.2301
   },
   {
    "stratum": "Papua Selatan",
    "peat": "mineral",
    "k": 3.525,
-   "k_lo": 3.323,
-   "k_hi": 3.809
+   "k_lo": 3.324,
+   "k_hi": 3.809,
+   "alpha": 6.4759
   },
   {
    "stratum": "Papua Selatan",
    "peat": "peat",
-   "k": 3.347,
-   "k_lo": 3.201,
-   "k_hi": 3.622
+   "k": 3.351,
+   "k_lo": 3.205,
+   "k_hi": 3.624,
+   "alpha": 5.3046
   },
   {
    "stratum": "Riau",
    "peat": "mineral",
    "k": 3.445,
    "k_lo": 3.31,
-   "k_hi": 3.707
+   "k_hi": 3.707,
+   "alpha": 5.4507
   },
   {
    "stratum": "Riau",
    "peat": "peat",
    "k": 2.546,
    "k_lo": 2.013,
-   "k_hi": 2.869
+   "k_hi": 2.869,
+   "alpha": 4.1511
   },
   {
    "stratum": "Sulawesi",
    "peat": "mineral",
    "k": 7.801,
    "k_lo": 7.146,
-   "k_hi": 8.946
+   "k_hi": 8.946,
+   "alpha": 11.0242
   },
   {
    "stratum": "Sulawesi",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Sulawesi Selatan",
    "peat": "mineral",
-   "k": 6.583,
-   "k_lo": 5.837,
-   "k_hi": 7.77
+   "k": 6.647,
+   "k_lo": 5.938,
+   "k_hi": 7.77,
+   "alpha": 9.4369
   },
   {
    "stratum": "Sulawesi Selatan",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Sulawesi Tengah",
    "peat": "mineral",
-   "k": 5.524,
-   "k_lo": 5.135,
-   "k_hi": 6.191
+   "k": 5.534,
+   "k_lo": 5.144,
+   "k_hi": 6.197,
+   "alpha": 8.243
   },
   {
    "stratum": "Sulawesi Tengah",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Sulawesi Tenggara",
    "peat": "mineral",
-   "k": 4.904,
-   "k_lo": 4.636,
-   "k_hi": 5.35
+   "k": 4.912,
+   "k_lo": 4.649,
+   "k_hi": 5.35,
+   "alpha": 7.4208
   },
   {
    "stratum": "Sulawesi Tenggara",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   },
   {
    "stratum": "Sumatera Barat",
    "peat": "mineral",
    "k": 5.05,
    "k_lo": 4.642,
-   "k_hi": 5.64
+   "k_hi": 5.64,
+   "alpha": 6.7124
   },
   {
    "stratum": "Sumatera Barat",
    "peat": "peat",
    "k": 4.237,
    "k_lo": 3.863,
-   "k_hi": 4.731
+   "k_hi": 4.731,
+   "alpha": 5.0976
   },
   {
    "stratum": "Sumatera Selatan",
    "peat": "mineral",
-   "k": 3.479,
-   "k_lo": 3.266,
-   "k_hi": 3.747
+   "k": 3.477,
+   "k_lo": 3.261,
+   "k_hi": 3.747,
+   "alpha": 6.05
   },
   {
    "stratum": "Sumatera Selatan",
    "peat": "peat",
-   "k": 3.059,
-   "k_lo": 2.695,
-   "k_hi": 3.303
+   "k": 3.061,
+   "k_lo": 2.699,
+   "k_hi": 3.303,
+   "alpha": 5.1895
   },
   {
    "stratum": "Sumatera Utara",
    "peat": "mineral",
    "k": 5.204,
    "k_lo": 4.823,
-   "k_hi": 5.83
+   "k_hi": 5.83,
+   "alpha": 7.5963
   },
   {
    "stratum": "Sumatera Utara",
    "peat": "peat",
    "k": 4.067,
-   "k_lo": 2.972,
-   "k_hi": 4.275
+   "k_lo": 2.975,
+   "k_hi": 4.275,
+   "alpha": 4.8696
   },
   {
    "stratum": "Sumatra",
    "peat": "mineral",
    "k": 5.365,
    "k_lo": 5.156,
-   "k_hi": 5.691
+   "k_hi": 5.691,
+   "alpha": 7.1367
   },
   {
    "stratum": "Sumatra",
    "peat": "peat",
-   "k": 3.142,
-   "k_lo": 2.972,
-   "k_hi": 3.271
+   "k": 3.143,
+   "k_lo": 2.975,
+   "k_hi": 3.271,
+   "alpha": 5.2301
   }
  ],
+ "model": "power",
+ "exponent": {
+  "b": 0.875,
+  "lo": 0.85,
+  "hi": 0.875
+ },
  "notes": [
   "Week 52 covers the last 8-9 days of each year.",
   "Slots before the Aqua start use Terra scaled to Aqua per stratum.",
-  "Slots before the first full S-NPP week are back-cast; later slots are observed S-NPP VIIRS.",
+  "Slots before the first full S-NPP week are back-cast with V = alpha * M^b per stratum; later slots are observed S-NPP VIIRS.",
   "Peat split on."
  ]
 }

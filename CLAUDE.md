@@ -45,11 +45,11 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 ## Done since the first build (14 Nov)
 - Peat split on (GFW 30 m tiles in `DATA/peat/`; step 04 reads `.tif` tiles). Peat-only and mineral-only toggles. V-1: national error +2.3% / +1.2%, 71% of province-years within 20% (77% without peat split).
 - ONI marker (step 07, `public/data/oni.json`), FRP in story mode, CSV/PNG export and copy-link, "vs last 10 years" tile, GitHub Pages deploy (`.github/workflows/deploy.yml`), `docs/video-script.md`, `docs/project-page.md`.
-- 2026 vs 2015 at week 43: nation 76% (fire-days), South Papua 116%, West Kalimantan 112%, Central Kalimantan 67%, South Sumatra 43%, Riau 13%.
+- 2026 vs 2015 at week 43: nation 75% (fire-days), South Papua 115%, West Kalimantan 111%, Central Kalimantan 66%, South Sumatra 42%, Riau 13%.
 
 ## Added 14 Nov evening (from the winning-factor research)
 - Readiness window, BPBD brief (`#/brief/<id>`, 1 A4 page), El Niño link (`pipeline/08_enso_signal.py` -> `public/data/enso.json`; panel + `#/enso` map), analog year. See `docs/WINNING-IDEAS.md` and `docs/BUILD-LOG.md`.
-- Honest numbers: 300 of 422 areas show a clear El Niño link, 41 weak, 81 none; only 5 El Niño years in 2001-2025; p not corrected for multiple tests. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
+- Honest numbers: 298 of 422 areas show a clear El Niño link, 37 weak, 87 none; only 5 El Niño years in 2001-2025; p not corrected for multiple tests. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
 
 - Compare view `#/compare/<a>/<b>`. Papers verified (Giglio 2016 RSE 178:31-41; Schroeder 2014 RSE 143:85-96).
 
@@ -65,3 +65,4 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - No live API calls in the demo path. Keep each area file under 2 MB.
 - Do not claim more than the data supports. Hotspots are heat detections, not area burned.
 - AI use must be disclosed on the project page. No NASA logos in AI-made content.
+- Back-cast model (14 Nov 2026): V = alpha_stratum * M^b, b=0.875 shared, Poisson fit (`calibrate_power` in `pipeline/harmonize_lib.py`). Replaced the fixed ratio (quiet years were 17% too low). Static-looking NRT cells are dropped in `build()`. Do not reintroduce "within ±14%" or "17% too low" text. Plan: `docs/PRD-v2.md`.

@@ -72,3 +72,5 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 - One row per commit. Put the short hash in backticks.
 - Say what changed, why, and how to check it.
 - Do not edit the history rows. Add new rows at the bottom of section 2.
+
+| _pending_ | Activity-dependent back-cast (V = a*M^b, b=0.875), static-NRT filter, new error numbers, PRD v2 | Quiet-year bias 17% -> about 4% in-sample; LOYO about 1% |

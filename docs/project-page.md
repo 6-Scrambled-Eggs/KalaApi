@@ -19,7 +19,7 @@ KalaApi joins 25 years of NASA MODIS and VIIRS hot spots into one comparable fir
 - peat-only and mineral-only views, an El Nino marker for each year, and CSV and PNG export;
 - a **readiness window**: the earliest, median and latest week the fire season started over 25 years, and a "be ready by" date;
 - a **one-page BPBD brief** (print or save as PDF, English and Bahasa Indonesia) with where the area stands now, the readiness window, the El Nino link and the limits of the numbers;
-- an **El Nino link** map and chart: for each province, whether years with El Nino (July-September ONI) are also years with more fire-days. 300 of 422 areas show a clear link, 41 a weak one and 81 none (only 5 El Nino years in 25; exploratory, not a forecast);
+- an **El Nino link** map and chart: for each province, whether years with El Nino (July-September ONI) are also years with more fire-days. 298 of 422 areas show a clear link, 37 a weak one and 87 none (only 5 El Nino years in 25; exploratory, not a forecast);
 - an **analog year**: the past year whose fire curve so far is closest to this year (a likeness, not a prediction).
 The interface is in English and Bahasa Indonesia.
 
@@ -27,9 +27,9 @@ The interface is in English and Bahasa Indonesia.
 
 **How we tested it.** We held out 2019 and 2023, calibrated without them, and predicted their VIIRS fire-days from MODIS. National annual error was +2.3% and +1.2%. 71% of province-years were within 20%. The median weekly correlation was 0.90. A reverse test (calibrate on 2018 and later, predict 2012-2017) gave a median weekly correlation of 0.94, but it under-predicts quiet years such as 2016 and 2017 by about 11%. The peat split lowers the national error a little and lowers the share of province-years within 20% (71% against 77% without the split), because some peat strata have few fire-days. The Method page in the app shows all checks.
 
-**What we found.** By week 43 of 2026, Indonesia has 76% of the fire-days that 2015 had at the same point. South Papua (116%) and West Kalimantan (112%) are already above 2015.
+**What we found.** By week 43 of 2026, Indonesia has 75% of the fire-days that 2015 had at the same point. South Papua (115%) and West Kalimantan (111%) are already above 2015.
 
-**Limits.** Hot spots are heat detections, not burned area. Before 2012 yearly province totals are typically within ±14% of observed VIIRS (9 in 10 within ±36%) and quiet years are about 17% too low; comparisons from 2012 on use observed VIIRS only. Clouds and haze hide fires. Quiet years are under-predicted before 2012. NRT files after July 2026 have no static-source flag. The peat map is a 30 m global product, not the official 1:50,000 national map.
+**Limits.** Hot spots are heat detections, not burned area. Before 2012 yearly province totals are typically within ±10% of observed VIIRS (9 in 10 within ±30%); the VIIRS/MODIS ratio falls as activity rises, so we fit V = α·M^b (b≈0.88) rather than a fixed ratio; comparisons from 2012 on use observed VIIRS only. Clouds and haze hide fires. NRT files after July 2026 carry no static-source flag, so we drop cells that look static (about 1% of NRT fire-days). The peat map is a 30 m global product, not the official 1:50,000 national map.
 
 ## Demo link
 [30-second video URL]

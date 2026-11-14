@@ -17,6 +17,10 @@ Y0, WPY, Y1 = 2001, 52, 2026
 NSLOT = (Y1 - Y0 + 1) * WPY
 PROV_MIN = 3000  # a province is its own stratum above this many Aqua fire-days on the overlap
 THIN = 500  # minimum Aqua fire-days on the overlap before a stratum is calibrated on its own
+NRT_START = pd.Timestamp("2026-08-01")  # archive files end 2026-07-31; NRT files (no vegetation-fire type flag) start here
+STATIC_FRAC = 0.30  # NRT cell is "static-like" if it has detections on at least this share of NRT days ...
+STATIC_ARCH_PER_YEAR = 5  # ... and had fewer than this many fire-days a year in the archive (2013 onward)
+B_GRID = np.round(np.arange(0.60, 1.1001, 0.025), 3)  # candidate exponents of the power-law ratio V = a * M^b
 
 
 def slot_of(date: pd.Series) -> np.ndarray:
@@ -28,6 +32,28 @@ class Data:
     pass
 
 
+def drop_static_nrt(cd: pd.DataFrame, snpp_end) -> pd.DataFrame:
+    """NRT files have no 'type' column, so static land sources (flares, industry, vents) are not filtered there.
+    Drop NRT rows of cells that look static: detections on >= STATIC_FRAC of the NRT days, and almost no
+    archive fire-days. Offshore sources are already dropped later because they fall outside the admin boundaries."""
+    sn = cd[cd["sensor"].astype(str) == "snpp"]
+    n_days = (snpp_end - NRT_START).days + 1
+    if n_days < 20:
+        return cd
+    nrt = sn[sn["date"] >= NRT_START].groupby(["cx", "cy"])["date"].nunique()
+    arch = sn[(sn["date"] >= "2013-01-01") & (sn["date"] < NRT_START)].groupby(["cx", "cy"])["date"].nunique()
+    years = (NRT_START - pd.Timestamp("2013-01-01")).days / 365.25
+    cand = nrt[nrt >= STATIC_FRAC * n_days]
+    flagged = [c for c in cand.index if arch.get(c, 0) / years < STATIC_ARCH_PER_YEAR]
+    if not flagged:
+        return cd
+    key = pd.MultiIndex.from_frame(cd[["cx", "cy"]])
+    drop = key.isin(flagged) & (cd["date"].to_numpy() >= NRT_START.to_datetime64())
+    print(f"static-source filter: {len(flagged)} cells flagged, {int(drop.sum())} NRT cell-day rows dropped "
+          f"({100 * drop.mean():.2f}% of all rows)")
+    return cd[~drop]
+
+
 def build() -> Data:
     cd = pd.read_parquet(OUT_DIR / "cell_days.parquet")
     cells = pd.read_parquet(OUT_DIR / "cells.parquet")
@@ -36,6 +62,7 @@ def build() -> Data:
     snpp_start = cd.loc[cd["sensor"].astype(str) == "snpp", "date"].min()
     cd = cd.merge(cells, on=["cx", "cy"], how="inner")
     cd = cd[cd["date"].dt.year >= Y0]
+    cd = drop_static_nrt(cd, snpp_end)
     cd["slot"] = slot_of(cd["date"])
     cd["sensor"] = cd["sensor"].astype(str)
     g = cd.groupby(["kab_id", "peat", "sensor", "slot"], as_index=False).agg(fd=("n", "size"), cnt=("n", "sum"), frp=("max_frp", "sum"))
@@ -89,6 +116,7 @@ def build() -> Data:
     D.meff = D.fd["aqua"].copy()
     pre = np.arange(NSLOT) < D.A0
     D.meff[:, pre] = D.fd["terra"][:, pre] * kta[D.sidx][:, None]
+    D.Ms_all = strata_sum(D, D.meff)  # stratum weekly MODIS-equivalent fire-days, all slots
     return D
 
 
@@ -127,6 +155,63 @@ def calibrate(D, train_slots, boot=0, seed=0):
     return k, kb
 
 
+def calibrate_power(D, train_slots, boot=0, seed=0):
+    """Activity-dependent ratio: stratum weekly V_hat = alpha_s * M_s^b, one exponent b shared by all strata.
+    Poisson-type fit (alpha_s matches the stratum total of V; b minimises the deviance). Thin strata share alpha
+    within their peat class. Returns (b, alpha[ns]); with boot also (b_draws[boot], alpha_draws[ns, boot]),
+    drawn by resampling YEARS."""
+    train = np.asarray(train_slots)
+    Ms = strata_sum(D, D.fd["aqua"])[:, train]
+    Vs = strata_sum(D, D.fd["snpp"])[:, train]
+    peat = np.array([p for _, p in D.strata])
+    thin = Ms.sum(1) < THIN
+    years = (train // WPY) + Y0
+    uy = np.unique(years)
+    pos = Ms > 0
+    logM = np.where(pos, np.log(np.maximum(Ms, 1)), 0.0)
+    cols = [years == y for y in uy]
+    SV = np.stack([Vs[:, c].sum(1) for c in cols], 1)
+    SVp = np.stack([(Vs * pos)[:, c].sum(1) for c in cols], 1)
+    SVlogM = np.stack([(Vs * logM)[:, c].sum(1) for c in cols], 1)
+    SMb = np.stack([np.stack([(Ms ** b)[:, c].sum(1) for c in cols], 1) for b in B_GRID], 0)  # [nb, ns, ny]
+
+    def fit(W):  # W: [ny, nd] year weights (columns = draws)
+        sv, svp, svl, smb = SV @ W, SVp @ W, SVlogM @ W, np.einsum("bsy,yd->bsd", SMb, W)
+        alpha = sv[None] / np.maximum(smb, 1e-9)
+        for p in np.unique(peat):
+            sel = thin & (peat == p)
+            if sel.any():
+                alpha[:, sel] = (sv[sel].sum(0)[None] / np.maximum(smb[:, sel].sum(1), 1e-9))[:, None, :]
+        use = (~thin)[None, :, None] & (sv[None] > 0) & (smb > 1e-9)
+        dev = np.where(use, -svp[None] * np.log(np.maximum(alpha, 1e-12)) - B_GRID[:, None, None] * svl[None]
+                       + alpha * smb - svp[None], 0).sum(1)
+        ib = dev.argmin(0)
+        return B_GRID[ib], np.take_along_axis(alpha, ib[None, None, :], 0)[0]
+
+    b, alpha = fit(np.ones((len(uy), 1)))
+    if not boot:
+        return float(b[0]), alpha[:, 0]
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(uy), size=(boot, len(uy)))
+    W = np.stack([np.bincount(i, minlength=len(uy)) for i in idx], 1).astype(float)
+    bb, ab = fit(W)
+    return float(b[0]), alpha[:, 0], bb, ab
+
+
+def backcast(D, b, alpha):
+    """VIIRS-equivalent fire-days for every combo and slot: stratum-level alpha*M^b, shared out to the combos of
+    the stratum in proportion to their own MODIS-equivalent fire-days (so areas add up to their stratum)."""
+    Vs = alpha[:, None] * D.Ms_all ** b
+    share = D.meff / np.maximum(D.Ms_all[D.sidx], 1e-12)
+    return share * Vs[D.sidx]
+
+
+def boot_paths(D, bb, ab):
+    """Bootstrap back-cast paths per stratum for the slots before the first full VIIRS week: [ns, boot, S0] float32."""
+    M0 = D.Ms_all[:, : D.S0]
+    return (ab[:, :, None] * M0[:, None, :] ** bb[None, :, None]).astype(np.float32)
+
+
 def area_groups(D):
     """level -> list of (id, name, parent, combo indices)."""
     from geo_lib import slug
@@ -145,25 +230,23 @@ def area_groups(D):
     return out
 
 
-def area_series(D, idx, k, kb=None):
-    """Weekly series for one area. Returns dict of arrays of length NSLOT (NaN where not available)."""
+def area_series(D, idx, vhat, bootp=None):
+    """Weekly series for one area. Returns dict of arrays of length NSLOT (NaN where not available).
+    vhat: back-cast array from backcast(); bootp: bootstrap paths from boot_paths() (for the 90% band)."""
     nan = np.full(NSLOT, np.nan)
     h, chk, lo, hi = nan.copy(), nan.copy(), nan.copy(), nan.copy()
-    sidx = D.sidx[idx]
-    back = np.zeros(NSLOT)
-    Hb = None
-    for s in np.unique(sidx):
-        mem = idx[sidx == s]
-        Ms = D.meff[mem].sum(0)
-        back += k[s] * Ms
-        if kb is not None:
-            part = kb[s][:, None] * Ms[None, : D.S0]
-            Hb = part if Hb is None else Hb + part
+    back = vhat[idx].sum(0)
     obs = D.fd["snpp"][idx].sum(0)
     h[: D.S0] = back[: D.S0]
     h[D.S0 : D.LAST + 1] = obs[D.S0 : D.LAST + 1]
     chk[D.S0 : D.LAST + 1] = back[D.S0 : D.LAST + 1]
-    if Hb is not None:
+    if bootp is not None:
+        sidx = D.sidx[idx]
+        Hb = np.zeros((bootp.shape[1], D.S0), dtype=np.float32)
+        for s in np.unique(sidx):
+            mem = idx[sidx == s]
+            share = D.meff[mem].sum(0)[: D.S0] / np.maximum(D.Ms_all[s, : D.S0], 1e-12)
+            Hb += share[None, :].astype(np.float32) * bootp[s]
         lo[: D.S0], hi[: D.S0] = np.quantile(Hb, [0.05, 0.95], axis=0)
         lo[D.S0 : D.LAST + 1] = hi[D.S0 : D.LAST + 1] = obs[D.S0 : D.LAST + 1]
     m = D.fd["aqua"][idx].sum(0).astype(float)

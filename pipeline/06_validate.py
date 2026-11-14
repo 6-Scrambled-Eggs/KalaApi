@@ -15,22 +15,20 @@ import json
 import numpy as np
 
 from config import REPO
-from harmonize_lib import WPY, Y0, area_groups, build, calibrate, periods
+from harmonize_lib import WPY, Y0, area_groups, backcast, build, calibrate, calibrate_power, periods
 
 PUB = REPO / "public" / "data"
 
 
-def predict(D, idx, k, slots):
-    out = np.zeros(len(slots))
-    sidx = D.sidx[idx]
-    for s in np.unique(sidx):
-        out += k[s] * D.meff[idx[sidx == s]][:, slots].sum(0)
-    return out
+def predict(D, idx, model, slots):
+    """model = (b, alpha): stratum-level alpha*M^b, shared out to combos by their MODIS-equivalent share."""
+    b, alpha = model
+    return backcast(D, b, alpha)[idx][:, slots].sum(0)
 
 
 def holdout(D, groups, train, test_years, label):
     test = np.array([s for s in range(D.S0, D.LAST + 1) if (s // WPY + Y0) in test_years])
-    k = calibrate(D, train)
+    k = calibrate_power(D, train)
     rows = []
     for aid, name, _, idx in groups["province"]:
         obs = D.fd["snpp"][idx][:, test].sum(0)
