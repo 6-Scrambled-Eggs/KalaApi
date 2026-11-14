@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Area, AreaIndex, Meta, Validation, loadArea, loadMeta, loadValidation, matrix, weekLabel } from "./data";
+import { Area, AreaIndex, HaCheck, Meta, Validation, loadArea, loadHaCheck, loadMeta, loadValidation, matrix, weekLabel } from "./data";
 
 function Three({ index }: { index: AreaIndex[] }) {
   const [id, setId] = useState("kalimantan-tengah");
@@ -27,7 +27,8 @@ function Three({ index }: { index: AreaIndex[] }) {
 export default function Method({ index }: { index: AreaIndex[] }) {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [val, setVal] = useState<Validation | null>(null);
-  useEffect(() => { loadMeta().then(setMeta); loadValidation().then(setVal).catch(() => setVal(null)); }, []);
+  const [ha, setHa] = useState<HaCheck | null>(null);
+  useEffect(() => { loadMeta().then(setMeta); loadValidation().then(setVal).catch(() => setVal(null)); loadHaCheck().then(setHa).catch(() => setHa(null)); }, []);
   const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
   const errs = (h: Validation["V1_holdout"]) => Object.entries(h.national_err_pct).map(([y, e]) => `${y}: ${e > 0 ? "+" : ""}${e.toFixed(1)}%`).join(", ");
   return (
@@ -39,8 +40,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
       <ol>
         <li>Keep vegetation-fire detections, daytime passes only (afternoon orbit: Aqua MODIS, S-NPP VIIRS). Local solar date. MODIS confidence ≥ 30, VIIRS nominal or high.</li>
         <li>Snap to 0.05° cells (about 5.5 km). A fire-day is one cell on one day with at least one detection.</li>
-        <li>For each stratum, the ratio k = VIIRS fire-days ÷ Aqua MODIS fire-days on the overlap. A stratum is a province, or its island group when the province has too few fire-days.</li>
-        <li>Back-cast 2002–2011 as k × Aqua MODIS fire-days. Before July 2002 Aqua did not exist, so Terra is scaled to Aqua first.</li>
+        <li>For each stratum, fit weekly VIIRS fire-days V = α × M<sup>b</sup>, where M is Aqua MODIS fire-days on the overlap. VIIRS sees small fires that MODIS misses, so the VIIRS ÷ MODIS ratio falls as fire activity rises. One shared exponent b (about 0.88) captures this; α makes each stratum total match. A stratum is a province, or its island group when the province has too few fire-days. The average ratio k below is a summary only.</li>
+        <li>Back-cast 2002–2011 as α × M<sup>b</sup>, shared out to areas in proportion to their MODIS fire-days. Before July 2002 Aqua did not exist, so Terra is scaled to Aqua first.</li>
         <li>The 90% band comes from 1,000 bootstrap draws that resample years. It shows the uncertainty of the ratio only. The real error is larger: see Limits.</li>
         <li>From 2012 the series is the observed S-NPP VIIRS count.</li>
       </ol>
@@ -51,7 +52,7 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <li><b>Reverse-time holdout</b> (calibrated on 2018–2026, predicting 2012–2017): national annual error {errs(val.V6_reverse)}; {pct(val.V6_reverse.share_within_20pct)} within ±20%; median weekly r {val.V6_reverse.median_weekly_r.toFixed(2)}. Quiet years are under-predicted, so back-cast bands for quiet years are likely too narrow.</li>
           <li><b>Known events</b>: {Object.entries(val.V5_known_events).map(([k, v]) => `${k}: top weekly percentile ${v.max_pct.toFixed(0)}`).join("; ")}.</li>
           <li><b>Small areas</b>: {val.V2_small_areas.low_data_areas} of {val.V2_small_areas.total_areas} areas have fewer than 50 fire-days a year and carry a low-data note.</li>
-          <li><b>Burned-area cross-check (MCD64A1)</b>: {val.V7_burned_area.status}. {val.V7_burned_area.reason}.</li>
+          {ha && <li><b>Official burned area (national, 2015–2025)</b>: our yearly fire-days rank the years like official burned hectares do (Spearman rho {ha.spearman_rho.toFixed(2)}, n={ha.n}, permutation p&lt;0.001). The hectares come from SiPongi as reproduced by GoodStats, a secondary copy. Official hectares are a soft target: one study found the 2019 official figure far below Sentinel-2 mapping. Fire-days are not hectares. A province-level check with MCD64A1 is still open.</li>}
           {!val.V3_peat_available && <li><b>Peat vs mineral split</b>: not available yet. No peat polygon file was used in this build.</li>}
           {val.V3_peat_available && <li><b>Peat vs mineral split</b>: on. Peat map: Global Forest Watch peatlands tiles (30 m). A 5 km cell counts as peat when at least half of its pixels are peat. In our tests the split lowers the national annual error a little (2.3% and 1.2% against 2.8% and 1.6% without it). It also lowers the share of province-years within 20% (71% against 77%), because some peat strata have few fire-days. We keep it because it shows a real difference between peat and mineral soil. Read small peat areas with care.</li>}
           <li><b>Fire radiative power (FRP)</b>: shown in story mode and in the CSV from 2012 onward only. It is the VIIRS value, summed from the daily maximum in each cell. It is not harmonized with MODIS and it is not burned area.</li>
@@ -76,8 +77,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
         <li>Fire-days soften but do not remove the sensor difference. That is why we calibrate.</li>
         <li>Rows before 2012 are estimates. The 2001–2011 baseline years are estimates too. We checked the back-cast against observed VIIRS for 2013–2025 (<code>pipeline/09_backcast_error.py</code>): a yearly province total is typically within ±10% (half of province-years) and within ±30% for 9 in 10. The ratio of VIIRS to MODIS falls as fire activity rises (VIIRS sees small fires MODIS misses), so the back-cast uses V = α·M^b with b≈0.88 instead of one fixed ratio; this removed an earlier bias that made quiet years about 17% too low (now about 4% in-sample, about 1% in leave-one-year-out tests).</li>
         <li>The "vs last 10 years" tile and all comparisons between 2012 and 2026 use observed VIIRS only, so they do not depend on the back-cast.</li>
-        <li>In the near-real-time months (1 Aug – 2 Nov 2026), cells that look like static sources (detections on at least 30% of days and almost no past fire-days) are about 1% of national fire-days and at most 5% in one province (Maluku Utara). They are not removed. They do not change the South Papua and West Kalimantan comparison with 2015 by more than about 1%.</li>
-        <li>Near-real-time files (after July–August 2026) have no vegetation-fire type flag, so static and offshore sources are not filtered there.</li>
+                <li>Near-real-time files (after July–August 2026) have no vegetation-fire type flag. We drop cells that look static (detections on at least 30% of days, almost no past fire-days). Other static sources may remain.</li>
+        <li>S-NPP VIIRS stopped delivering data on 2 Nov 2026, which is where our series ends. NOAA-20 and NOAA-21 continue it. We have not merged them: that needs its own calibration. NASA plans to retire Terra and Aqua MODIS in 2027, so a calibrated bridge matters now.</li>
       </ul>
       <h2>Sources</h2>
       <ul>

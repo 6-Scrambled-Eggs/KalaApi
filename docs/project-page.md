@@ -29,6 +29,12 @@ The interface is in English and Bahasa Indonesia.
 
 **What we found.** By week 43 of 2026, Indonesia has 75% of the fire-days that 2015 had at the same point. South Papua (115%) and West Kalimantan (111%) are already above 2015.
 
+**Validation.** Yearly national fire-days from our harmonized series rank 2015-2025 the same way official burned hectares do (Spearman rho 0.90, n=11, permutation p<0.001; hectares from SiPongi as reproduced by GoodStats). Official hectares are a soft target and fire-days are not hectares. A province-level check against MCD64A1 burned area is the next step.
+
+**Why now.** S-NPP VIIRS stopped delivering data on 2 Nov 2026, and NASA plans to retire Terra and Aqua MODIS in 2027. A calibrated bridge between the sensors keeps 25 years of fire history usable.
+
+**Challenge checklist.** Web app: yes. Calendar view: yes. Current month vs historical median: yes (weekly percentile vs 2001-2025). Accessible colour ramp: yes (single-hue yellow-to-brown sequential scale). Anomalies: yes. CSV download: yes. Area picker: yes (map, search, kabupaten level).
+
 **Limits.** Hot spots are heat detections, not burned area. Before 2012 yearly province totals are typically within ±10% of observed VIIRS (9 in 10 within ±30%); the VIIRS/MODIS ratio falls as activity rises, so we fit V = α·M^b (b≈0.88) rather than a fixed ratio; comparisons from 2012 on use observed VIIRS only. Clouds and haze hide fires. NRT files after July 2026 carry no static-source flag, so we drop cells that look static (about 1% of NRT fire-days). The peat map is a 30 m global product, not the official 1:50,000 national map.
 
 ## Demo link
@@ -55,8 +61,13 @@ We built KalaApi with AI assistance. Claude (Anthropic) helped write the Python 
 3. NASA FIRMS (part of NASA ESDIS, LANCE): https://firms.modaps.eosdis.nasa.gov/ . We acknowledge the use of data from NASA LANCE FIRMS. Check the FIRMS site for any newer "how to cite" wording before you submit.
 4. geoBoundaries: https://www.geoboundaries.org/
 5. Global Forest Watch, Global Peatlands: https://data.globalforestwatch.org/
-6. NOAA CPC, Oceanic Nino Index: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php
-7. Verify the BRIN and SiPongi claims before you cite them (see below).
+6. NOAA CPC, Oceanic Nino Index: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/ (ONI v6)
+7. Giglio, L., et al. (2025). VNP64A1 versus MCD64A1 burned area comparison. Remote Sensing of Environment (Elsevier S0034425725004109). Advises statistical inter-calibration instead of simple concatenation. Check the exact title and volume before you cite.
+8. Fu, Y., et al. (2020). MODIS (MYD14) and VIIRS (VNP14IMG) active fire comparison, Northeast Asia. Remote Sensing, 12(18), 2870. https://doi.org/10.3390/rs12182870
+9. Gaveau, D. L. A., et al. (2021). Indonesian fire burned-area dataset for 2019. Earth System Science Data, 13, 5353. https://doi.org/10.5194/essd-13-5353-2021
+10. NASA Earthdata: MCD64A1 v6.1 and VNP64A1 v2 burned-area products (validation route, not yet used) and FIRMS notice that S-NPP VIIRS production ceased 2 Nov 2026. https://www.earthdata.nasa.gov/data/tools/firms/faq
+11. SiPongi national burned area 2015-2025 as reproduced by GoodStats: https://data.goodstats.id/statistic/tren-luas-karhutla-di-indonesia-per-maret-2026-hampir-seluas-jakarta-I0vpd
+12. Verify the BRIN and SiPongi claims before you cite them (see below).
 
 ## Claims your teammate must check before you submit
 - "SiPongi recorded 202,004 ha burned from January to July 2026, 69% more than 2025." Sources found: Kompas, Katadata. Check on SiPongi+.

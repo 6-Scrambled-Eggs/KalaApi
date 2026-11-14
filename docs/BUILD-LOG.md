@@ -74,3 +74,4 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 - Do not edit the history rows. Add new rows at the bottom of section 2.
 
 | _pending_ | Activity-dependent back-cast (V = a*M^b, b=0.875), static-NRT filter, new error numbers, PRD v2 | Quiet-year bias 17% -> about 4% in-sample; LOYO about 1% |
+| _pending_ | Burned-area validation (pipeline/10, validation/sipongi_national_ha.csv, validation_ha.json), Method page rewritten for V=a*M^b, S-NPP end note, project page: validation, why-now, challenge checklist, more references | Spearman rho 0.90 (n=11, p<0.001) of yearly fire-days vs SiPongi hectares. Open #/method and check the new bullet. |
