@@ -41,7 +41,11 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
       });
       map.on("mouseleave", "fill", () => { map.getCanvas().style.cursor = ""; setTip(""); });
     });
-    return () => map.remove();
+    const fit = () => { map.resize(); map.fitBounds([[94, -11.5], [141.5, 6.5]], { padding: 12, duration: 0 }); };
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
+    ro?.observe(el.current);
+    window.addEventListener("orientationchange", fit);
+    return () => { ro?.disconnect(); window.removeEventListener("orientationchange", fit); map.remove(); };
   }, [index]);
   return (
     <div className="mapWrap">
