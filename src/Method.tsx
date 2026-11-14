@@ -41,7 +41,7 @@ export default function Method({ index }: { index: AreaIndex[] }) {
         <li>Snap to 0.05° cells (about 5.5 km). A fire-day is one cell on one day with at least one detection.</li>
         <li>For each stratum, the ratio k = VIIRS fire-days ÷ Aqua MODIS fire-days on the overlap. A stratum is a province, or its island group when the province has too few fire-days.</li>
         <li>Back-cast 2002–2011 as k × Aqua MODIS fire-days. Before July 2002 Aqua did not exist, so Terra is scaled to Aqua first.</li>
-        <li>The 90% band comes from 1,000 bootstrap draws that resample years.</li>
+        <li>The 90% band comes from 1,000 bootstrap draws that resample years. It shows the uncertainty of the ratio only. The real error is larger: see Limits.</li>
         <li>From 2012 the series is the observed S-NPP VIIRS count.</li>
       </ol>
       <h2>Validation</h2>
@@ -74,7 +74,9 @@ export default function Method({ index }: { index: AreaIndex[] }) {
       <ul>
         <li>Hotspots are heat detections, not area burned. Cloud and thick haze can hide fires, so the worst weeks may be undercounted.</li>
         <li>Fire-days soften but do not remove the sensor difference. That is why we calibrate.</li>
-        <li>Rows before 2012 are estimates. The 2001–2011 baseline years are estimates too.</li>
+        <li>Rows before 2012 are estimates. The 2001–2011 baseline years are estimates too. We checked the back-cast against observed VIIRS for 2013–2025 (<code>pipeline/09_backcast_error.py</code>): a yearly province total is typically within ±14% (half of province-years) and within ±36% for 9 in 10. Quiet years are too low by about 17% (busy years by about 2%).</li>
+        <li>The "vs last 10 years" tile and all comparisons between 2012 and 2026 use observed VIIRS only, so they do not depend on the back-cast.</li>
+        <li>In the near-real-time months (1 Aug – 2 Nov 2026), cells that look like static sources (detections on at least 30% of days and almost no past fire-days) are about 1% of national fire-days and at most 5% in one province (Maluku Utara). They are not removed. They do not change the South Papua and West Kalimantan comparison with 2015 by more than about 1%.</li>
         <li>Near-real-time files (after July–August 2026) have no vegetation-fire type flag, so static and offshore sources are not filtered there.</li>
       </ul>
       <h2>Sources</h2>

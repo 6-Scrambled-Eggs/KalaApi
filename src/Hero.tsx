@@ -27,7 +27,7 @@ export default function Hero({ areaId, index, onPick }: { areaId: string; index:
     const base = { grid: { left: 60, right: 16, top: 30, bottom: 30 }, xAxis: { type: "value", min: area.start_year, max: area.last_year + 1, axisLabel: { formatter: (v: number) => String(v) } }, yAxis: { type: "value" }, tooltip: { trigger: "axis", valueFormatter: (v: number) => String(v) } };
     const rawOpt = { ...base, title: { text: "Raw hotspot counts, stitched (MODIS to 2011, VIIRS from 2012)", textStyle: { fontSize: 13 } },
       series: [{ type: "line", showSymbol: false, data: pts(area.cnt), lineStyle: { color: "#c0392b", width: 1.4 }, markLine: mk }] };
-    const hOpt = { ...base, title: { text: "Harmonized fire-days (VIIRS-equivalent, 90% band to 2011)", textStyle: { fontSize: 13 } },
+    const hOpt = { ...base, title: { text: "Harmonized fire-days (VIIRS-equivalent, 90% band to 2011, ratio uncertainty only)", textStyle: { fontSize: 13 } },
       series: [
         { type: "line", showSymbol: false, data: pts(area.hi), lineStyle: { opacity: 0 }, areaStyle: { color: "#2e86c1", opacity: 0.2 }, z: 1, tooltip: { show: false } },
         { type: "line", showSymbol: false, data: pts(area.lo), lineStyle: { opacity: 0 }, areaStyle: { color: "#fff", opacity: 1 }, z: 2, tooltip: { show: false } },

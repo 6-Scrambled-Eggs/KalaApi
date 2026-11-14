@@ -29,7 +29,7 @@ The interface is in English and Bahasa Indonesia.
 
 **What we found.** By week 43 of 2026, Indonesia has 76% of the fire-days that 2015 had at the same point. South Papua (116%) and West Kalimantan (112%) are already above 2015.
 
-**Limits.** Hot spots are heat detections, not burned area. Clouds and haze hide fires. Quiet years are under-predicted before 2012. NRT files after July 2026 have no static-source flag. The peat map is a 30 m global product, not the official 1:50,000 national map.
+**Limits.** Hot spots are heat detections, not burned area. Before 2012 yearly province totals are typically within ±14% of observed VIIRS (9 in 10 within ±36%) and quiet years are about 17% too low; comparisons from 2012 on use observed VIIRS only. Clouds and haze hide fires. Quiet years are under-predicted before 2012. NRT files after July 2026 have no static-source flag. The peat map is a 30 m global product, not the official 1:50,000 national map.
 
 ## Demo link
 [30-second video URL]

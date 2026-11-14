@@ -60,7 +60,7 @@ export default function Brief({ id }: { id: string }) {
       <h2>{L ? "Batas angka ini" : "Limits of these numbers"}</h2>
       <ol>
         <li>{L ? "Titik panas menunjukkan panas, bukan luas terbakar. Awan dan asap dapat menyembunyikan api." : "Hotspots show heat, not area burned. Cloud and haze can hide fires."}</li>
-        <li>{L ? "Tahun sebelum 2012 diperkirakan dari MODIS dan punya ketidakpastian." : "Years before 2012 are estimated from MODIS and carry uncertainty."}</li>
+        <li>{L ? "Tahun sebelum 2012 diperkirakan dari MODIS: total tahunan biasanya dalam ±14%, tahun sepi sekitar 17% terlalu rendah." : "Years before 2012 are estimated from MODIS: yearly totals are typically within ±14%, and quiet years are about 17% too low."}</li>
         <li>{a.low_data ? (L ? "Wilayah ini punya sedikit api pada tahun rata-rata. Baca persentil dengan hati-hati." : "This area has few fires in an average year. Read the percentiles with care.") : (L ? "Persentil membandingkan tiap minggu dengan minggu yang sama 2001–2025." : "Percentiles compare each week with the same week in 2001–2025.")}</li>
         <li>{L ? "Jendela kesiapsiagaan dan kaitan El Niño adalah gambaran sejarah, bukan prakiraan." : "The readiness window and the El Niño link describe history. They are not forecasts."}</li>
       </ol>
