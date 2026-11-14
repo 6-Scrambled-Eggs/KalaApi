@@ -66,3 +66,4 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - Do not claim more than the data supports. Hotspots are heat detections, not area burned.
 - AI use must be disclosed on the project page. No NASA logos in AI-made content.
 - Back-cast model (14 Nov 2026): V = alpha_stratum * M^b, b=0.875 shared, Poisson fit (`calibrate_power` in `pipeline/harmonize_lib.py`). Replaced the fixed ratio (quiet years were 17% too low). Static-looking NRT cells are dropped in `build()`. Do not reintroduce "within ±14%" or "17% too low" text. Plan: `docs/PRD-v2.md`.
+- Live strip (14 Nov 2026): `pipeline/11_live_fire.py` runs in the deploy workflow with secret FIRMS_MAP_KEY and writes public/data/live.json (gitignored). It is separate from the calibrated series. Never print or commit the key; local .env is gitignored. The sandbox cannot reach the FIRMS API, so the script was only self-tested with fake rows (`--selftest`; delete the live.json it writes).

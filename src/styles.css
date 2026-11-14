@@ -50,3 +50,5 @@ table { border-collapse:collapse; width:100%; font-size:14px; margin:8px 0; } th
 .cmp select { max-width:100%; }
 .cmp table { table-layout:fixed; }
 .cmp th, .cmp td { overflow-wrap:anywhere; }
+.live { margin:16px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:#fffaf3; }
+.live h2 { margin:0 0 4px; font-size:18px; }

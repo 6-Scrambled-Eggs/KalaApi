@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"  # refresh the live strip every 6 hours
 
 permissions:
   contents: read
@@ -23,6 +25,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Live strip from NASA FIRMS (skipped if the secret is missing or the API fails)
+        env:
+          FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
+        run: |
+          pip install shapely
+          python pipeline/11_live_fire.py || true
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3

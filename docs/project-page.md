@@ -23,9 +23,9 @@ KalaApi joins 25 years of NASA MODIS and VIIRS hot spots into one comparable fir
 - an **analog year**: the past year whose fire curve so far is closest to this year (a likeness, not a prediction).
 The interface is in English and Bahasa Indonesia.
 
-**How the harmonization works.** We count fire-days: one 0.05-degree cell on one day with at least one daytime detection. For each stratum (province or island group, split by peat and mineral soil) we measure the ratio k between VIIRS fire-days and Aqua MODIS fire-days on the years when both exist (2012-2026). Before 2012 we estimate VIIRS-equivalent fire-days as k times the MODIS fire-days (Terra scaled to Aqua before mid-2002). From 2012 the series is the observed VIIRS series. A 90% band comes from 1,000 bootstrap draws over years.
+**How the harmonization works.** We count fire-days: one 0.05-degree cell on one day with at least one daytime detection. VIIRS sees small fires that MODIS misses, so the VIIRS-to-MODIS ratio falls as fire activity rises. For each stratum (province or island group, split by peat and mineral soil) we fit weekly VIIRS fire-days as alpha times MODIS fire-days to the power b, using the years when both sensors exist (2012-2026). One shared exponent b (about 0.88) captures the activity effect, and alpha makes each stratum total match. Before 2012 we back-cast VIIRS-equivalent fire-days with this fit (Terra scaled to Aqua before mid-2002). From 2012 the series is the observed VIIRS series. A 90% band comes from 1,000 bootstrap draws over years.
 
-**How we tested it.** We held out 2019 and 2023, calibrated without them, and predicted their VIIRS fire-days from MODIS. National annual error was +2.3% and +1.2%. 71% of province-years were within 20%. The median weekly correlation was 0.90. A reverse test (calibrate on 2018 and later, predict 2012-2017) gave a median weekly correlation of 0.94, but it under-predicts quiet years such as 2016 and 2017 by about 11%. The peat split lowers the national error a little and lowers the share of province-years within 20% (71% against 77% without the split), because some peat strata have few fire-days. The Method page in the app shows all checks.
+**How we tested it.** We held out 2019 and 2023, calibrated without them, and predicted their VIIRS fire-days from MODIS. National annual error was +1.8% and +3.2%. 80% of province-years were within 20%. The median weekly correlation was 0.90. A reverse test (calibrate on 2018 and later, predict 2012-2017) gave 84% of province-years within 20% and a median weekly correlation of 0.95; national totals came out 1% to 11% low. A first version used one fixed ratio per stratum and under-predicted quiet years by about 17%; the activity-dependent fit removed most of that bias. The Method page in the app shows all checks.
 
 **What we found.** By week 43 of 2026, Indonesia has 75% of the fire-days that 2015 had at the same point. South Papua (115%) and West Kalimantan (111%) are already above 2015.
 
@@ -45,6 +45,7 @@ https://6-scrambled-eggs.github.io/KalaApi/
 Code: https://github.com/6-Scrambled-Eggs/KalaApi
 
 ## NASA data used
+- NASA FIRMS API (near-real-time NOAA-20 and NOAA-21 VIIRS for the "Right now" strip): https://firms.modaps.eosdis.nasa.gov/api/
 - NASA FIRMS active fire archive: MODIS Collection 6.1 (Terra, Aqua) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21).
 
 ## Other data used
@@ -62,7 +63,7 @@ We built KalaApi with AI assistance. Claude (Anthropic) helped write the Python 
 4. geoBoundaries: https://www.geoboundaries.org/
 5. Global Forest Watch, Global Peatlands: https://data.globalforestwatch.org/
 6. NOAA CPC, Oceanic Nino Index: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/ (ONI v6)
-7. Giglio, L., et al. (2025). VNP64A1 versus MCD64A1 burned area comparison. Remote Sensing of Environment (Elsevier S0034425725004109). Advises statistical inter-calibration instead of simple concatenation. Check the exact title and volume before you cite.
+7. Giglio, L., Boschetti, L., Roy, D. P., Hall, J. V., Zubkova, M., Humber, M., Huang, H., Oles, V. (2025). The NASA VIIRS burned area product, global validation, and intercomparison with the NASA MODIS burned area product. Remote Sensing of Environment, 331, 115006. https://doi.org/10.1016/j.rse.2025.115006
 8. Fu, Y., et al. (2020). MODIS (MYD14) and VIIRS (VNP14IMG) active fire comparison, Northeast Asia. Remote Sensing, 12(18), 2870. https://doi.org/10.3390/rs12182870
 9. Gaveau, D. L. A., et al. (2021). Indonesian fire burned-area dataset for 2019. Earth System Science Data, 13, 5353. https://doi.org/10.5194/essd-13-5353-2021
 10. NASA Earthdata: MCD64A1 v6.1 and VNP64A1 v2 burned-area products (validation route, not yet used) and FIRMS notice that S-NPP VIIRS production ceased 2 Nov 2026. https://www.earthdata.nasa.gov/data/tools/firms/faq

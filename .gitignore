@@ -73,3 +73,4 @@ desktop.ini
 # Vite temp files
 vite.config.ts.timestamp-*
 *.timestamp-*.mjs
+public/data/live.json

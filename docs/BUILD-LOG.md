@@ -75,3 +75,4 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 
 | _pending_ | Activity-dependent back-cast (V = a*M^b, b=0.875), static-NRT filter, new error numbers, PRD v2 | Quiet-year bias 17% -> about 4% in-sample; LOYO about 1% |
 | _pending_ | Burned-area validation (pipeline/10, validation/sipongi_national_ha.csv, validation_ha.json), Method page rewritten for V=a*M^b, S-NPP end note, project page: validation, why-now, challenge checklist, more references | Spearman rho 0.90 (n=11, p<0.001) of yearly fire-days vs SiPongi hectares. Open #/method and check the new bullet. |
+| _pending_ | "Right now" strip: pipeline/11_live_fire.py (FIRMS API, NOAA-20/21), src/LiveStrip.tsx, workflow refreshes every 6 h | Needs GitHub secret FIRMS_MAP_KEY. Without it the card stays hidden. After adding the secret, run Actions > Deploy > Run workflow, then check the home page. |
