@@ -25,7 +25,7 @@ Work that has no commit: edits to the teammate PRD (Google Doc, done in place), 
 
 ## 3. Key results so far (week 43 of 2026)
 - Raw hot spot counts jump x6.5 in 2012. Harmonized fire-days jump x1.2.
-- 2026 against 2015, same weeks, harmonized fire-days: Indonesia 76%, South Papua 116%, West Kalimantan 112%, Central Kalimantan 67%, South Sumatra 43%, Riau 13%. FRP gives similar numbers.
+- 2026 against 2015, same weeks, harmonized fire-days: Indonesia 76%, South Papua 116%, West Kalimantan 112%, Central Kalimantan 67%, South Sumatra 43%, Riau 13% (first build; the current back-cast gives 75%, 115%, 111%, 66%, 42%, 13%). FRP gives similar numbers.
 - Holdout test (2019 and 2023): national annual error +2.3% and +1.2%. Median weekly correlation 0.90.
 - Weak spot: quiet years such as 2016 and 2017 are under-predicted by about 11%. Bands in quiet years are probably too narrow.
 - Raw VIIRS and harmonized series are identical from week 4 of 2012 (checked on all 324,096 area-weeks: 0 differences).
@@ -73,6 +73,10 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 - Say what changed, why, and how to check it.
 - Do not edit the history rows. Add new rows at the bottom of section 2.
 
-| _pending_ | Activity-dependent back-cast (V = a*M^b, b=0.875), static-NRT filter, new error numbers, PRD v2 | Quiet-year bias 17% -> about 4% in-sample; LOYO about 1% |
-| _pending_ | Burned-area validation (pipeline/10, validation/sipongi_national_ha.csv, validation_ha.json), Method page rewritten for V=a*M^b, S-NPP end note, project page: validation, why-now, challenge checklist, more references | Spearman rho 0.90 (n=11, p<0.001) of yearly fire-days vs SiPongi hectares. Open #/method and check the new bullet. |
-| _pending_ | "Right now" strip: pipeline/11_live_fire.py (FIRMS API, NOAA-20/21), src/LiveStrip.tsx, workflow refreshes every 6 h | Needs GitHub secret FIRMS_MAP_KEY. Without it the card stays hidden. After adding the secret, run Actions > Deploy > Run workflow, then check the home page. |
+| `14ae413` | Activity-dependent back-cast (V = a*M^b, b=0.875), static-NRT filter, new error numbers, PRD v2 | Quiet-year bias 17% -> about 4% in-sample; LOYO about 1% |
+| `5db87b2` | Burned-area validation (pipeline/10, validation/sipongi_national_ha.csv, validation_ha.json), Method page rewritten for V=a*M^b, S-NPP end note, project page: validation, why-now, challenge checklist, more references | Spearman rho 0.90 (n=11, p<0.001) of yearly fire-days vs SiPongi hectares. Open #/method and check the new bullet. |
+| `c952b8b` | "Right now" strip: pipeline/11_live_fire.py (FIRMS API, NOAA-20/21), src/LiveStrip.tsx, workflow refreshes every 6 h | Needs GitHub secret FIRMS_MAP_KEY. Without it the card stays hidden. After adding the secret, run Actions > Deploy > Run workflow, then check the home page. |
+| `294399c` | Batch A (15 Nov): home hero stat cards (x6.5 raw, x1.2 harmonized, this year vs normal), map legends and loading state, El Nino map in its own purple palette, "clear" needs p<=0.01 else "suggestive", one-line area summary, calendar "Anomaly (percentile)" view, Indonesian strings, "Sensor step (2012)" rename | Open `#/`, `#/enso`, an area page with `?m=a`, and switch to ID. Independent review of the live site found no blocking bugs. |
+| `63cafcb` | Batch B: `pipeline/12_flag_baseline.py` and `flag_check.json` (flags vs VIIRS-only 2012-2025 baseline), "(low base)" flag labels, "VIIRS only" tile wording, "Not an official product" on brief, card and readiness, CLAUDE.md numbers | Spearman 0.94 over 27,756 weeks; every elevated week >= 80th and every extreme week >= 90th percentile on the VIIRS-only baseline. See `#/method`. |
+| `7978306` | Batch C and Method limits: "Provinces to watch", shareable weekly card (text + PNG), keyboard province list, skip link, focus rings, mobile nav row, grouped area-page buttons; honest limits for the flag check and the low-base rule | Open `#/` and tab through the page. At 390 px the nav scrolls sideways. |
+| `d801c29` | "Provinces to watch" only counts provinces with at least 1,000 fire-days in an average year; card wording | Top rows: Papua Selatan, Maluku, Kalimantan Timur. |
