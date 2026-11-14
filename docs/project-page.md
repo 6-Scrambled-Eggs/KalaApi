@@ -16,7 +16,11 @@ KalaApi joins 25 years of NASA MODIS and VIIRS hot spots into one comparable fir
 - the typical onset, peak and end weeks, and how 2026 compares with the same weeks in 2001-2025 and in the last 10 years;
 - flagged weeks (elevated at the 90th percentile and extreme at the 97.5th);
 - a story mode that compares 2015, 2019, 2023 and 2026 in fire-days and in fire radiative power (FRP);
-- peat-only and mineral-only views, an El Nino marker for each year, a one-page readiness card, and CSV and PNG export.
+- peat-only and mineral-only views, an El Nino marker for each year, and CSV and PNG export;
+- a **readiness window**: the earliest, median and latest week the fire season started over 25 years, and a "be ready by" date;
+- a **one-page BPBD brief** (print or save as PDF, English and Bahasa Indonesia) with where the area stands now, the readiness window, the El Nino link and the limits of the numbers;
+- an **El Nino link** map and chart: for each province, whether years with El Nino (July-September ONI) are also years with more fire-days. 300 of 422 areas show a clear link, 41 a weak one and 81 none (only 5 El Nino years in 25; exploratory, not a forecast);
+- an **analog year**: the past year whose fire curve so far is closest to this year (a likeness, not a prediction).
 The interface is in English and Bahasa Indonesia.
 
 **How the harmonization works.** We count fire-days: one 0.05-degree cell on one day with at least one daytime detection. For each stratum (province or island group, split by peat and mineral soil) we measure the ratio k between VIIRS fire-days and Aqua MODIS fire-days on the years when both exist (2012-2026). Before 2012 we estimate VIIRS-equivalent fire-days as k times the MODIS fire-days (Terra scaled to Aqua before mid-2002). From 2012 the series is the observed VIIRS series. A 90% band comes from 1,000 bootstrap draws over years.

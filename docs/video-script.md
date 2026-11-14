@@ -11,7 +11,7 @@ Record at 1280x720 or larger, browser zoom 100%, language set to EN. Record the 
 | 4-10 | App page `#/surge/indonesia`. Hold on the two big numbers: **x6.5 raw counts** and **x1.2 harmonized**. | "In 2012, Indonesia's fire count jumped six and a half times. The fires did not. A new satellite sensor came in. Harmonized, the jump is only 1.2 times." |
 | 10-14 | Title card: **KalaApi** + "One fire record for Indonesia" | "This is KalaApi. One fire record for Indonesia." |
 | 14-24 | Open `#/area/kalimantan-barat`. Calendar appears. Point to the 2026 row (red El Nino dot) and the flagged weeks list (week 43, 100th percentile). Click "Story mode". | "Pick any province. See 25 years of burning on one calendar. 2026 is flagged: West Kalimantan reached the 100th percentile in week 43." |
-| 24-30 | Story mode chart for Papua Selatan, 2026 line above 2015. | "Is 2026 worse than 2015? Not in all of Indonesia, but in South Papua and West Kalimantan, yes. Now BPBD and peat managers can see when to get ready." |
+| 24-30 | Story mode chart for Papua Selatan, 2026 line above 2015. Then cut to `#/brief/papua-selatan` (readiness window tile). | "Is 2026 worse than 2015? Not in all of Indonesia, but in South Papua and West Kalimantan, yes. And KalaApi tells BPBD when to be ready: a one-page brief for every area." |
 
 ## Facts behind each line (all from the app data, week 43 of 2026)
 - National fire-days, 2026 vs 2015, same weeks: 130,628 vs 171,995 (**76% of 2015**). FRP: 69%.
