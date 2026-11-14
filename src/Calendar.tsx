@@ -3,14 +3,14 @@ import Chart from "./Chart";
 import { Area, Oni, WPY, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
 
-export type Mode = "h" | "m" | "v" | "p" | "n";
+export type Mode = "h" | "m" | "v" | "p" | "n" | "a";
 
 export default function Calendar({ area, mode, year, onYear, oni, onReady }: { area: Area; mode: Mode; year: number; onYear: (y: number) => void; oni?: Oni | null; onReady?: (c: any) => void }) {
   const { t } = useT();
   const option = useMemo(() => {
     const years: number[] = [];
     for (let y = area.start_year; y <= area.last_year; y++) years.push(y);
-    const src = mode === "m" ? area.m : mode === "v" ? area.v : mode === "p" ? (area.h_peat ?? area.h) : mode === "n" ? (area.h_min ?? area.h) : area.h;
+    const src = mode === "a" ? area.pct : mode === "m" ? area.m : mode === "v" ? area.v : mode === "p" ? (area.h_peat ?? area.h) : mode === "n" ? (area.h_min ?? area.h) : area.h;
     const M = matrix(src), H = matrix(area.h), LO = matrix(area.lo), HI = matrix(area.hi);
     const MM = matrix(area.m), VV = matrix(area.v), P = matrix(area.pct);
     const vals: number[] = [];
@@ -20,7 +20,8 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       if (v != null) vals.push(v);
     }));
     vals.sort((a, b) => a - b);
-    const vmax = Math.max(5, vals[Math.floor(vals.length * 0.99)] || 5);
+    const anom = mode === "a";
+    const vmax = anom ? 100 : Math.max(5, vals[Math.floor(vals.length * 0.99)] || 5);
     const lastBack = Math.floor(area.back_cast_end_slot / WPY);
     return {
       grid: { left: 52, right: 16, top: 12, bottom: 78 },
@@ -32,7 +33,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           const est = y < 2012 || (y === 2012 && w < 3);
           const band = est && LO[yi][w] != null ? ` (90%: ${LO[yi][w]} to ${HI[yi][w]})` : "";
           const pct = P[yi][w] == null ? "" : `<br/>${t("pctile")}: ${P[yi][w]}`;
-          return `<b>${y}, ${t("week")} ${w + 1}</b> (from ${weekLabel(w + 1)})<br/>` +
+          return `<b>${y}, ${t("week")} ${w + 1}</b> (${t("fromWord")} ${weekLabel(w + 1)})<br/>` +
             `${t("harmonized")}: ${f(H)}${band}${est ? " *" : ""}<br/>${t("rawModis")}: ${f(MM)}<br/>${t("rawViirs")}: ${f(VV)}${pct}`;
         },
       },
@@ -48,7 +49,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           },
         },
       },
-      visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: [t("fireDays"), ""], inRange: { color: ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
+      visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: anom ? [t("busiest"), t("quietest")] : [`${vmax}+ ${t("fireDays")}`, "0"], inRange: { color: anom ? ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] : ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
       series: [{
         type: "heatmap", data, progressive: 0,
         itemStyle: { borderColor: "#fff", borderWidth: 0.5 },

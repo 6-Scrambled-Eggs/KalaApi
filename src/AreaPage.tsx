@@ -5,9 +5,10 @@ import EnsoPanel from "./EnsoPanel";
 import Readiness from "./Readiness";
 import Seasonal from "./Seasonal";
 import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, weekLabel } from "./data";
-import { useT } from "./i18n";
+import { fmt, useT } from "./i18n";
+import { ensoLabel } from "./EnsoPanel";
 
-const modes: [Mode, "harmonized" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
+const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
 
 export default function AreaPage({ id, index, year, mode, setYear, setMode, go }: {
   id: string; index: AreaIndex[]; year: number | null; mode: Mode; setYear: (y: number) => void; setMode: (m: Mode) => void; go: (path: string) => void;
@@ -37,6 +38,17 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const onsetDiff = cur ? cur[0] - area.typical_period.onset : null;
   const tp = area.typical_period;
   const hasSplit = !!(area.h_peat && area.h_min);
+  const e0 = enso?.areas[area.id];
+  const summary = (() => {
+    const bits: string[] = [];
+    if (area.ytd_ratio != null) {
+      const r = area.ytd_ratio;
+      bits.push(fmt(t(r >= 1.15 ? "sumRatioHigh" : r <= 0.85 ? "sumRatioLow" : "sumRatioMid"), r));
+    }
+    if (onsetDiff != null) bits.push(onsetDiff === 0 ? t("sumOnTime") : fmt(t(onsetDiff < 0 ? "sumEarly" : "sumLate"), Math.abs(onsetDiff)));
+    if (e0 && ensoLabel(e0) === "clear" && e0.ratio_el_neu != null && e0.ratio_el_neu > 1) bits.push(fmt(t("sumEl"), e0.ratio_el_neu));
+    return bits.length ? `${area.name}: ${bits.join("; ")}.` : "";
+  })();
   const exportCsv = () => {
     const rows = ["year,week,harmonized,low90,high90,raw_modis_fire_days,raw_viirs_fire_days,percentile_vs_2001_2025,frp_mw"];
     const g = (a: (number | null)[], i: number) => (a[i] == null ? "" : String(a[i]));
@@ -58,7 +70,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <div className="head">
         <div>
           <h1>{area.name}</h1>
-          <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {t("asOf")} week {area.last_week} of {area.last_year}</div>
+          <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
         </div>
         <div className="toggles" role="group" aria-label="Data view">
           {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
@@ -71,28 +83,29 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <button onClick={copyLink}>{copied ? t("copied") : t("copyLink")}</button>
         </div>
       </div>
+      {summary && <p className="summary">{summary}</p>}
       {area.low_data && <div className="warn">{t("lowData")}</div>}
       <div className="tiles">
-        <div className="tile"><div className="k">{t("ytd")}</div><div className="v">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</div><div className="s">{t("pctile")} {Math.round(area.ytd_pct)} of 2001–2025</div><div className="s">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")} · {t("pctile")} {Math.round(area.ytd_pct_recent)}</div></div>
-        <div className="tile"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · onset {weekLabel(tp.onset)} · end {weekLabel(tp.end)}</div></div>
-        <div className="tile"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? "on time" : `${Math.abs(onsetDiff)} wk ${onsetDiff < 0 ? "early" : "late"}`}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} vs typical {tp.onset}</div></div>
+        <div className="tile"><div className="k">{t("ytd")}</div><div className="v">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</div><div className="s">{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</div><div className="s">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")} · {t("pctile")} {Math.round(area.ytd_pct_recent)}</div></div>
+        <div className="tile"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · {t("onsetWord")} {weekLabel(tp.onset)} · {t("endWord")} {weekLabel(tp.end)}</div></div>
+        <div className="tile"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} {fmt(t("vsTypical"), tp.onset)}</div></div>
       </div>
       <Readiness area={area} />
       <Analog area={area} />
       <EnsoPanel area={area} enso={enso} oni={oni} />
       <h2>{t("calendar")}</h2>
-      <p className="note">One row per year, one column per 7-day block. Rows before 2012 are estimated from MODIS and shown with a pale overlay (yearly totals are typically within ±10%, and 9 in 10 within ±30%). Click a row to compare that year below. {t("oniNote")}</p>
+      <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
       <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
       <h2>{t("profile")}: {y}</h2>
       <Seasonal area={area} year={y} />
       <h2>{t("anomalies")}: {y}</h2>
-      {flagged.length === 0 ? <p className="note">No weeks at or above the 90th percentile in {y}.</p> : (
+      {flagged.length === 0 ? <p className="note">{fmt(t("noFlags"), y)}</p> : (
         <ul className="flags">{flagged.map((f) => (
-          <li key={f.w}><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · from {weekLabel(f.w + 1)}</button>
+          <li key={f.w}><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</button>
             <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`}>{(f.p as number) >= 97.5 ? t("extreme") : t("elevated")}</span>
             <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}</span></li>))}</ul>
       )}
-      {area.level === "province" && <p className="note"><a href={`#/area/${id}`}>Kabupaten in {area.name}</a>: use the search box above.</p>}
+      {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
     </section>
   );
 }

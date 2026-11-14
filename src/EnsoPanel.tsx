@@ -3,6 +3,8 @@ import Chart from "./Chart";
 import { Area, Enso, Oni, WPY, matrix } from "./data";
 import { useT } from "./i18n";
 
+/** Display label: "clear" needs p <= 0.01 because p is not corrected for the many tests; p up to 0.05 is only "suggestive". */
+export const ensoLabel = (e: { label: string; p: number }) => (e.label === "clear" && e.p > 0.01 ? "suggestive" : e.label);
 export const fmtP = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(3)}`);
 const COLORS = { el: "#c0392b", la: "#2e86c1", neu: "#9aa5ad" };
 
@@ -35,11 +37,12 @@ export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; en
   const nEl = enso.years.el.length, nLa = enso.years.la.length, nNeu = enso.years.neu.length;
   const o26 = oni.jas["2026"];
   const verdict = {
-    clear: id ? "Aktivitas api di sini jelas mengikuti El Niño." : "Fire activity here clearly follows El Niño.",
+    clear: id ? "Aktivitas api di sini berkaitan kuat dengan El Niño." : "Fire activity here is strongly associated with El Niño.",
+    suggestive: id ? "Aktivitas api di sini mungkin berkaitan dengan El Niño (indikasi, belum pasti)." : "Fire activity here may be linked to El Niño (suggestive, not firm).",
     weak: id ? "Ada kaitan lemah dengan El Niño di sini." : "There is a weak link to El Niño here.",
     none: id ? "Tidak ada kaitan jelas dengan El Niño di sini. Jangan menjadikan El Niño sebagai alasan tahun yang buruk di wilayah ini." : "No clear link to El Niño here. Do not use El Niño as the reason for a bad year in this area.",
     reverse: id ? "Kaitannya terbalik: tahun El Niño cenderung lebih sedikit api." : "The link runs the other way: El Niño years tend to have fewer fires.",
-  }[e.label];
+  }[ensoLabel(e)];
   return (
     <div>
       <h2>{t("ensoTitle")}</h2>

@@ -85,9 +85,10 @@ export function seasonal(area: Area, y0 = 2001, y1 = 2025) {
 }
 
 /** Approximate date label of a week slot (7-day blocks of the year). */
+export const dateLocale = { v: "en-GB" };
 export function weekLabel(w: number): string {
   const d = new Date(Date.UTC(2001, 0, 1 + 7 * (w - 1)));
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+  return d.toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", timeZone: "UTC" });
 }
 
 export function annualTotals(s: Series, startYear: number): { year: number; total: number | null }[] {

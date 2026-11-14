@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Chart from "./Chart";
+import { ensoLabel } from "./EnsoPanel";
 import { Area, AreaIndex, Enso, WPY, loadArea, loadEnso, matrix, readiness, seasonal, upto, weekLabel } from "./data";
 import { useT } from "./i18n";
 
@@ -72,7 +73,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
       vs15: u15 > 0 ? `${Math.round((now / u15) * 100)}%` : "n/a",
       onset: r ? `${L ? "mgg" : "wk"} ${r.median} (${weekLabel(r.median)}), ${L ? "rentang" : "range"} ${r.earliest}–${r.latest}` : "n/a",
       peak: `${L ? "mgg" : "wk"} ${a.typical_period.peak} (${weekLabel(a.typical_period.peak)})`,
-      enso: e ? `${L ? ({ clear: "jelas", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[e.label] : e.label}, ρ = ${e.rho}` : "n/a",
+      enso: e ? `${L ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}, ρ = ${e.rho}` : "n/a",
       mean: Math.round(a.mean_annual_fire_days).toLocaleString(),
     };
   };

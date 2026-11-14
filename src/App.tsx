@@ -11,7 +11,8 @@ import LiveStrip from "./LiveStrip";
 import MapView from "./MapView";
 import Method from "./Method";
 import Story from "./Story";
-import { AreaIndex, loadIndex } from "./data";
+import HomeHero from "./HomeHero";
+import { AreaIndex, dateLocale, loadIndex } from "./data";
 import { Lang, LangCtx, makeT } from "./i18n";
 
 function useHash() {
@@ -27,7 +28,7 @@ export default function App() {
   const { path, params } = useHash();
   const t = useMemo(() => makeT(lang), [lang]);
   useEffect(() => { loadIndex().then(setIndex); }, []);
-  useEffect(() => { document.documentElement.lang = lang; localStorageSet("lang", lang); }, [lang]);
+  useEffect(() => { dateLocale.v = lang === "id" ? "id-ID" : "en-GB"; document.documentElement.lang = lang; localStorageSet("lang", lang); }, [lang]);
 
   const go = useCallback((p: string, q?: URLSearchParams) => { window.location.hash = p + (q && q.toString() ? `?${q}` : ""); }, []);
   const route = path[0] || "home";
@@ -62,10 +63,11 @@ export default function App() {
         : (
           <section>
             <h1>{t("tagline")}</h1>
-            <p className="lead">25 years of MODIS and VIIRS hotspot detections turned into one comparable burning-activity calendar for any area in Indonesia.</p>
+            <p className="lead">{t("lead")}</p>
+            <HomeHero index={index} />
+            <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/surge">{t("ctaStep")}</a> <a className="cta alt" href="#/enso">{t("ctaEnso")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
             <MapView index={index} onSelect={(a) => go(`/area/${a}`)} />
             <LiveStrip />
-            <p><a className="cta" href="#/area/indonesia">Open the national calendar</a> <a className="cta alt" href="#/surge">See the 2012 fake surge</a> <a className="cta alt" href="#/enso">Does El Niño matter here?</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">Compare two places</a></p>
           </section>
         )}
       </main>

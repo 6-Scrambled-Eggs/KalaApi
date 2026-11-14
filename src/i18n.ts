@@ -3,8 +3,21 @@ import { createContext, useContext } from "react";
 export type Lang = "en" | "id";
 const dict = {
   en: {
+    lead: "25 years of MODIS and VIIRS hotspot detections turned into one comparable burning-activity calendar for any area in Indonesia.",
+    ctaNational: "Open the national calendar", ctaStep: "See the 2012 sensor step", ctaEnso: "Check the El Niño link", ctaCompare: "Compare two places",
+    heroRaw: "raw hotspot counts, 2012–14 vs 2009–11", heroH: "harmonized fire-days, same years", heroNow: "this year vs normal for the same weeks (up to week {0})", heroRecent: "vs the last 10 years (VIIRS only)",
+    heroNote: "The 2012 jump is mostly a sensor change. KalaApi measures it and removes it.",
+    legMapTitle: "This year vs the same weeks in 2001–2025 (percentile)", legQuiet: "quieter than usual", legBusy: "busier than usual", legNoData: "no data",
+    legEnsoTitle: "How strongly fire follows El Niño (ρ)", legNoLink: "no clear link", legStrong: "strong link", loadingMap: "Loading map…",
+    anomaly: "Anomaly (percentile)", busiest: "100 (busiest)", quietest: "0 (quietest)",
+    calNote: "One row per year, one column per 7-day block. Rows before 2012 are estimated from MODIS and shown with a pale overlay (yearly totals are typically within ±10%, and 9 in 10 within ±30%). Click a row to compare that year below.",
+    calNoteAnom: "Anomaly view: colour shows how busy each week is compared with the same week in 2001–2025. Blue is quieter than usual, orange is busier.",
+    asOfLine: "Data as of week {0} of {1}", pctOf: "of 2001–2025", onTime: "on time", earlyN: "{0} wk early", lateN: "{0} wk late", typicalWord: "typical", onsetWord: "onset", endWord: "end", fromWord: "from",
+    vsTypical: "vs typical {0}", noFlags: "No weeks at or above the 90th percentile in {0}.", kabHint: "Kabupaten in {0}: use the search box above.",
+    sumRatioHigh: "fire activity is ×{0} normal so far this year", sumRatioLow: "fire activity is below normal (×{0}) so far this year", sumRatioMid: "fire activity is close to normal (×{0}) so far this year",
+    sumEarly: "the season started {0} wk early", sumLate: "the season started {0} wk late", sumOnTime: "the season started on time", sumEl: "El Niño years are typically ×{0} worse",
     tagline: "One fire record for Indonesia, from MODIS to VIIRS.",
-    home: "Map", surge: "Fake surge", method: "Method and data", pick: "Pick an area",
+    home: "Map", surge: "Sensor step (2012)", method: "Method and data", pick: "Pick an area",
     search: "Search province or kabupaten", harmonized: "Harmonized", rawModis: "Raw MODIS", rawViirs: "Raw VIIRS",
     ytd: "This year vs normal", typicalPeak: "Typical peak weeks", onset: "Onset vs typical",
     calendar: "Burning-activity calendar", profile: "Seasonal profile", anomalies: "Flagged weeks",
@@ -16,11 +29,24 @@ const dict = {
     week: "week", year: "Year", fireDays: "fire-days", pctile: "percentile",
     peatOnly: "Peat only", mineralOnly: "Mineral only", csv: "Download CSV", png: "Download PNG", copyLink: "Copy link", copied: "Link copied",
     vsRecent: "vs last 10 years", oniNote: "Dot beside each year: El Niño (red), La Niña (blue), neutral (grey), from the July–September ONI.",
-    brief: "BPBD brief", compare: "Compare", enso: "El Niño link", readyTitle: "Readiness window", ensoTitle: "Does El Niño matter here?", analogTitle: "2026 is most like",
+    brief: "BPBD brief", compare: "Compare", enso: "El Niño link", readyTitle: "Readiness window", ensoTitle: "El Niño link", analogTitle: "2026 is most like",
   },
   id: {
+    lead: "25 tahun deteksi titik panas MODIS dan VIIRS diubah menjadi satu kalender aktivitas pembakaran yang bisa dibandingkan untuk wilayah mana pun di Indonesia.",
+    ctaNational: "Buka kalender nasional", ctaStep: "Lihat lompatan sensor 2012", ctaEnso: "Lihat kaitan El Niño", ctaCompare: "Bandingkan dua tempat",
+    heroRaw: "hitungan titik panas mentah, 2012–14 vs 2009–11", heroH: "hari-api terharmonisasi, tahun yang sama", heroNow: "tahun ini vs normal untuk minggu yang sama (sampai minggu {0})", heroRecent: "vs 10 tahun terakhir (hanya VIIRS)",
+    heroNote: "Lonjakan 2012 sebagian besar akibat pergantian sensor. KalaApi mengukurnya dan menghilangkannya.",
+    legMapTitle: "Tahun ini vs minggu yang sama 2001–2025 (persentil)", legQuiet: "lebih sepi dari biasanya", legBusy: "lebih ramai dari biasanya", legNoData: "tanpa data",
+    legEnsoTitle: "Seberapa kuat api mengikuti El Niño (ρ)", legNoLink: "tidak ada kaitan jelas", legStrong: "kaitan kuat", loadingMap: "Memuat peta…",
+    anomaly: "Anomali (persentil)", busiest: "100 (paling ramai)", quietest: "0 (paling sepi)",
+    calNote: "Satu baris per tahun, satu kolom per blok 7 hari. Baris sebelum 2012 diperkirakan dari MODIS dan diberi lapisan pucat (total tahunan biasanya dalam ±10%, dan 9 dari 10 dalam ±30%). Klik baris untuk membandingkan tahun itu di bawah.",
+    calNoteAnom: "Tampilan anomali: warna menunjukkan seberapa ramai tiap minggu dibanding minggu yang sama pada 2001–2025. Biru lebih sepi dari biasanya, oranye lebih ramai.",
+    asOfLine: "Data per minggu {0} tahun {1}", pctOf: "dari 2001–2025", onTime: "tepat waktu", earlyN: "{0} mgg lebih awal", lateN: "{0} mgg terlambat", typicalWord: "biasanya", onsetWord: "awal", endWord: "akhir", fromWord: "mulai",
+    vsTypical: "vs biasanya {0}", noFlags: "Tidak ada minggu di persentil ke-90 atau lebih pada {0}.", kabHint: "Kabupaten di {0}: gunakan kotak pencarian di atas.",
+    sumRatioHigh: "aktivitas api ×{0} dari normal sejauh ini tahun ini", sumRatioLow: "aktivitas api di bawah normal (×{0}) sejauh ini tahun ini", sumRatioMid: "aktivitas api mendekati normal (×{0}) sejauh ini tahun ini",
+    sumEarly: "musim mulai {0} mgg lebih awal", sumLate: "musim mulai {0} mgg terlambat", sumOnTime: "musim mulai tepat waktu", sumEl: "tahun El Niño biasanya ×{0} lebih buruk",
     tagline: "Satu rekam jejak api untuk Indonesia, dari MODIS ke VIIRS.",
-    home: "Peta", surge: "Lonjakan semu", method: "Metode dan data", pick: "Pilih wilayah",
+    home: "Peta", surge: "Lompatan sensor (2012)", method: "Metode dan data", pick: "Pilih wilayah",
     search: "Cari provinsi atau kabupaten", harmonized: "Harmonisasi", rawModis: "MODIS mentah", rawViirs: "VIIRS mentah",
     ytd: "Tahun ini vs normal", typicalPeak: "Minggu puncak biasanya", onset: "Awal musim vs biasanya",
     calendar: "Kalender aktivitas pembakaran", profile: "Profil musiman", anomalies: "Minggu yang ditandai",
@@ -32,10 +58,11 @@ const dict = {
     week: "minggu", year: "Tahun", fireDays: "hari-api", pctile: "persentil",
     peatOnly: "Hanya gambut", mineralOnly: "Hanya tanah mineral", csv: "Unduh CSV", png: "Unduh PNG", copyLink: "Salin tautan", copied: "Tautan disalin",
     vsRecent: "vs 10 tahun terakhir", oniNote: "Titik di samping tahun: El Niño (merah), La Niña (biru), netral (abu-abu), dari ONI Juli–September.",
-    brief: "Ringkasan BPBD", compare: "Bandingkan", enso: "Kaitan El Niño", readyTitle: "Jendela kesiapsiagaan", ensoTitle: "Apakah El Niño berpengaruh di sini?", analogTitle: "2026 paling mirip dengan",
+    brief: "Ringkasan BPBD", compare: "Bandingkan", enso: "Kaitan El Niño", readyTitle: "Jendela kesiapsiagaan", ensoTitle: "Kaitan El Niño", analogTitle: "2026 paling mirip dengan",
   },
 };
 export type Key = keyof typeof dict.en;
 export const LangCtx = createContext<{ lang: Lang; t: (k: Key) => string }>({ lang: "en", t: (k) => dict.en[k] });
 export const useT = () => useContext(LangCtx);
+export const fmt = (s: string, ...a: (string | number)[]) => s.replace(/\{(\d)\}/g, (_, i) => String(a[Number(i)]));
 export const makeT = (lang: Lang) => (k: Key) => dict[lang][k];

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { AreaIndex, Enso, loadEnso, loadOni, loadProvinces, Oni } from "./data";
-import { fmtP } from "./EnsoPanel";
+import { ensoLabel, fmtP } from "./EnsoPanel";
+import Legend from "./Legend";
 import { useT } from "./i18n";
 
 /** #/enso: provinces shaded by how strongly yearly fire activity follows El Nino (Spearman rho, 2001-2025). */
@@ -13,6 +14,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
   const [enso, setEnso] = useState<Enso | null>(null);
   const [oni, setOni] = useState<Oni | null>(null);
   const [tip, setTip] = useState("");
+  const [ready, setReady] = useState(false);
   useEffect(() => { loadEnso().then(setEnso); loadOni().then(setOni); }, []);
   const rows = useMemo(() => !enso ? [] : index.filter((a) => a.level === "province" && enso.areas[a.id]).map((a) => ({ a, e: enso.areas[a.id] })).sort((x, y) => y.e.rho - x.e.rho), [enso, index]);
   useEffect(() => {
@@ -28,14 +30,15 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       fc.features.forEach((f) => {
         const e = enso.areas[(f.properties as any).id];
         (f.properties as any).rho = e ? e.rho : -9;
-        (f.properties as any).lab = e ? e.label : "";
+        (f.properties as any).lab = e ? ensoLabel(e) : "";
         (f.properties as any).p = e ? e.p : 1;
       });
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: {
-        "fill-color": ["case", ["<", ["get", "rho"], -5], "#ccc", ["interpolate", ["linear"], ["get", "rho"], -0.2, "#d9d9d9", 0, "#f0f0f0", 0.3, "#fdd0a2", 0.6, "#e6550d", 0.9, "#7f2704"],],
+        "fill-color": ["case", ["<", ["get", "rho"], -5], "#ccc", ["interpolate", ["linear"], ["get", "rho"], -0.2, "#d9d9d9", 0, "#f0f0f0", 0.3, "#c6dbef", 0.6, "#6a51a3", 0.9, "#3f007d"],],
         "fill-opacity": 0.92 } });
       map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fff", "line-width": 0.8 } });
+      setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });
       map.on("mousemove", "fill", (e) => {
         map.getCanvas().style.cursor = "pointer";
@@ -50,13 +53,15 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
   const o26 = oni?.jas["2026"];
   return (
     <section>
-      <h1>{id ? "Apakah El Niño berpengaruh di sini?" : "Does El Niño matter here?"}</h1>
+      <h1>{id ? "Kaitan El Niño dengan api" : "El Niño link"}</h1>
       <p className="lead">{id
         ? "Di setiap provinsi, apakah tahun dengan El Niño juga tahun dengan lebih banyak hari-api? Warna gelap berarti kaitan kuat. Abu-abu berarti tidak ada kaitan jelas."
         : "In each province, are El Niño years also years with more fire-days? Dark means a strong link. Grey means no clear link."}</p>
       <div className="mapWrap">
         <div ref={el} className="map" role="img" aria-label="Map of provinces shaded by the El Niño link of yearly fire activity" />
+        {!ready && <div className="mapLoad">{id ? "Memuat peta…" : "Loading map…"}</div>}
         <div className="mapTip">{tip || (id ? "Klik provinsi untuk melihat grafiknya." : "Click a province for its chart.")}</div>
+        <Legend title={id ? "Seberapa kuat api mengikuti El Niño (ρ)" : "How strongly fire follows El Niño (ρ)"} stops={[["#f0f0f0", 0], ["#c6dbef", 33], ["#6a51a3", 66], ["#3f007d", 100]]} low={id ? "tidak ada kaitan jelas" : "no clear link"} high={id ? "kaitan kuat" : "strong link"} extra={id ? "tanpa data" : "no data"} />
       </div>
       <p className="note">{id
         ? `Warna: korelasi peringkat (ρ) antara hari-api tahunan 2001–2025 dan ONI Juli–September. Hanya ${n} tahun El Niño dalam 25 tahun, jadi baca sebagai petunjuk, bukan bukti. ${o26 != null ? `ONI Juli–September 2026: ${o26 > 0 ? "+" : ""}${o26}.` : ""} Ini bukan prakiraan 2027.`
@@ -65,10 +70,10 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       <table>
         <thead><tr><th>{id ? "Provinsi" : "Province"}</th><th>ρ</th><th>p</th><th>{id ? "Kaitan" : "Link"}</th><th>{id ? "El Niño vs netral" : "El Niño vs neutral"}</th></tr></thead>
         <tbody>{rows.map(({ a, e }) => (
-          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[e.label] : e.label}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
+          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
         ))}</tbody>
       </table>
-      <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear = p < 0,05 dan ρ ≥ 0,4; weak = p < 0,15." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15."}</p>
+      <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear (jelas) = p < 0,01 dan ρ ≥ 0,4; suggestive (indikasi) = p < 0,05 dan ρ ≥ 0,4; weak = p < 0,15. Hanya 5 tahun El Niño: baca sebagai petunjuk." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.01 and ρ ≥ 0.4; suggestive = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15. With only 5 El Niño years, read all of this as a lead, not proof."}</p>
     </section>
   );
 }
