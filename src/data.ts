@@ -51,6 +51,8 @@ export const loadOni = () => load<Oni>("oni.json");
 export const loadMeta = () => load<Meta>("meta.json");
 export type HaCheck = { years: number[]; fire_days: number[]; burned_ha: number[]; spearman_rho: number; p: number; n: number };
 export const loadHaCheck = () => load<HaCheck>("validation_ha.json");
+export type FlagCheck = { n_weeks: number; spearman: number; elevated_n: number; elevated_ge80: number; extreme_n: number; extreme_ge90: number };
+export const loadFlagCheck = () => load<FlagCheck>("flag_check.json");
 export const loadValidation = () => load<Validation>("validation.json");
 export const loadProvinces = () => load<GeoJSON.FeatureCollection>("provinces.geojson");
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Area, AreaIndex, HaCheck, Meta, Validation, loadArea, loadHaCheck, loadMeta, loadValidation, matrix, weekLabel } from "./data";
+import { Area, AreaIndex, FlagCheck, HaCheck, Meta, Validation, loadArea, loadFlagCheck, loadHaCheck, loadMeta, loadValidation, matrix, weekLabel } from "./data";
 
 function Three({ index }: { index: AreaIndex[] }) {
   const [id, setId] = useState("kalimantan-tengah");
@@ -28,6 +28,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [val, setVal] = useState<Validation | null>(null);
   const [ha, setHa] = useState<HaCheck | null>(null);
+  const [fc, setFc] = useState<FlagCheck | null>(null);
+  useEffect(() => { loadFlagCheck().then(setFc).catch(() => setFc(null)); }, []);
   useEffect(() => { loadMeta().then(setMeta); loadValidation().then(setVal).catch(() => setVal(null)); loadHaCheck().then(setHa).catch(() => setHa(null)); }, []);
   const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
   const errs = (h: Validation["V1_holdout"]) => Object.entries(h.national_err_pct).map(([y, e]) => `${y}: ${e > 0 ? "+" : ""}${e.toFixed(1)}%`).join(", ");
@@ -53,6 +55,7 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <li><b>Known events</b>: {Object.entries(val.V5_known_events).map(([k, v]) => `${k}: top weekly percentile ${v.max_pct.toFixed(0)}`).join("; ")}.</li>
           <li><b>Small areas</b>: {val.V2_small_areas.low_data_areas} of {val.V2_small_areas.total_areas} areas have fewer than 50 fire-days a year and carry a low-data note.</li>
           {ha && <li><b>Official burned area (national, 2015–2025)</b>: our yearly fire-days rank the years like official burned hectares do (Spearman rho {ha.spearman_rho.toFixed(2)}, n={ha.n}, permutation p&lt;0.001). The hectares come from SiPongi as reproduced by GoodStats, a secondary copy. Official hectares are a soft target: one study found the 2019 official figure far below Sentinel-2 mapping. Fire-days are not hectares. A province-level check with MCD64A1 is still open.</li>}
+          {fc && <li><b>Flags do not depend on the back-cast</b>: we recomputed every weekly percentile using only observed VIIRS (2012–2025 baseline). Across {fc.n_weeks.toLocaleString()} province and national weeks since 2012, the two baselines rank weeks almost the same (Spearman {fc.spearman.toFixed(2)}). {(fc.elevated_ge80 * 100).toFixed(0)}% of weeks flagged "elevated" (90th percentile or higher, {fc.elevated_n.toLocaleString()} weeks) are at least the 80th percentile on the VIIRS-only baseline, and {(fc.extreme_ge90 * 100).toFixed(0)}% of "extreme" weeks ({fc.extreme_n.toLocaleString()}) are at least the 90th. With only 14 baseline years the top steps are coarse, so the exact label can differ by one step.</li>}
           {!val.V3_peat_available && <li><b>Peat vs mineral split</b>: not available yet. No peat polygon file was used in this build.</li>}
           {val.V3_peat_available && <li><b>Peat vs mineral split</b>: on. Peat map: Global Forest Watch peatlands tiles (30 m). A 5 km cell counts as peat when at least half of its pixels are peat. In our tests the split lowers the national annual error a little (2.3% and 1.2% against 2.8% and 1.6% without it). It also lowers the share of province-years within 20% (71% against 77%), because some peat strata have few fire-days. We keep it because it shows a real difference between peat and mineral soil. Read small peat areas with care.</li>}
           <li><b>Fire radiative power (FRP)</b>: shown in story mode and in the CSV from 2012 onward only. It is the VIIRS value, summed from the daily maximum in each cell. It is not harmonized with MODIS and it is not burned area.</li>

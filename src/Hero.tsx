@@ -39,19 +39,19 @@ export default function Hero({ areaId, index, onPick }: { areaId: string; index:
   return (
     <section>
       <h1>{t("heroTitle")}</h1>
-      <p className="lead">Hotspot counts jump when the higher-resolution VIIRS sensor takes over from MODIS. KalaApi measures that step and removes it.</p>
+      <p className="lead">{t("heroLead")}</p>
       <label className="row">{t("pick")}: <select value={areaId} onChange={(e) => onPick(e.target.value)}>
         {index.filter((a) => a.level !== "kabupaten").map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
       </select></label>
       {!view ? <p>{t("loading")}</p> : (
         <>
           <div className="stepRow">
-            <div className="step bad"><span className="big">×{view.stepRaw.toFixed(1)}</span><span>raw counts, 2012–14 vs 2009–11</span></div>
-            <div className="step good"><span className="big">×{view.stepH.toFixed(1)}</span><span>harmonized, same years</span></div>
+            <div className="step bad"><span className="big">×{view.stepRaw.toFixed(1)}</span><span>{t("heroRaw")}</span></div>
+            <div className="step good"><span className="big">×{view.stepH.toFixed(1)}</span><span>{t("heroH")}</span></div>
           </div>
           <Chart option={view.rawOpt} height={260} label="Raw stitched hotspot counts" />
           <Chart option={view.hOpt} height={260} label="Harmonized fire-days" />
-          <p className="note">Raw counts mix two sensors. The harmonized series counts fire-days (one cell, one day, at least one detection), calibrated on the 2012–2026 overlap.</p>
+          <p className="note">{t("heroNote2")}</p>
         </>
       )}
     </section>

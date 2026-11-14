@@ -13,6 +13,7 @@ export default function Readiness({ area }: { area: Area }) {
   return (
     <div>
       <h2>{t("readyTitle")}</h2>
+      <p className="note">{t("notOfficial")}</p>
       <div className="tiles">
         <div className="tile"><div className="k">{id ? "Paling awal" : "Earliest onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.earliest}</div><div className="s">{weekLabel(r.earliest)}</div></div>
         <div className="tile"><div className="k">{id ? "Tengah (median)" : "Median onset"}</div><div className="v">{id ? "mgg" : "wk"} {r.median}</div><div className="s">{weekLabel(r.median)}</div></div>

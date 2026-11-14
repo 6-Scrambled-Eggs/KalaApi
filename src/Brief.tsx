@@ -47,6 +47,7 @@ export default function Brief({ id }: { id: string }) {
     <section className="card a4 brief">
       <button className="noprint" onClick={() => window.print()}>{L ? "Cetak atau simpan PDF" : "Print or save as PDF"}</button>
       <h1>{a.name}: {L ? "ringkasan kesiapsiagaan api" : "fire readiness brief"}</h1>
+      <p className="note">{L ? "Bukan produk resmi. Dibuat untuk NASA Space Apps Challenge dari data NASA FIRMS. Belum disahkan oleh BPBD atau lembaga mana pun." : "Not an official product. Made for the NASA Space Apps Challenge from NASA FIRMS data. Not endorsed by BPBD or any agency."}</p>
       <p className="note">{L ? "Untuk BPBD, Manggala Agni, dan pengelola gambut. Data per minggu" : "For BPBD, Manggala Agni and peat managers. Data as of week"} {w} {L ? "tahun" : "of"} {a.last_year} · NASA FIRMS MODIS + VIIRS</p>
       <table><tbody>
         <tr><th>{L ? "Saat ini" : "Right now"}</th><td>{L ? `Minggu ${wk + 1} berada di persentil ke-${pct == null ? "n/a" : Math.round(pct)} dari minggu yang sama 2001–2025.` : `Week ${wk + 1} is at the ${pct == null ? "n/a" : Math.round(pct)}th percentile of the same week in 2001–2025.`} {L ? `Sejak awal tahun: ×${a.ytd_ratio ?? "n/a"} dari normal (×${a.ytd_ratio_recent ?? "n/a"} dari 10 tahun terakhir).` : `Year to date: ×${a.ytd_ratio ?? "n/a"} of normal (×${a.ytd_ratio_recent ?? "n/a"} of the last 10 years).`}</td></tr>

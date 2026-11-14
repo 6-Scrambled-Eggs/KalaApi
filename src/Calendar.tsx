@@ -32,7 +32,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           const f = (a: (number | null)[][]) => (a[yi][w] == null ? "n/a" : String(a[yi][w]));
           const est = y < 2012 || (y === 2012 && w < 3);
           const band = est && LO[yi][w] != null ? ` (90%: ${LO[yi][w]} to ${HI[yi][w]})` : "";
-          const pct = P[yi][w] == null ? "" : `<br/>${t("pctile")}: ${P[yi][w]}`;
+          const pct = P[yi][w] == null ? "" : `<br/>${t("pctile").charAt(0).toUpperCase() + t("pctile").slice(1)}: ${P[yi][w]}`;
           return `<b>${y}, ${t("week")} ${w + 1}</b> (${t("fromWord")} ${weekLabel(w + 1)})<br/>` +
             `${t("harmonized")}: ${f(H)}${band}${est ? " *" : ""}<br/>${t("rawModis")}: ${f(MM)}<br/>${t("rawViirs")}: ${f(VV)}${pct}`;
         },

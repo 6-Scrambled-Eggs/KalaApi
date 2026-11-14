@@ -73,7 +73,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
           <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
         ))}</tbody>
       </table>
-      <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear (jelas) = p < 0,01 dan ρ ≥ 0,4; suggestive (indikasi) = p < 0,05 dan ρ ≥ 0,4; weak = p < 0,15. Hanya 5 tahun El Niño: baca sebagai petunjuk." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.01 and ρ ≥ 0.4; suggestive = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15. With only 5 El Niño years, read all of this as a lead, not proof."}</p>
+      <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; p tidak dikoreksi untuk uji berganda. Label: clear (jelas) = p < 0,01 dan ρ ≥ 0,4; suggestive (indikasi) = p < 0,05 dan ρ ≥ 0,4; lemah (weak) = p < 0,15. Hanya 5 tahun El Niño: baca sebagai petunjuk." : "38 provinces and many kabupaten are tested; p is not corrected for multiple tests. Labels: clear = p < 0.01 and ρ ≥ 0.4; suggestive = p < 0.05 and ρ ≥ 0.4; weak = p < 0.15. With only 5 El Niño years, read all of this as a lead, not proof."}</p>
     </section>
   );
 }

@@ -4,7 +4,7 @@ import Analog from "./Analog";
 import EnsoPanel from "./EnsoPanel";
 import Readiness from "./Readiness";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
 import { fmt, useT } from "./i18n";
 import { ensoLabel } from "./EnsoPanel";
 
@@ -28,7 +28,10 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     if (!area) return [];
     const P = matrix(area.pct)[y - area.start_year] || [];
     const H = matrix(area.h)[y - area.start_year] || [];
-    return P.map((p, w) => ({ w, p, h: H[w] })).filter((r) => r.p != null && r.p >= 90).sort((a, b) => (b.p as number) - (a.p as number)).slice(0, 8);
+    const P12 = matrix(area.pct12)[y - area.start_year] || [];
+    const sm = seasonal(area).med;
+    const peakMed = Math.max(...sm.filter((v) => Number.isFinite(v)));
+    return P.map((p, w) => ({ w, p, h: H[w], p12: P12[w], low: H[w] != null && H[w] < 0.1 * peakMed })).filter((r) => r.p != null && r.p >= 90).sort((a, b) => (b.p as number) - (a.p as number)).slice(0, 8);
   }, [area, y]);
 
   if (err) return <p className="error">Could not load this area. {err}</p>;
@@ -72,7 +75,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <h1>{area.name}</h1>
           <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
         </div>
-        <div className="toggles" role="group" aria-label="Data view">
+        <div className="toggles" role="group" aria-label={t("dataView")}>
           {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
           <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
           <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
@@ -102,8 +105,8 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       {flagged.length === 0 ? <p className="note">{fmt(t("noFlags"), y)}</p> : (
         <ul className="flags">{flagged.map((f) => (
           <li key={f.w}><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</button>
-            <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`}>{(f.p as number) >= 97.5 ? t("extreme") : t("elevated")}</span>
-            <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}</span></li>))}</ul>
+            <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span>
+            <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
       )}
       {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
     </section>

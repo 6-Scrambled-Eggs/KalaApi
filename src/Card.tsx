@@ -15,6 +15,7 @@ export default function Card({ id }: { id: string }) {
     <section className="card a4">
       <button className="noprint" onClick={() => window.print()}>Print</button>
       <h1>{a.name}: fire readiness card</h1>
+      <p className="note">Not an official product. Made for the NASA Space Apps Challenge from NASA FIRMS data.</p>
       <table><tbody>
         <tr><th>Fire season, typical</th><td>starts {weekLabel(tp.onset)} · peaks {weekLabel(tp.peak)} · ends {weekLabel(tp.end)}</td></tr>
         <tr><th>This year ({a.last_year})</th><td>week {wk + 1} is at the {pct == null ? "n/a" : Math.round(pct)}th percentile of the same week in 2001–2025. Year to date: ×{a.ytd_ratio ?? "n/a"} of the normal amount (percentile {Math.round(a.ytd_pct)}).</td></tr>

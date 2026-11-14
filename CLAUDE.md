@@ -34,8 +34,8 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 
 ## Findings so far (keep honest in the UI and pitch)
 - 2012 step: raw detections jump about 5-6x; harmonized fire-days about 1.2x (national, 2012-14 vs 2009-11).
-- A fixed ratio per stratum beats a log-log model. Province strata fix most of the island-mix error.
-- Holdout 2019+2023: national annual error +2.8% / +1.6%; 77% of province-years within +-20%; median weekly r 0.90. Reverse holdout: quiet years (2016, 2017) under-predicted by about 10-11%.
+- Back-cast: power law V = alpha*M^b (b about 0.88), replaced the fixed per-stratum ratio on 14 Nov 2026.
+- V-1 holdout (2019, 2023): national annual error +1.8% / +3.2%; 80% of province-years within +-20%; weekly r 0.90. V-6 reverse holdout: 84% within +-20%, weekly r 0.95. In-sample back-cast check 2013-2025: median -2.4%, 79/90/95% of province-years within +-20/30/40%.
 - Known events: Kalteng and Sumsel in 2015 reach a weekly percentile of 98 (5 of 9 weeks in weeks 36-44 are >= 90; 2 of 9 are >= 97.5). 2019 reaches 94. The PRD check says the peaks must "stand out" in the calendar. They do, but not in every week. Report this honestly.
 - NRT files have no `type` column; static/offshore sources are not filtered after Jul-Aug 2026.
 
@@ -43,7 +43,7 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 `npm install`, `npm run dev`, `npm run build`. Hash routes: `#/` map, `#/area/<id>?m=h|m|v&y=<year>`, `#/surge/<id>` (FR-19 fake-surge hero), `#/story/<id>` (FR-15), `#/card/<id>` (FR-20 print card), `#/method`. EN/ID toggle in `i18n.ts`. Data is read from `public/data/` at runtime.
 
 ## Done since the first build (14 Nov)
-- Peat split on (GFW 30 m tiles in `DATA/peat/`; step 04 reads `.tif` tiles). Peat-only and mineral-only toggles. V-1: national error +2.3% / +1.2%, 71% of province-years within 20% (77% without peat split).
+- Peat split on (GFW 30 m tiles in `DATA/peat/`; step 04 reads `.tif` tiles). Peat-only and mineral-only toggles. V-1 numbers are in the line above (they include the peat split).
 - ONI marker (step 07, `public/data/oni.json`), FRP in story mode, CSV/PNG export and copy-link, "vs last 10 years" tile, GitHub Pages deploy (`.github/workflows/deploy.yml`), `docs/video-script.md`, `docs/project-page.md`.
 - 2026 vs 2015 at week 43: nation 75% (fire-days), South Papua 115%, West Kalimantan 111%, Central Kalimantan 66%, South Sumatra 42%, Riau 13%.
 
@@ -67,3 +67,5 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - AI use must be disclosed on the project page. No NASA logos in AI-made content.
 - Back-cast model (14 Nov 2026): V = alpha_stratum * M^b, b=0.875 shared, Poisson fit (`calibrate_power` in `pipeline/harmonize_lib.py`). Replaced the fixed ratio (quiet years were 17% too low). Static-looking NRT cells are dropped in `build()`. Do not reintroduce "within ±14%" or "17% too low" text. Plan: `docs/PRD-v2.md`.
 - Live strip (14 Nov 2026): `pipeline/11_live_fire.py` runs in the deploy workflow with secret FIRMS_MAP_KEY and writes public/data/live.json (gitignored). It is separate from the calibrated series. Never print or commit the key; local .env is gitignored. The sandbox cannot reach the FIRMS API, so the script was only self-tested with fake rows (`--selftest`; delete the live.json it writes).
+
+- Flags (15 Nov): `pipeline/12_flag_baseline.py` shows the weekly percentile flags agree with a VIIRS-only 2012-2025 baseline (Spearman 0.94; all elevated weeks >= 80th, all extreme >= 90th). Weeks with a low base are labelled "(low base)". Briefs and cards say "Not an official product".
