@@ -75,8 +75,10 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <h1>{area.name}</h1>
           <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
         </div>
-        <div className="toggles" role="group" aria-label={t("dataView")}>
+        <div className="togglegrp"><div className="toggles" role="group" aria-label={t("dataView")}>
           {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
+          </div>
+          <div className="toggles" role="group" aria-label={t("actions")}>
           <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
           <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
           <button onClick={() => go(`/card/${id}`)}>{t("card")}</button>
@@ -84,6 +86,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <button onClick={exportCsv}>{t("csv")}</button>
           <button onClick={exportPng}>{t("png")}</button>
           <button onClick={copyLink}>{copied ? t("copied") : t("copyLink")}</button>
+          </div>
         </div>
       </div>
       {summary && <p className="summary">{summary}</p>}

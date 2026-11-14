@@ -12,7 +12,9 @@ import MapView from "./MapView";
 import Method from "./Method";
 import Story from "./Story";
 import HomeHero from "./HomeHero";
+import HomeWatch from "./HomeWatch";
 import { AreaIndex, dateLocale, loadIndex } from "./data";
+import ProvList from "./ProvList";
 import { Lang, LangCtx, makeT } from "./i18n";
 
 function useHash() {
@@ -39,6 +41,7 @@ export default function App() {
 
   return (
     <LangCtx.Provider value={{ lang, t }}>
+      <a className="skip" href="#main-content" onClick={(e) => { e.preventDefault(); document.getElementById("main-content")?.focus(); }}>{lang === "id" ? "Lewati ke isi" : "Skip to content"}</a>
       <header className="top noprint">
         <a className="brand" href="#/"><b>KalaApi</b><span>{t("tagline")}</span></a>
         <nav>
@@ -50,7 +53,7 @@ export default function App() {
         </nav>
         {index && <AreaPicker index={index} onPick={(a) => go(`/area/${a}`)} />}
       </header>
-      <main>
+      <main id="main-content" tabIndex={-1}>
         {!index ? <p>{t("loading")}</p> : route === "area" ? (
           <AreaPage id={id} index={index} year={year} mode={mode} setYear={(y) => setQ("y", String(y))} setMode={(m) => setQ("m", m)} go={go} />
         ) : route === "surge" ? <Hero areaId={path[1] || "indonesia"} index={index} onPick={(a) => go(`/surge/${a}`)} />
@@ -68,6 +71,8 @@ export default function App() {
             <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/surge">{t("ctaStep")}</a> <a className="cta alt" href="#/enso">{t("ctaEnso")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
             <MapView index={index} onSelect={(a) => go(`/area/${a}`)} />
             <LiveStrip />
+            <ProvList index={index} />
+            <HomeWatch index={index} />
           </section>
         )}
       </main>
