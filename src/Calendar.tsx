@@ -1,16 +1,16 @@
 import { useMemo } from "react";
 import Chart from "./Chart";
-import { Area, WPY, matrix, weekLabel } from "./data";
+import { Area, Oni, WPY, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
 
-export type Mode = "h" | "m" | "v";
+export type Mode = "h" | "m" | "v" | "p" | "n";
 
-export default function Calendar({ area, mode, year, onYear }: { area: Area; mode: Mode; year: number; onYear: (y: number) => void }) {
+export default function Calendar({ area, mode, year, onYear, oni, onReady }: { area: Area; mode: Mode; year: number; onYear: (y: number) => void; oni?: Oni | null; onReady?: (c: any) => void }) {
   const { t } = useT();
   const option = useMemo(() => {
     const years: number[] = [];
     for (let y = area.start_year; y <= area.last_year; y++) years.push(y);
-    const src = mode === "h" ? area.h : mode === "m" ? area.m : area.v;
+    const src = mode === "m" ? area.m : mode === "v" ? area.v : mode === "p" ? (area.h_peat ?? area.h) : mode === "n" ? (area.h_min ?? area.h) : area.h;
     const M = matrix(src), H = matrix(area.h), LO = matrix(area.lo), HI = matrix(area.hi);
     const MM = matrix(area.m), VV = matrix(area.v), P = matrix(area.pct);
     const vals: number[] = [];
@@ -37,7 +37,17 @@ export default function Calendar({ area, mode, year, onYear }: { area: Area; mod
         },
       },
       xAxis: { type: "category", data: Array.from({ length: WPY }, (_, i) => String(i + 1)), name: t("week"), nameLocation: "middle", nameGap: 30, splitArea: { show: false } },
-      yAxis: { type: "category", data: years.map(String), inverse: true, axisLabel: { interval: 1 } },
+      yAxis: {
+        type: "category", data: years.map(String), inverse: true,
+        axisLabel: {
+          interval: 0, fontSize: 11, rich: { n: { color: "#bbb" }, e: { color: "#c0392b" }, l: { color: "#2471a3" } },
+          formatter: (v: string) => {
+            const o = oni?.jas?.[v];
+            const m = o == null ? "n" : o >= 0.5 ? "e" : o <= -0.5 ? "l" : "n";
+            return `{${m}|●} ${v}`;
+          },
+        },
+      },
       visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: "center", bottom: 0, itemWidth: 12, itemHeight: 160, text: [t("fireDays"), ""], inRange: { color: ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
       series: [{
         type: "heatmap", data, progressive: 0,
@@ -47,7 +57,7 @@ export default function Calendar({ area, mode, year, onYear }: { area: Area; mod
         emphasis: { itemStyle: { borderColor: "#000", borderWidth: 1 } },
       }],
     } as any;
-  }, [area, mode, t]);
+  }, [area, mode, t, oni]);
   const onClick = useMemo(() => (p: any) => { if (p?.value) onYear(area.start_year + (p.value as number[])[1]); }, [area, onYear]);
-  return <Chart option={option} height={560} onClick={onClick} label={`${t("calendar")}: ${area.name}`} />;
+  return <Chart option={option} height={620} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />;
 }

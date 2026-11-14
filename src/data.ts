@@ -4,12 +4,14 @@ export type Period = { onset: number; peak: number; end: number };
 export type AreaIndex = {
   id: string; name: string; level: "nation" | "province" | "kabupaten"; parent: string | null;
   low_data: boolean; mean_annual_fire_days: number; ytd_pct: number; ytd_ratio: number | null; typical_period: Period;
+  ytd_pct_recent: number; ytd_ratio_recent: number | null;
 };
 type Series = (number | null)[];
 export type Area = AreaIndex & {
   start_year: number; last_year: number; last_week: number; back_cast_end_slot: number;
   periods: Record<string, [number, number, number]>;
   h: Series; lo: Series; hi: Series; chk: Series; m: Series; v: Series; cnt: Series; pct: Series; pct12: Series;
+  frp: Series; h_peat?: Series; h_min?: Series;
 };
 export type Meta = {
   generated: string; data_end: string; start_year: number; end_year: number; last_complete_year: number;
@@ -42,8 +44,10 @@ export const loadIndex = () => load<AreaIndex[]>("areas.json");
 export const loadArea = (id: string): Promise<Area> =>
   Promise.all([load<Area>(`areas/${id}.json`), loadIndex()]).then(([a, idx]) => {
     const ix = idx.find((x) => x.id === id);
-    return { ...a, ytd_pct: ix?.ytd_pct ?? NaN, ytd_ratio: ix?.ytd_ratio ?? null };
+    return { ...a, ytd_pct: ix?.ytd_pct ?? NaN, ytd_ratio: ix?.ytd_ratio ?? null, ytd_pct_recent: ix?.ytd_pct_recent ?? NaN, ytd_ratio_recent: ix?.ytd_ratio_recent ?? null };
   });
+export type Oni = { source: string; jas: Record<string, number> };
+export const loadOni = () => load<Oni>("oni.json");
 export const loadMeta = () => load<Meta>("meta.json");
 export const loadValidation = () => load<Validation>("validation.json");
 export const loadProvinces = () => load<GeoJSON.FeatureCollection>("provinces.geojson");

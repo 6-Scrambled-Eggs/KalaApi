@@ -18,6 +18,7 @@ from harmonize_lib import (NSLOT, WPY, Y0, Y1, area_groups, area_series, build, 
 PUB = REPO / "public" / "data"
 BASE = list(range(2001, 2026))  # baseline for anomalies (PRD: 2001-2025)
 BASE12 = list(range(2012, 2026))  # sensitivity baseline (observed VIIRS years only)
+BASE10 = list(range(2016, 2026))  # "recent ten years" baseline for the year-to-date tile
 NBOOT = 1000
 
 
@@ -56,7 +57,19 @@ def main():
             base_ytd = np.nansum(Hm[: len(BASE), :last_w], axis=1)
             ytd_pct = 100 * ((base_ytd < ytd).sum() + 0.5 * (base_ytd == ytd).sum()) / len(base_ytd)
             ytd_ratio = float(ytd / np.median(base_ytd)) if np.median(base_ytd) > 0 else None
+            base10 = np.nansum(Hm[[y - Y0 for y in BASE10], :last_w], axis=1)
+            ytd_pct10 = 100 * ((base10 < ytd).sum() + 0.5 * (base10 == ytd).sum()) / len(base10)
+            ytd_ratio10 = float(ytd / np.median(base10)) if np.median(base10) > 0 else None
             low = bool(annual < 50)
+            # Peat-only and mineral-only harmonized series (FR-05), when the area has both kinds of cells.
+            pk = D.combos["peat"].to_numpy()[idx]
+            split = {}
+            if D.peat_known and (pk == "peat").any() and (pk == "mineral").any():
+                split["h_peat"] = r(area_series(D, idx[pk == "peat"], k)["h"])
+                split["h_min"] = r(area_series(D, idx[pk == "mineral"], k)["h"])
+            # Fire radiative power (MW, sum of daily cell maxima), S-NPP era only.
+            frp = np.full(NSLOT, np.nan)
+            frp[D.S0 : D.LAST + 1] = D.frp["snpp"][idx].sum(0)[D.S0 : D.LAST + 1]
             rec = dict(id=aid, name=name, level=level, parent=parent, start_year=Y0, weeks_per_year=WPY,
                        last_year=last_year, last_week=last_w, back_cast_end_slot=D.S0, low_data=low,
                        mean_annual_fire_days=round(float(annual), 1),
@@ -64,11 +77,13 @@ def main():
                        periods={str(y): v for y, v in per.items()},
                        h=r(h), lo=r(ser["lo"]), hi=r(ser["hi"]), chk=r(ser["chk"]),
                        m=r(ser["m"], 0), v=r(ser["v"], 0), cnt=r(ser["cnt"], 0),
-                       pct=r(pct, 0), pct12=r(pct12, 0))
+                       pct=r(pct, 0), pct12=r(pct12, 0), frp=r(frp, 0), **split)
             (PUB / "areas" / f"{aid}.json").write_text(json.dumps(rec, separators=(",", ":")), encoding="utf-8")
             index.append(dict(id=aid, name=name, level=level, parent=parent, low_data=low,
                               mean_annual_fire_days=rec["mean_annual_fire_days"], ytd_pct=round(float(ytd_pct), 1),
                               ytd_ratio=None if ytd_ratio is None else round(ytd_ratio, 2),
+                              ytd_pct_recent=round(float(ytd_pct10), 1),
+                              ytd_ratio_recent=None if ytd_ratio10 is None else round(ytd_ratio10, 2),
                               typical_period=rec["typical_period"]))
     (PUB / "areas.json").write_text(json.dumps(index, separators=(",", ":")), encoding="utf-8")
     meta = dict(

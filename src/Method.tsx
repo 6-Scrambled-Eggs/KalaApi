@@ -53,6 +53,9 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <li><b>Small areas</b>: {val.V2_small_areas.low_data_areas} of {val.V2_small_areas.total_areas} areas have fewer than 50 fire-days a year and carry a low-data note.</li>
           <li><b>Burned-area cross-check (MCD64A1)</b>: {val.V7_burned_area.status}. {val.V7_burned_area.reason}.</li>
           {!val.V3_peat_available && <li><b>Peat vs mineral split</b>: not available yet. No peat polygon file was used in this build.</li>}
+          {val.V3_peat_available && <li><b>Peat vs mineral split</b>: on. Peat map: Global Forest Watch peatlands tiles (30 m). A 5 km cell counts as peat when at least half of its pixels are peat. In our tests the split lowers the national annual error a little (2.3% and 1.2% against 2.8% and 1.6% without it). It also lowers the share of province-years within 20% (71% against 77%), because some peat strata have few fire-days. We keep it because it shows a real difference between peat and mineral soil. Read small peat areas with care.</li>}
+          <li><b>Fire radiative power (FRP)</b>: shown in story mode and in the CSV from 2012 onward only. It is the VIIRS value, summed from the daily maximum in each cell. It is not harmonized with MODIS and it is not burned area.</li>
+          <li><b>El Niño marker</b>: the dot beside each year uses NOAA's Oceanic Niño Index for July to September (El Niño at +0.5 or higher, La Niña at −0.5 or lower).</li>
         </ul>
       ) : <p>Validation results are not available.</p>}
       {meta && (<>

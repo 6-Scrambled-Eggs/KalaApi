@@ -38,7 +38,7 @@ def build() -> Data:
     cd = cd[cd["date"].dt.year >= Y0]
     cd["slot"] = slot_of(cd["date"])
     cd["sensor"] = cd["sensor"].astype(str)
-    g = cd.groupby(["kab_id", "peat", "sensor", "slot"], as_index=False).agg(fd=("n", "size"), cnt=("n", "sum"))
+    g = cd.groupby(["kab_id", "peat", "sensor", "slot"], as_index=False).agg(fd=("n", "size"), cnt=("n", "sum"), frp=("max_frp", "sum"))
 
     combos = cells[["kab_id", "kab", "prov", "island"]].drop_duplicates("kab_id")
     pk = cd[["kab_id", "peat"]].drop_duplicates()
@@ -46,7 +46,7 @@ def build() -> Data:
     cidx = {(a, b): i for i, (a, b) in enumerate(zip(combos["kab_id"], combos["peat"]))}
     D = Data()
     D.combos = combos
-    D.fd, D.cnt = {}, {}
+    D.fd, D.cnt, D.frp = {}, {}, {}
     for s in ["aqua", "terra", "snpp"]:
         D.fd[s] = np.zeros((len(combos), NSLOT))
         D.cnt[s] = np.zeros((len(combos), NSLOT))
@@ -54,6 +54,9 @@ def build() -> Data:
         ii = np.array([cidx[(a, b)] for a, b in zip(gs["kab_id"], gs["peat"])])
         D.fd[s][ii, gs["slot"].to_numpy()] = gs["fd"].to_numpy()
         D.cnt[s][ii, gs["slot"].to_numpy()] = gs["cnt"].to_numpy()
+        if s == "snpp":  # FRP (MW): sum over cell-days of the daily maximum FRP in each cell. VIIRS era only.
+            D.frp[s] = np.zeros((len(combos), NSLOT))
+            D.frp[s][ii, gs["slot"].to_numpy()] = gs["frp"].fillna(0).to_numpy()
 
     doy_end = snpp_end.dayofyear
     s_end = (snpp_end.year - Y0) * WPY + min((doy_end - 1) // 7, WPY - 1)

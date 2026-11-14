@@ -69,3 +69,7 @@ desktop.ini
 !.vscode/extensions.json
 .idea/
 *.code-workspace
+
+# Vite temp files
+vite.config.ts.timestamp-*
+*.timestamp-*.mjs
