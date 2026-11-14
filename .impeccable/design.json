@@ -1,0 +1,1230 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T17:08:12+00:00",
+  "title": "Design System: KalaApi",
+  "extensions": {
+    "colorMeta": {
+      "sea": {
+        "role": "neutral",
+        "displayName": "Deep Sea",
+        "canonical": "#0d1324",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "head": {
+        "role": "neutral",
+        "displayName": "Night Header",
+        "canonical": "#0e1322",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Nila Ground",
+        "canonical": "#121829",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Dyed Panel",
+        "canonical": "#1a2238",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "raised": {
+        "role": "neutral",
+        "displayName": "Raised Thread",
+        "canonical": "#222b45",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "active": {
+        "role": "neutral",
+        "displayName": "Active Thread",
+        "canonical": "#2a3352",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "control": {
+        "role": "neutral",
+        "displayName": "Control Indigo",
+        "canonical": "#46517a",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "control-hover": {
+        "role": "neutral",
+        "displayName": "Control Hover",
+        "canonical": "#56628f",
+        "tonalRamp": [
+          "#0d1324",
+          "#0e1322",
+          "#121829",
+          "#1a2238",
+          "#222b45",
+          "#2a3352",
+          "#46517a",
+          "#56628f"
+        ],
+        "note": "Ramp is the project's own indigo dye-step scale."
+      },
+      "axis": {
+        "role": "neutral",
+        "displayName": "Axis",
+        "canonical": "#3b456a",
+        "tonalRamp": [
+          "#070a16",
+          "#1e2437",
+          "#39415c",
+          "#555f83",
+          "#7681a6",
+          "#9aa4c4",
+          "#c0c8e2",
+          "#e8eeff"
+        ]
+      },
+      "grid": {
+        "role": "neutral",
+        "displayName": "Grid",
+        "canonical": "#26304d",
+        "tonalRamp": [
+          "#070b15",
+          "#1f2435",
+          "#394158",
+          "#55607e",
+          "#7682a1",
+          "#9aa5bf",
+          "#c0c9de",
+          "#e8eefe"
+        ]
+      },
+      "no-data": {
+        "role": "neutral",
+        "displayName": "No Data",
+        "canonical": "#3b4060",
+        "tonalRamp": [
+          "#090a15",
+          "#212435",
+          "#3c4058",
+          "#595f7e",
+          "#7a80a1",
+          "#9ea3bf",
+          "#c3c8df",
+          "#eaeefe"
+        ]
+      },
+      "wax-line": {
+        "role": "neutral",
+        "displayName": "Wax Line",
+        "canonical": "rgba(241, 236, 225, .14)",
+        "tonalRamp": [
+          "#0c0b08",
+          "#272520",
+          "#45423b",
+          "#656158",
+          "#868279",
+          "#a8a59d",
+          "#ccc9c3",
+          "#f0eeea"
+        ],
+        "note": "Cream at alpha over the indigo ground; ramp built from its opaque base."
+      },
+      "wax-rule": {
+        "role": "neutral",
+        "displayName": "Wax Rule",
+        "canonical": "rgba(241, 236, 225, .08)",
+        "tonalRamp": [
+          "#0c0b08",
+          "#272520",
+          "#45423b",
+          "#656158",
+          "#868279",
+          "#a8a59d",
+          "#ccc9c3",
+          "#f0eeea"
+        ],
+        "note": "Cream at alpha over the indigo ground; ramp built from its opaque base."
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Wax Cream",
+        "canonical": "#f2f0eb",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#262523",
+          "#43423f",
+          "#63615d",
+          "#84827e",
+          "#a6a5a1",
+          "#cac9c6",
+          "#efeeec"
+        ]
+      },
+      "ink-body": {
+        "role": "neutral",
+        "displayName": "Cream Body",
+        "canonical": "#e4e2dc",
+        "tonalRamp": [
+          "#0c0b09",
+          "#262522",
+          "#43423e",
+          "#63615c",
+          "#84827d",
+          "#a6a5a1",
+          "#cac9c6",
+          "#efeeec"
+        ]
+      },
+      "mute": {
+        "role": "neutral",
+        "displayName": "Indigo Grey",
+        "canonical": "#a9adc0",
+        "tonalRamp": [
+          "#0a0b10",
+          "#23242d",
+          "#3f414d",
+          "#5d6070",
+          "#7e8192",
+          "#a1a4b2",
+          "#c6c8d4",
+          "#eceef6"
+        ]
+      },
+      "faint": {
+        "role": "neutral",
+        "displayName": "Faint",
+        "canonical": "#8e93aa",
+        "tonalRamp": [
+          "#090b11",
+          "#22242f",
+          "#3e4150",
+          "#5c6074",
+          "#7d8196",
+          "#a0a4b6",
+          "#c5c8d7",
+          "#ebeef8"
+        ]
+      },
+      "soga": {
+        "role": "primary",
+        "displayName": "Soga Brown",
+        "canonical": "#c58b4b",
+        "tonalRamp": [
+          "#170600",
+          "#391e00",
+          "#5e3805",
+          "#865517",
+          "#aa763c",
+          "#c89b6e",
+          "#e6c29e",
+          "#ffe9cf"
+        ]
+      },
+      "soga-hi": {
+        "role": "primary",
+        "displayName": "Lit Soga",
+        "canonical": "#d79d5d",
+        "tonalRamp": [
+          "#170700",
+          "#381e00",
+          "#5e3805",
+          "#855517",
+          "#a9763d",
+          "#c79c6e",
+          "#e5c29e",
+          "#ffeacf"
+        ]
+      },
+      "soga-ink": {
+        "role": "primary",
+        "displayName": "Soga Night",
+        "canonical": "#1b1206",
+        "tonalRamp": [
+          "#0e0a06",
+          "#2a241d",
+          "#494136",
+          "#6a5f52",
+          "#8b8072",
+          "#ada397",
+          "#cfc8be",
+          "#f3eee6"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Soga Link",
+        "canonical": "#e0a96a",
+        "tonalRamp": [
+          "#160700",
+          "#371f00",
+          "#5c3908",
+          "#83561a",
+          "#a7773f",
+          "#c59d70",
+          "#e3c39f",
+          "#ffead0"
+        ]
+      },
+      "selection": {
+        "role": "primary",
+        "displayName": "Soga Selection",
+        "canonical": "#5b4126",
+        "tonalRamp": [
+          "#120903",
+          "#302214",
+          "#513e2a",
+          "#755c43",
+          "#977d63",
+          "#b7a18b",
+          "#d8c6b4",
+          "#f9ecdf"
+        ]
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Wax Gold",
+        "canonical": "#f2b25c",
+        "tonalRamp": [
+          "#180600",
+          "#3a1d00",
+          "#603700",
+          "#895400",
+          "#ad7623",
+          "#ca9b5f",
+          "#e8c294",
+          "#ffeac8"
+        ]
+      },
+      "coral": {
+        "role": "secondary",
+        "displayName": "Coral",
+        "canonical": "#ff7a6b",
+        "tonalRamp": [
+          "#210000",
+          "#490806",
+          "#761d18",
+          "#a6342b",
+          "#cd584c",
+          "#e88578",
+          "#ffb1a6",
+          "#ffded5"
+        ]
+      },
+      "sky": {
+        "role": "secondary",
+        "displayName": "Sky",
+        "canonical": "#8fb8ff",
+        "tonalRamp": [
+          "#020a1e",
+          "#122444",
+          "#28416e",
+          "#3f609b",
+          "#5f82bf",
+          "#87a6da",
+          "#b2caf4",
+          "#ddf0ff"
+        ]
+      },
+      "fire-0": {
+        "role": "tertiary",
+        "displayName": "Fire 0, Ember Floor",
+        "canonical": "#2a2230",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-1": {
+        "role": "tertiary",
+        "displayName": "Fire 1, Dim Rust",
+        "canonical": "#4d1a02",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-2": {
+        "role": "tertiary",
+        "displayName": "Fire 2, Rust",
+        "canonical": "#993404",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-3": {
+        "role": "tertiary",
+        "displayName": "Fire 3, Burnt Orange",
+        "canonical": "#d95f0e",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-4": {
+        "role": "tertiary",
+        "displayName": "Fire 4, Amber",
+        "canonical": "#fe9929",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-5": {
+        "role": "tertiary",
+        "displayName": "Fire 5, Flame Yellow",
+        "canonical": "#fec44f",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "fire-6": {
+        "role": "tertiary",
+        "displayName": "Fire 6, Pale Heat",
+        "canonical": "#fff7bc",
+        "tonalRamp": [
+          "#2a2230",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "note": "Ramp is the project's dark-order fire scale (hotter = brighter)."
+      },
+      "anomaly-hot": {
+        "role": "tertiary",
+        "displayName": "Anomaly Hot",
+        "canonical": "#c2541a",
+        "tonalRamp": [
+          "#1f0000",
+          "#460f00",
+          "#722600",
+          "#a03e01",
+          "#c66132",
+          "#e28c67",
+          "#fcb699",
+          "#ffe1cc"
+        ]
+      },
+      "enso-0": {
+        "role": "tertiary",
+        "displayName": "ENSO 0, Cold Indigo",
+        "canonical": "#26304d",
+        "tonalRamp": [
+          "#0d1324",
+          "#26304d",
+          "#3c5a96",
+          "#6f97dd",
+          "#8fb8ff",
+          "#d6e6ff"
+        ],
+        "note": "Ramp is the project's cold El Nino scale, sea to pale sky."
+      },
+      "enso-1": {
+        "role": "tertiary",
+        "displayName": "ENSO 1, Dusk Blue",
+        "canonical": "#3c5a96",
+        "tonalRamp": [
+          "#0d1324",
+          "#26304d",
+          "#3c5a96",
+          "#6f97dd",
+          "#8fb8ff",
+          "#d6e6ff"
+        ],
+        "note": "Ramp is the project's cold El Nino scale, sea to pale sky."
+      },
+      "enso-2": {
+        "role": "tertiary",
+        "displayName": "ENSO 2, Cornflower",
+        "canonical": "#6f97dd",
+        "tonalRamp": [
+          "#0d1324",
+          "#26304d",
+          "#3c5a96",
+          "#6f97dd",
+          "#8fb8ff",
+          "#d6e6ff"
+        ],
+        "note": "Ramp is the project's cold El Nino scale, sea to pale sky."
+      },
+      "enso-3": {
+        "role": "tertiary",
+        "displayName": "ENSO 3, Pale Sky",
+        "canonical": "#d6e6ff",
+        "tonalRamp": [
+          "#0d1324",
+          "#26304d",
+          "#3c5a96",
+          "#6f97dd",
+          "#8fb8ff",
+          "#d6e6ff"
+        ],
+        "note": "Ramp is the project's cold El Nino scale, sea to pale sky."
+      },
+      "elevated-bg": {
+        "role": "tertiary",
+        "displayName": "Elevated Ground",
+        "canonical": "#3d2a1c",
+        "tonalRamp": [
+          "#100a05",
+          "#2d231b",
+          "#4e3e34",
+          "#715d4f",
+          "#937e6f",
+          "#b3a195",
+          "#d5c6bc",
+          "#f7ece5"
+        ]
+      },
+      "elevated-ink": {
+        "role": "tertiary",
+        "displayName": "Elevated Ink",
+        "canonical": "#ffc27a",
+        "tonalRamp": [
+          "#170600",
+          "#391e00",
+          "#5e3800",
+          "#865507",
+          "#aa7635",
+          "#c89c69",
+          "#e6c29b",
+          "#ffeacd"
+        ]
+      },
+      "notice-bg": {
+        "role": "neutral",
+        "displayName": "Notice Ground",
+        "canonical": "#2a2416",
+        "tonalRamp": [
+          "#0d0b06",
+          "#28251d",
+          "#464236",
+          "#676152",
+          "#888273",
+          "#aaa598",
+          "#cdc9be",
+          "#f1eee6"
+        ]
+      },
+      "notice-line": {
+        "role": "neutral",
+        "displayName": "Notice Line",
+        "canonical": "#5a4a24",
+        "tonalRamp": [
+          "#100a02",
+          "#2c2411",
+          "#4c4126",
+          "#6f5f3d",
+          "#90815d",
+          "#b1a486",
+          "#d3c8b0",
+          "#f6eedc"
+        ]
+      },
+      "notice-ink": {
+        "role": "neutral",
+        "displayName": "Notice Ink",
+        "canonical": "#f0c879",
+        "tonalRamp": [
+          "#140900",
+          "#342100",
+          "#563d00",
+          "#7c5b07",
+          "#9f7d35",
+          "#bea169",
+          "#ddc69b",
+          "#fdedcd"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "paper-raised": {
+        "role": "neutral",
+        "displayName": "Paper Raised",
+        "canonical": "#f0f0ee",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252524",
+          "#424241",
+          "#616160",
+          "#828281",
+          "#a5a5a4",
+          "#c9c9c8",
+          "#eeeeee"
+        ]
+      },
+      "paper-line": {
+        "role": "neutral",
+        "displayName": "Paper Line",
+        "canonical": "#e4e4e1",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252524",
+          "#424240",
+          "#61615f",
+          "#828280",
+          "#a5a5a3",
+          "#c9c9c7",
+          "#eeeeed"
+        ]
+      },
+      "paper-rule": {
+        "role": "neutral",
+        "displayName": "Paper Rule",
+        "canonical": "#ececea",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252524",
+          "#424241",
+          "#616160",
+          "#828281",
+          "#a5a5a4",
+          "#c9c9c8",
+          "#eeeeee"
+        ]
+      },
+      "paper-control": {
+        "role": "neutral",
+        "displayName": "Paper Control",
+        "canonical": "#cfcfcb",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#424240",
+          "#61615e",
+          "#82827f",
+          "#a5a5a2",
+          "#c9c9c7",
+          "#eeeeed"
+        ]
+      },
+      "paper-ink": {
+        "role": "neutral",
+        "displayName": "Paper Ink",
+        "canonical": "#18181b",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252527",
+          "#424244",
+          "#616164",
+          "#828285",
+          "#a5a5a8",
+          "#c9c9cb",
+          "#eeeef0"
+        ]
+      },
+      "paper-ink-body": {
+        "role": "neutral",
+        "displayName": "Paper Body",
+        "canonical": "#27272a",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252527",
+          "#424244",
+          "#616164",
+          "#828285",
+          "#a5a5a7",
+          "#c9c9cb",
+          "#eeeef0"
+        ]
+      },
+      "paper-mute": {
+        "role": "neutral",
+        "displayName": "Paper Mute",
+        "canonical": "#55585c",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#242527",
+          "#404245",
+          "#5f6165",
+          "#808386",
+          "#a3a5a9",
+          "#c7c9cc",
+          "#edeef0"
+        ]
+      },
+      "paper-faint": {
+        "role": "neutral",
+        "displayName": "Paper Faint",
+        "canonical": "#6b6b6b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "paper-accent": {
+        "role": "primary",
+        "displayName": "Paper Rust",
+        "canonical": "#b03a12",
+        "tonalRamp": [
+          "#200000",
+          "#480c00",
+          "#742205",
+          "#a33917",
+          "#ca5d3c",
+          "#e6896d",
+          "#ffb49e",
+          "#ffe0cf"
+        ]
+      },
+      "paper-gold": {
+        "role": "secondary",
+        "displayName": "Paper Gold",
+        "canonical": "#993404",
+        "tonalRamp": [
+          "#1e0100",
+          "#451100",
+          "#6f280b",
+          "#9d411d",
+          "#c36341",
+          "#df8d70",
+          "#fab7a0",
+          "#ffe2d1"
+        ]
+      },
+      "paper-neg": {
+        "role": "secondary",
+        "displayName": "Paper Red",
+        "canonical": "#b42318",
+        "tonalRamp": [
+          "#230000",
+          "#4d0100",
+          "#7b150e",
+          "#ac2b20",
+          "#d45242",
+          "#ee8171",
+          "#ffafa1",
+          "#ffdcd1"
+        ]
+      },
+      "paper-good": {
+        "role": "secondary",
+        "displayName": "Paper Blue",
+        "canonical": "#1f5f8b",
+        "tonalRamp": [
+          "#000c1a",
+          "#07283e",
+          "#1a4665",
+          "#2f668f",
+          "#5188b3",
+          "#7eabcf",
+          "#abceeb",
+          "#d8f2ff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home title and area name (34px; 25px on phones)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles on other routes."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section heads, 44px above."
+      },
+      "title-sm": {
+        "displayName": "Title small",
+        "purpose": "Sub-section heads and story-card titles."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Intro under a title, in mute, max 66ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text in ink-body; prose max 78ch."
+      },
+      "note": {
+        "displayName": "Note",
+        "purpose": "Method notes and caveats beside the numbers, max 110ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "KPI keys, nav, tabs, table heads."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "KPI values, tabular."
+      },
+      "figure-hero": {
+        "displayName": "Figure hero",
+        "purpose": "Main KPI (gold) and the home strip."
+      },
+      "chart": {
+        "displayName": "Chart",
+        "purpose": "ECharts axis and name labels in both chart themes."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tooltip-lift",
+        "value": "0 8px 24px rgba(0,0,0,.25)",
+        "purpose": "Chart tooltips only; the one shadow in a flat-cloth system."
+      }
+    ],
+    "focus": [
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #8fb8ff; outline-offset: 2px",
+        "purpose": "Every focusable element (links, buttons, inputs, selects, summaries)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "120ms ease",
+        "purpose": "Colour, border and background changes on hover and selection."
+      },
+      {
+        "name": "press",
+        "value": "transform translateY(1px), 80ms",
+        "purpose": "Button press-down."
+      },
+      {
+        "name": "disclosure",
+        "value": "transform rotate(90deg), 150ms",
+        "purpose": "Disclosure arrow on the province list."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "prefers-reduced-motion removes every transition."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav-wrap",
+        "value": "1100px",
+        "purpose": "Nav drops to its own scrolling row."
+      },
+      {
+        "name": "single-column",
+        "value": "1023px",
+        "purpose": "Splits collapse; watch list before map; 4-up KPIs become 2-up."
+      },
+      {
+        "name": "phone",
+        "value": "700px",
+        "purpose": "16px gutter, grid header, 2x2 CTAs, 360px map."
+      }
+    ],
+    "chartThemes": {
+      "kala": {
+        "ink": "#f2f0eb",
+        "mute": "#a9adc0",
+        "grid": "#26304d",
+        "axis": "#3b456a",
+        "tipBg": "#0e1322",
+        "tipLine": "#3b456a",
+        "pointer": "#56628f",
+        "palette": [
+          "#fe9929",
+          "#e8e2d4",
+          "#8fb8ff",
+          "#c58b4b",
+          "#8e93aa"
+        ],
+        "use": "All screen charts on the indigo ground."
+      },
+      "kala-paper": {
+        "ink": "#18181b",
+        "mute": "#55585c",
+        "grid": "#ecece9",
+        "axis": "#cfcfcb",
+        "tipBg": "#ffffff",
+        "tipLine": "#e4e4e1",
+        "pointer": "#a3a39e",
+        "palette": [
+          "#d95f0e",
+          "#3f3f46",
+          "#1f5f8b",
+          "#993404",
+          "#8a8a85"
+        ],
+        "use": "Picked automatically for any chart inside the A4 sheet."
+      }
+    },
+    "dataRamps": {
+      "fire-count": {
+        "stops": [
+          "#241f33",
+          "#4d1a02",
+          "#993404",
+          "#d95f0e",
+          "#fe9929",
+          "#fec44f",
+          "#fff7bc"
+        ],
+        "use": "Calendar count view, dim to bright."
+      },
+      "fire-map": {
+        "stops": [
+          [
+            "#4d1a02",
+            0
+          ],
+          [
+            "#d95f0e",
+            50
+          ],
+          [
+            "#fe9929",
+            90
+          ],
+          [
+            "#fff7bc",
+            100
+          ]
+        ],
+        "use": "Province map by weekly percentile; no data #3b4060."
+      },
+      "anomaly": {
+        "stops": [
+          "#8fb8ff",
+          "#3c5a96",
+          "#222b45",
+          "#c2541a",
+          "#fec44f"
+        ],
+        "use": "Calendar anomaly view, quietest to busiest."
+      },
+      "enso": {
+        "stops": [
+          [
+            "#26304d",
+            0
+          ],
+          [
+            "#3c5a96",
+            0.3
+          ],
+          [
+            "#6f97dd",
+            0.6
+          ],
+          [
+            "#d6e6ff",
+            0.9
+          ]
+        ],
+        "use": "El Nino link strength (rho) map."
+      },
+      "story-years": {
+        "stops": {
+          "2015": "#ff7a6b",
+          "2019": "#fec44f",
+          "2023": "#8fb8ff",
+          "2026": "#f2f0eb"
+        },
+        "use": "Story mode year lines on dark."
+      },
+      "enso-phase": {
+        "stops": {
+          "el-nino": "#e5564a",
+          "la-nina": "#4a8ad6",
+          "neutral": "#8e93aa"
+        },
+        "use": "ENSO panel phases."
+      }
+    },
+    "provenance": {
+      "world": "Indigo Batik",
+      "origin": "New replacement world chosen by the user in a safer-register round (re-roll 3) with the steer: keep the layout, darker theme.",
+      "seed": "seed:e65ef1c8cb966fa6",
+      "contract": ".impeccable/surfaces/src-app-tsx.md",
+      "decisions": [
+        "Cream text is #f2f0eb, cooled from #f1ece1 so body text never reads as a cream ground."
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one soga-filled action per view (Open the calendar, Print brief).",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Open the calendar</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border: 1px solid var(--control, #46517a); border-radius: 6px; background: transparent; color: var(--ink, #f2f0eb); font: 500 14px/1.2 \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; cursor: pointer; transition: background-color .12s, border-color .12s, color .12s, transform .08s; } .ds-btn-primary { background: var(--accent, #c58b4b); border-color: var(--accent, #c58b4b); color: var(--accent-ink, #1b1206); font-weight: 600; } .ds-btn-primary:hover { background: var(--accent-hi, #d79d5d); border-color: var(--accent-hi, #d79d5d); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined default for every other action (CSV, PNG, copy link, compare).",
+      "html": "<button class=\"ds-btn2\">Download CSV</button>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border: 1px solid var(--control, #46517a); border-radius: 6px; background: transparent; color: var(--ink, #f2f0eb); font: 500 14px/1.2 \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; cursor: pointer; transition: background-color .12s, border-color .12s, transform .08s; } .ds-btn2:hover { background: var(--raised, #222b45); border-color: #56628f; } .ds-btn2:active { transform: translateY(1px); } .ds-btn2:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Area Search",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Header search for a province or kabupaten; sinks into the header on the nila ground.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"7\" cy=\"7\" r=\"4.5\"/><path d=\"M10.5 10.5 14 14\"/></svg><input placeholder=\"Find a province or kabupaten\" /></label>",
+      "css": ".ds-search { position: relative; display: block; width: 300px; } .ds-search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--faint, #8e93aa); pointer-events: none; } .ds-search input { width: 100%; height: 36px; padding: 0 14px 0 36px; border: 1px solid var(--control, #46517a); border-radius: 6px; background: var(--ground, #121829); color: var(--ink, #f2f0eb); font: 14px \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; caret-color: var(--accent, #c58b4b); } .ds-search input::placeholder { color: var(--faint, #8e93aa); } .ds-search input:hover { border-color: #56628f; } .ds-search input:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Header Nav",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Indigo header with the flame mark; the current page and language carry a 2px soga underline.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\"><svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect width=\"32\" height=\"32\" rx=\"7\" fill=\"#993404\"/><path d=\"M16 5c1 5 7 8 7 15a7 7 0 0 1-14 0c0-3 2-5 3-7 1 2 2 3 3 3-1-4-1-7 1-11z\" fill=\"#fec44f\"/></svg><b>KalaApi</b></a><nav class=\"ds-nav\"><a class=\"on\" href=\"#\">Map</a><a href=\"#\">2012 step</a><a href=\"#\">El Ni&ntilde;o</a><a href=\"#\">Method</a></nav><div class=\"ds-lang\"><button aria-pressed=\"true\">EN</button><button aria-pressed=\"false\">ID</button></div></header>",
+      "css": ".ds-top { display: flex; align-items: stretch; gap: 28px; min-height: 60px; padding: 0 28px; background: var(--head, #0e1322); border-bottom: 1px solid var(--border, rgba(241,236,225,.14)); font-family: \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; } .ds-brand { display: flex; align-items: center; gap: 11px; color: var(--ink, #f2f0eb); text-decoration: none; font-size: 17px; } .ds-brand svg { width: 30px; height: 30px; } .ds-nav { display: flex; gap: 22px; flex: 1; } .ds-nav a, .ds-lang button { display: flex; align-items: center; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--mute, #a9adc0); font-family: inherit; font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer; transition: color .12s, border-color .12s; } .ds-nav a:hover, .ds-lang button:hover { color: var(--ink, #f2f0eb); } .ds-nav a.on, .ds-lang button[aria-pressed=\"true\"] { color: var(--ink, #f2f0eb); border-bottom-color: var(--accent, #c58b4b); } .ds-lang { display: flex; gap: 12px; } .ds-lang button { font-size: 13px; font-weight: 600; color: var(--faint, #8e93aa); } .ds-nav a:focus-visible, .ds-lang button:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Data Tabs",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Text tabs on a wax-line rule; the active one has a soga underline as wide as its label.",
+      "html": "<div class=\"ds-seg\" role=\"tablist\"><button class=\"on\">Harmonized</button><button>Raw MODIS</button><button>Raw VIIRS</button><button>Anomaly</button></div>",
+      "css": ".ds-seg { display: flex; gap: 22px; border-bottom: 1px solid var(--border, rgba(241,236,225,.14)); } .ds-seg button { height: 34px; padding: 0; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--mute, #a9adc0); font: 500 13.5px \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; cursor: pointer; transition: color .12s; } .ds-seg button:hover { color: var(--ink, #f2f0eb); } .ds-seg button.on { color: var(--ink, #f2f0eb); border-bottom-color: var(--accent, #c58b4b); } .ds-seg button:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "KPI Strip",
+      "kind": "card",
+      "refersTo": "kpi-cell",
+      "description": "One rounded container split by 1px wax-line gaps; coral raw step, sky harmonized step, cream current figure.",
+      "html": "<div class=\"ds-kpis\"><div class=\"ds-kpi bad\"><span class=\"k\">Raw hotspots, 2012 step</span><span class=\"v\">&times;6.5</span></div><div class=\"ds-kpi good\"><span class=\"k\">Harmonized fire-days</span><span class=\"v\">&times;1.2</span></div><div class=\"ds-kpi\"><span class=\"k\">This year to week 43</span><span class=\"v\">&times;1.65</span></div></div>",
+      "css": ".ds-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--border, rgba(241,236,225,.14)); border: 1px solid var(--border, rgba(241,236,225,.14)); border-radius: 8px; overflow: hidden; font-family: \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; } .ds-kpi { display: flex; flex-direction: column; padding: 18px 22px 20px; background: var(--surface, #1a2238); } .ds-kpi .k { font-size: 13px; font-weight: 500; color: var(--mute, #a9adc0); } .ds-kpi .v { margin: 8px 0 6px; font-size: 36px; font-weight: 650; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink, #f2f0eb); } .ds-kpi.bad .v { color: var(--neg, #ff7a6b); } .ds-kpi.good .v { color: var(--good, #8fb8ff); }"
+    },
+    {
+      "name": "Percentile Badges",
+      "kind": "chip",
+      "refersTo": "badge-extreme",
+      "description": "Dim amber pair for elevated weeks (>= 90th), one bright amber call-out for extreme (>= 97.5th).",
+      "html": "<span class=\"ds-badge e\">elevated</span> <span class=\"ds-badge x\">extreme</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 99px; font: 600 12px \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; white-space: nowrap; } .ds-badge.e { background: #3d2a1c; color: #ffc27a; } .ds-badge.x { background: var(--h4, #fe9929); color: #1b1206; }"
+    },
+    {
+      "name": "Watch List",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "Ranked provinces to watch: faint rank, cream name (soga on hover), gold figure, a fire-4 bar on a raised track.",
+      "html": "<ol class=\"ds-watch\"><li><span class=\"rk\">1</span><a href=\"#\">South Papua</a><span class=\"s\"><b>115%</b> of 2015</span><span class=\"bar\"><i style=\"width:100%\"></i></span></li><li><span class=\"rk\">2</span><a href=\"#\">West Kalimantan</a><span class=\"s\"><b>111%</b> of 2015</span><span class=\"bar\"><i style=\"width:96%\"></i></span></li></ol>",
+      "css": ".ds-watch { list-style: none; margin: 0; padding: 0; background: var(--surface, #1a2238); border: 1px solid var(--border, rgba(241,236,225,.14)); border-radius: 8px; font-family: \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; } .ds-watch li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; row-gap: 8px; column-gap: 8px; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--rule, rgba(241,236,225,.08)); } .ds-watch li:last-child { border-bottom: 0; } .ds-watch .rk { color: var(--faint, #8e93aa); font-size: 12.5px; font-variant-numeric: tabular-nums; } .ds-watch a { color: var(--ink, #f2f0eb); font-weight: 500; text-decoration: none; } .ds-watch a:hover { color: var(--accent, #c58b4b); } .ds-watch a:focus-visible { outline: 2px solid var(--good, #8fb8ff); outline-offset: 2px; } .ds-watch .s { color: var(--mute, #a9adc0); font-size: 12.5px; font-variant-numeric: tabular-nums; } .ds-watch .s b { color: var(--gold, #f2b25c); font-size: 14px; font-weight: 650; } .ds-watch .bar { grid-column: 2 / -1; height: 3px; border-radius: 2px; background: var(--raised, #222b45); overflow: hidden; } .ds-watch .bar i { display: block; height: 100%; background: var(--h4, #fe9929); }"
+    },
+    {
+      "name": "A4 Brief Sheet",
+      "kind": "card",
+      "refersTo": "sheet-a4",
+      "description": "The printable brief: the same tokens re-scoped to white paper inside the sheet, one A4 page.",
+      "html": "<article class=\"ds-a4\"><h1>Central Kalimantan: fire-readiness brief</h1><p>Be ready by <b>early July</b>, 4 weeks before the early-onset week.</p><p class=\"foot\">Not an official product.</p></article>",
+      "css": ".ds-a4 { --surface: #ffffff; --ink: #18181b; --ink2: #27272a; --mute: #55585c; --accent: #b03a12; --gold: #993404; max-width: 794px; padding: 40px 44px; background: #fff; color: #27272a; border-radius: 3px; font: 15px/1.55 \"Inter Variable\", \"Inter Fallback\", system-ui, sans-serif; } .ds-a4 h1 { margin: 0 0 8px; font-size: 24px; font-weight: 650; letter-spacing: -0.02em; color: #18181b; } .ds-a4 b { color: #993404; } .ds-a4 .foot { font-size: 11px; color: #55585c; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Indigo Batik",
+    "overview": "KalaApi sits on the calm dark of nila-indigo cloth. The ground is a deep indigo, panels are one dye-step lighter, and the header one step darker, so the whole screen reads as a single dyed fabric, not a stack of floating cards. Fire is the only bright thing on screen, and it lives in the data: the calendar cells, the map fill, the watch-list bars, the year-to-date figures. Everything else stays quiet so a judge on a projector and a BPBD officer at a desk both see the burn season first.\n\nThe batik gives the system its two other materials. Soga, the warm brown dye, is the one non-data warmth: it fills the primary action and draws a 2px underline under every selection. Wax-resist lines, cream at 8 to 14% alpha, carry all the structure (panel edges, table rules, the 1px gaps between KPI cells). The density is a working dashboard's: tabular figures, compact controls, many numbers per screen, held together by a single type family and a strict column.\n\nThe world was chosen by the user from the safer-register lineup after re-rolls, with the steer \"keep the layout, darker theme\". The layout of the earlier light build is kept; only the material changed. The confirmed anti-reference is the generic navy or black dashboard with a neon accent. The printed brief and card leave the cloth entirely and become white paper.",
+    "keyCharacteristics": [
+      "Indigo grounds in tonal steps; no shadows for structure.",
+      "Fire hues appear only in data, ordered so hotter is brighter.",
+      "Soga brown marks the primary action and every selection (2px underline).",
+      "Wax-resist hairlines: cream at 8% (rules) and 14% (edges).",
+      "El Niño speaks in cold indigo-to-sky, never fire.",
+      "One family (Inter Variable), tabular figures everywhere numbers sit.",
+      "The A4 brief and card re-scope the same tokens to white paper and print on one page."
+    ],
+    "rules": [
+      {
+        "name": "The Fire Lives in the Data Rule",
+        "body": "Fire hues (`fire-1` to `fire-6`, `anomaly-hot`) appear only where they encode fire activity: calendar cells, map fill, watch-list bars, the extreme badge, fire series in charts. The single exception is the brand flame mark. Chrome never borrows a fire hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hotter Is Brighter Rule",
+        "body": "On the indigo ground every sequential fire scale runs dim (`fire-1`) to bright (`fire-6`). Never paste the light-ground order onto a dark surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Warmth Rule",
+        "body": "Soga is the only warm colour in interactive chrome. Selection is always a 2px soga underline, never a fill, a pill or a second accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Wax-Resist Rule",
+        "body": "Structure is drawn with cream hairlines: `wax-line` for container edges and dividers, `wax-rule` for rows inside them. No solid grey lines, no shadows doing structural work.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cold El Niño Rule",
+        "body": "The ENSO link is drawn in `enso-0` to `enso-3`. A climate driver must never be coloured like fire, or a reader takes the map for burn activity.",
+        "section": "colors"
+      },
+      {
+        "name": "The Labelled Colour Rule",
+        "body": "Every colour encoding carries words: legends have numbered ticks and low/high captions, badges say \"elevated\" or \"extreme\", flags print their percentile.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Inter Variable sets everything, including chart canvas text. Hierarchy comes from weight and size, never from a second face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Every number that can sit beside another number (KPIs, tables, watch list, legends, tooltips) uses tabular figures, so columns of weeks and percentiles line up.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Cloth Rule",
+        "body": "Surfaces never cast shadows. A surface that needs to stand forward gets a lighter indigo step and a wax line.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Soga Underline Rule",
+        "body": "Every \"you are here\" state (nav, data tabs, language) is a 2px soga underline under the label, and nothing else.",
+        "section": "components"
+      },
+      {
+        "name": "The Paper Re-scope Rule",
+        "body": "Printed artefacts do not get their own palette names. They redefine the existing tokens inside the sheet, so a component written for the screen prints correctly on paper unchanged.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do build every surface from the indigo steps: `head` above `ground`, containers in `surface`, hovers in `raised`.",
+      "Do run fire scales dim to bright on the dark ground (`fire-1` to `fire-6`), keeping the light ramp's hues.",
+      "Do mark the primary action with a `soga` fill and every selection with a 2px `soga` underline.",
+      "Do draw structure with wax-resist hairlines: `wax-line` (14%) for edges, `wax-rule` (8%) for rows.",
+      "Do colour El Niño and other climate drivers in the cold `enso-0` to `enso-3` ramp.",
+      "Do set every number in tabular figures and give every colour encoding a text label.",
+      "Do keep the A4 brief and card on white paper by re-scoping tokens inside the sheet, and make the brief fit one A4 page.",
+      "Do use the 2px `sky` focus ring on every focusable element."
+    ],
+    "donts": [
+      "Don't build a generic navy or black dashboard with a neon accent.",
+      "Don't use a fire hue for chrome, buttons, headings or decoration; fire is data (the flame mark is the only exception).",
+      "Don't add a second accent or mark selection with a fill or a pill.",
+      "Don't use shadows to separate surfaces; the tooltip is the only shadow.",
+      "Don't colour the El Niño link in fire hues.",
+      "Don't add a second typeface, including in chart canvases.",
+      "Don't print the brief or card on the dark theme."
+    ]
+  }
+}
