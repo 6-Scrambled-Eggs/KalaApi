@@ -1,0 +1,191 @@
+{
+ "generated": "2026-11-14",
+ "data_end": "2026-11-02",
+ "start_year": 2001,
+ "end_year": 2026,
+ "weeks_per_year": 52,
+ "last_complete_year": 2026,
+ "last_complete_week": 43,
+ "viirs_first_slot": 575,
+ "aqua_first_slot": 79,
+ "peat_split": false,
+ "baseline": "2001-2025",
+ "sensitivity_baseline": "2012-2025",
+ "n_boot": 1000,
+ "strata": [
+  {
+   "stratum": "Aceh",
+   "peat": "unknown",
+   "k": 5.366,
+   "k_lo": 4.926,
+   "k_hi": 6.009
+  },
+  {
+   "stratum": "Bangka Belitung",
+   "peat": "unknown",
+   "k": 3.971,
+   "k_lo": 3.704,
+   "k_hi": 4.291
+  },
+  {
+   "stratum": "Jambi",
+   "peat": "unknown",
+   "k": 3.436,
+   "k_lo": 3.275,
+   "k_hi": 3.715
+  },
+  {
+   "stratum": "Java-Bali",
+   "peat": "unknown",
+   "k": 10.099,
+   "k_lo": 9.521,
+   "k_hi": 10.721
+  },
+  {
+   "stratum": "Kalimantan Barat",
+   "peat": "unknown",
+   "k": 3.2,
+   "k_lo": 3.03,
+   "k_hi": 3.417
+  },
+  {
+   "stratum": "Kalimantan Selatan",
+   "peat": "unknown",
+   "k": 4.012,
+   "k_lo": 3.718,
+   "k_hi": 4.43
+  },
+  {
+   "stratum": "Kalimantan Tengah",
+   "peat": "unknown",
+   "k": 3.138,
+   "k_lo": 3.016,
+   "k_hi": 3.263
+  },
+  {
+   "stratum": "Kalimantan Timur",
+   "peat": "unknown",
+   "k": 3.421,
+   "k_lo": 3.165,
+   "k_hi": 3.865
+  },
+  {
+   "stratum": "Kalimantan Utara",
+   "peat": "unknown",
+   "k": 3.725,
+   "k_lo": 3.445,
+   "k_hi": 4.136
+  },
+  {
+   "stratum": "Lampung",
+   "peat": "unknown",
+   "k": 4.562,
+   "k_lo": 4.088,
+   "k_hi": 5.093
+  },
+  {
+   "stratum": "Maluku",
+   "peat": "unknown",
+   "k": 5.595,
+   "k_lo": 5.073,
+   "k_hi": 6.788
+  },
+  {
+   "stratum": "Nusa Tenggara Barat",
+   "peat": "unknown",
+   "k": 9.342,
+   "k_lo": 8.877,
+   "k_hi": 9.957
+  },
+  {
+   "stratum": "Nusa Tenggara Timur",
+   "peat": "unknown",
+   "k": 6.3,
+   "k_lo": 6.089,
+   "k_hi": 6.564
+  },
+  {
+   "stratum": "Papua",
+   "peat": "unknown",
+   "k": 4.896,
+   "k_lo": 4.151,
+   "k_hi": 6.464
+  },
+  {
+   "stratum": "Papua Selatan",
+   "peat": "unknown",
+   "k": 3.484,
+   "k_lo": 3.322,
+   "k_hi": 3.749
+  },
+  {
+   "stratum": "Riau",
+   "peat": "unknown",
+   "k": 2.868,
+   "k_lo": 2.51,
+   "k_hi": 3.068
+  },
+  {
+   "stratum": "Sulawesi",
+   "peat": "unknown",
+   "k": 7.818,
+   "k_lo": 7.175,
+   "k_hi": 8.968
+  },
+  {
+   "stratum": "Sulawesi Selatan",
+   "peat": "unknown",
+   "k": 6.635,
+   "k_lo": 5.893,
+   "k_hi": 7.816
+  },
+  {
+   "stratum": "Sulawesi Tengah",
+   "peat": "unknown",
+   "k": 5.516,
+   "k_lo": 5.128,
+   "k_hi": 6.171
+  },
+  {
+   "stratum": "Sulawesi Tenggara",
+   "peat": "unknown",
+   "k": 4.89,
+   "k_lo": 4.632,
+   "k_hi": 5.312
+  },
+  {
+   "stratum": "Sumatera Barat",
+   "peat": "unknown",
+   "k": 4.876,
+   "k_lo": 4.496,
+   "k_hi": 5.4
+  },
+  {
+   "stratum": "Sumatera Selatan",
+   "peat": "unknown",
+   "k": 3.341,
+   "k_lo": 3.14,
+   "k_hi": 3.544
+  },
+  {
+   "stratum": "Sumatera Utara",
+   "peat": "unknown",
+   "k": 5.092,
+   "k_lo": 4.742,
+   "k_hi": 5.654
+  },
+  {
+   "stratum": "Sumatra",
+   "peat": "unknown",
+   "k": 5.396,
+   "k_lo": 5.188,
+   "k_hi": 5.72
+  }
+ ],
+ "notes": [
+  "Week 52 covers the last 8-9 days of each year.",
+  "Slots before the Aqua start use Terra scaled to Aqua per stratum.",
+  "Slots before the first full S-NPP week are back-cast; later slots are observed S-NPP VIIRS.",
+  "Peat split is off when no peat polygon file was available."
+ ]
+}

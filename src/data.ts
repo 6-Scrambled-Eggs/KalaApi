@@ -1,0 +1,93 @@
+export const WPY = 52;
+
+export type Period = { onset: number; peak: number; end: number };
+export type AreaIndex = {
+  id: string; name: string; level: "nation" | "province" | "kabupaten"; parent: string | null;
+  low_data: boolean; mean_annual_fire_days: number; ytd_pct: number; ytd_ratio: number | null; typical_period: Period;
+};
+type Series = (number | null)[];
+export type Area = AreaIndex & {
+  start_year: number; last_year: number; last_week: number; back_cast_end_slot: number;
+  periods: Record<string, [number, number, number]>;
+  h: Series; lo: Series; hi: Series; chk: Series; m: Series; v: Series; cnt: Series; pct: Series; pct12: Series;
+};
+export type Meta = {
+  generated: string; data_end: string; start_year: number; end_year: number; last_complete_year: number;
+  last_complete_week: number; viirs_first_slot: number; peat_split: boolean; baseline: string;
+  sensitivity_baseline: string; n_boot: number; notes: string[];
+  strata: { stratum: string; peat: string; k: number; k_lo: number; k_hi: number }[];
+};
+export type Validation = {
+  V1_holdout: Holdout; V6_reverse: Holdout; V3_peat_available: boolean;
+  V5_known_events: Record<string, { max_pct: number; weeks_ge_90: number; weeks_ge_97_5: number }>;
+  V2_small_areas: { low_data_areas: number; total_areas: number };
+  V7_burned_area: { status: string; reason: string };
+};
+type Holdout = {
+  label: string; national_err_pct: Record<string, number>; share_within_20pct: number; median_weekly_r: number;
+};
+
+const base = import.meta.env.BASE_URL;
+const cache = new Map<string, Promise<unknown>>();
+function load<T>(path: string): Promise<T> {
+  if (!cache.has(path)) {
+    cache.set(path, fetch(`${base}data/${path}`).then((r) => {
+      if (!r.ok) throw new Error(`${path}: ${r.status}`);
+      return r.json();
+    }));
+  }
+  return cache.get(path) as Promise<T>;
+}
+export const loadIndex = () => load<AreaIndex[]>("areas.json");
+export const loadArea = (id: string): Promise<Area> =>
+  Promise.all([load<Area>(`areas/${id}.json`), loadIndex()]).then(([a, idx]) => {
+    const ix = idx.find((x) => x.id === id);
+    return { ...a, ytd_pct: ix?.ytd_pct ?? NaN, ytd_ratio: ix?.ytd_ratio ?? null };
+  });
+export const loadMeta = () => load<Meta>("meta.json");
+export const loadValidation = () => load<Validation>("validation.json");
+export const loadProvinces = () => load<GeoJSON.FeatureCollection>("provinces.geojson");
+
+/** years x 52 matrix from a flat series */
+export function matrix(s: Series): (number | null)[][] {
+  const out: (number | null)[][] = [];
+  for (let i = 0; i < s.length; i += WPY) out.push(s.slice(i, i + WPY));
+  return out;
+}
+
+export function quantile(sorted: number[], q: number): number {
+  if (!sorted.length) return NaN;
+  const pos = (sorted.length - 1) * q;
+  const lo = Math.floor(pos), hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+/** Seasonal profile: per week median and 10-90% over baseline years (default 2001-2025). */
+export function seasonal(area: Area, y0 = 2001, y1 = 2025) {
+  const M = matrix(area.h);
+  const med: number[] = [], p10: number[] = [], p90: number[] = [];
+  for (let w = 0; w < WPY; w++) {
+    const col: number[] = [];
+    for (let y = y0; y <= y1; y++) {
+      const v = M[y - area.start_year]?.[w];
+      if (v != null) col.push(v);
+    }
+    col.sort((a, b) => a - b);
+    med.push(quantile(col, 0.5)); p10.push(quantile(col, 0.1)); p90.push(quantile(col, 0.9));
+  }
+  return { med, p10, p90 };
+}
+
+/** Approximate date label of a week slot (7-day blocks of the year). */
+export function weekLabel(w: number): string {
+  const d = new Date(Date.UTC(2001, 0, 1 + 7 * (w - 1)));
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+}
+
+export function annualTotals(s: Series, startYear: number): { year: number; total: number | null }[] {
+  return matrix(s).map((row, i) => {
+    const vals = row.filter((x): x is number => x != null);
+    const complete = vals.length === WPY;
+    return { year: startYear + i, total: complete ? vals.reduce((a, b) => a + b, 0) : null };
+  });
+}

@@ -1,0 +1,71 @@
+# ---------- Secrets ----------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.*
+
+# ---------- Data (raw and processed data live outside the repo) ----------
+data/
+*.zip
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.nc
+*.hdf
+*.h5
+*.tif
+*.tiff
+# Small app data files that the web app needs ARE committed:
+!public/data/
+!public/data/**
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# ---------- Node / frontend ----------
+node_modules/
+dist/
+build/
+.vite/
+.next/
+.turbo/
+.cache/
+.parcel-cache/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vercel/
+
+# ---------- Logs and temp ----------
+*.log
+*.tmp
+*.bak
+*.swp
+tmp/
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Editors and tools ----------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.code-workspace
