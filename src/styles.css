@@ -32,3 +32,6 @@ table { border-collapse:collapse; width:100%; font-size:14px; margin:8px 0; } th
 .a4 { max-width:794px; background:#fff; padding:28px; border:1px solid var(--line); } .foot { font-size:11px; color:var(--mute); margin-top:24px; word-break:break-all; }
 @media (max-width:600px) { h1 { font-size:22px; } .map { height:360px; } .head { align-items:flex-start; } }
 @media print { body { background:#fff; } .noprint { display:none !important; } main { padding:0; max-width:none; } .a4 { border:0; padding:0; } @page { size:A4; margin:16mm; } }
+
+.calscroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.calinner { min-width:720px; }
