@@ -36,19 +36,22 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - 2012 step: raw detections jump about 5-6x; harmonized fire-days about 1.2x (national, 2012-14 vs 2009-11).
 - A fixed ratio per stratum beats a log-log model. Province strata fix most of the island-mix error.
 - Holdout 2019+2023: national annual error +2.8% / +1.6%; 77% of province-years within +-20%; median weekly r 0.90. Reverse holdout: quiet years (2016, 2017) under-predicted by about 10-11%.
-- Known events: Kalteng and Sumsel Sep-Oct 2015 reach a weekly percentile of 98 but not in every week, so the PRD acceptance check ">= 97.5th for all of Sep-Oct" is NOT met as written. Report it honestly or reword the check.
+- Known events: Kalteng and Sumsel in 2015 reach a weekly percentile of 98 (5 of 9 weeks in weeks 36-44 are >= 90; 2 of 9 are >= 97.5). 2019 reaches 94. The PRD check says the peaks must "stand out" in the calendar. They do, but not in every week. Report this honestly.
 - NRT files have no `type` column; static/offshore sources are not filtered after Jul-Aug 2026.
 
 ## Frontend (`src/`, Vite + React + TypeScript + MapLibre + ECharts, static, no backend)
 `npm install`, `npm run dev`, `npm run build`. Hash routes: `#/` map, `#/area/<id>?m=h|m|v&y=<year>`, `#/surge/<id>` (FR-19 fake-surge hero), `#/story/<id>` (FR-15), `#/card/<id>` (FR-20 print card), `#/method`. EN/ID toggle in `i18n.ts`. Data is read from `public/data/` at runtime.
 
+## Done since the first build (14 Nov)
+- Peat split on (GFW 30 m tiles in `DATA/peat/`; step 04 reads `.tif` tiles). Peat-only and mineral-only toggles. V-1: national error +2.3% / +1.2%, 71% of province-years within 20% (77% without peat split).
+- ONI marker (step 07, `public/data/oni.json`), FRP in story mode, CSV/PNG export and copy-link, "vs last 10 years" tile, GitHub Pages deploy (`.github/workflows/deploy.yml`), `docs/video-script.md`, `docs/project-page.md`.
+- 2026 vs 2015 at week 43: nation 76% (fire-days), South Papua 116%, West Kalimantan 112%, Central Kalimantan 67%, South Sumatra 43%, Riau 13%.
+
 ## Open items (see backlog in the Claude Project)
-- Peat polygon file (user to download to `DATA/peat/`, then rerun steps 4-6). Peat/mineral split and V-3 depend on it.
 - MCD64A1 burned-area check (V-7). Needs Earthdata login.
-- FRP is not exported yet (FR-15 asks for fire-days and FRP).
 - Row-count check against FIRMS yearly country CSVs.
-- ONI strip (FR-17), polygon draw (FR-14), CSV/PNG export + share URL (FR-18) not built.
-- Deploy to Vercel or GitHub Pages; record the 30 s video; project page; References list; AI-use disclosure.
+- Polygon draw (FR-14) not built.
+- Record the 30 s video (script in `docs/video-script.md`); fill the project page (text in `docs/project-page.md`); verify the References list.
 - Teammate must verify: BRIN "VIIRS only"; 69% / 202,004 ha burned figure.
 
 ## Rules

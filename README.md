@@ -75,6 +75,7 @@ pipeline/    Python: raw FIRMS -> harmonized data (steps 01-06)
 public/data/ Output data that the app reads at run time (committed)
 src/         React + TypeScript app (Vite, MapLibre, ECharts)
 AGENTS.md    Rules for AI coding agents
+docs/        Video script and project page text for the submission
 CLAUDE.md    Full project context (method, findings, open items)
 ```
 
