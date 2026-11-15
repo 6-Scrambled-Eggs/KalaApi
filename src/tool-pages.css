@@ -16,6 +16,9 @@
 .custom h2, .cmp h2 { margin-top: 42px; font-stretch: 100%; }
 .custom .note, .cmp .note { max-width: none; line-height: 1.6; }
 .custom-calendar { margin-bottom: 28px; }
+.custom-calendar-frame { border: 1px solid var(--ink); background: var(--sheet); padding: 6px 12px 12px; }
+.custom-calendar-frame .calscroll { border: 0; padding: 0; }
+.custom-calendar-frame > .note { margin: 8px 0 0; }
 
 .customgrid {
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr);

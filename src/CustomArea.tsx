@@ -138,7 +138,7 @@ export default function CustomArea() {
 
   const run = async () => {
     if (!idx || !valid || !rangeOk) return;
-    setBusy(true); setErr(""); setRows(null);
+    setBusy(true); setErr("");
     try {
       const dlat = radius / 110.57 + 0.05, dlon = radius / (111.32 * Math.cos((lat * Math.PI) / 180)) + 0.05;
       const [la0, la1, lo0, lo1] = mode === "circle" ? [lat - dlat, lat + dlat, lon - dlon, lon + dlon] : [bx.s, bx.n, bx.w, bx.e];
@@ -159,7 +159,7 @@ export default function CustomArea() {
         }
       }
       setRows(out);
-    } catch (e) { setErr(String(e)); }
+    } catch (e) { setRows(null); setErr(String(e)); }
     setBusy(false);
   };
   useEffect(() => { if (idx && from && to) void run(); /* first run when the page opens */ }, [idx, from === "" ? 0 : 1]);
@@ -284,8 +284,10 @@ export default function CustomArea() {
       {result && monthArea && (
         <div className="custom-calendar" aria-live="polite">
           <h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
-          <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
-          <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p>
+          <div className="custom-calendar-frame">
+            <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
+            <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p>
+          </div>
         </div>
       )}
       <div className="customgrid">
@@ -293,7 +295,11 @@ export default function CustomArea() {
           <div ref={el} className="map" role="img" aria-label={L("Map: click to place the centre of your area", "Peta: klik untuk menaruh pusat area Anda")} />
           <p className="note">{mode === "circle" ? L("Click the map to move the centre.", "Klik peta untuk memindahkan pusat.") : (pend ? t("boxPick") : t("boxHint"))}</p>
         </div>
-        <form className="cform" onSubmit={(e) => { e.preventDefault(); void run(); }}>
+        <form className="cform" onSubmit={(e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+          void run();
+        }}>
           <div className="seg" role="group" aria-label={L("Shape of the area", "Bentuk area")}>
             <button type="button" className={mode === "circle" ? "on" : ""} aria-pressed={mode === "circle"} onClick={() => setMode("circle")}>{t("modeCircle")}</button>
             <button type="button" className={mode === "box" ? "on" : ""} aria-pressed={mode === "box"} onClick={() => setMode("box")}>{t("modeBox")}</button>
