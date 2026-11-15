@@ -46,7 +46,7 @@ export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; en
   return (
     <div>
       <h2>{t("ensoTitle")}</h2>
-      <p><b>{verdict}</b> ρ = {e.rho}, {fmtP(e.p)}.{e.ratio_el_neu ? (id ? ` Tahun El Niño: tipikalnya ×${e.ratio_el_neu} hari-api tahun netral.` : ` In El Niño years the typical year had ×${e.ratio_el_neu} the fire-days of a neutral year.`) : ""}</p>
+      <p><b>{verdict}</b> ρ = {nf(e.rho, 2)}, {fmtP(e.p)}.{e.ratio_el_neu ? (id ? ` Tahun El Niño: tipikalnya ×${nf(e.ratio_el_neu, 2)} hari-api tahun netral.` : ` In El Niño years the typical year had ×${nf(e.ratio_el_neu, 2)} the fire-days of a neutral year.`) : ""}</p>
       <Chart option={option} height={compact ? 150 : 200} label={`${t("ensoTitle")} ${area.name}`} />
       <p className="note">
         <span style={{ color: COLORS.el }}>■</span> El Niño ({nEl}) <span style={{ color: COLORS.neu }}>■</span> {id ? "netral" : "neutral"} ({nNeu}) <span style={{ color: COLORS.la }}>■</span> La Niña ({nLa}) · ONI Jul–Sep. {o26 != null ? (id ? `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. ` : `2026: ONI ${o26 > 0 ? "+" : ""}${o26}${o26 >= 0.5 ? " (El Niño)" : ""}. `) : ""}

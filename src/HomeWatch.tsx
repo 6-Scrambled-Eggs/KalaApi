@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Area, AreaIndex, analogYears, loadArea, loadMeta } from "./data";
+import { Area, AreaIndex, analogYears, loadArea, loadMeta, nf } from "./data";
 import { fmt, useT } from "./i18n";
 import { hlProps, useHighlight } from "./hl";
 
@@ -18,9 +18,9 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
   const analog = nat ? analogYears(nat, 1)[0]?.year : undefined;
   const lines = week == null || !n ? [] : [
     L ? `KalaApi · minggu ${week}, 2026` : `KalaApi · week ${week}, 2026`,
-    L ? `Indonesia: ×${n.ytd_ratio} dari normal sejauh ini tahun ini (persentil ${Math.round(n.ytd_pct)} dari 2001–2025).`
-      : `Indonesia: ${n.ytd_ratio} times normal so far this year (percentile ${Math.round(n.ytd_pct)} of 2001–2025).`,
-    (L ? "Provinsi untuk dipantau: " : "Provinces to watch: ") + top.slice(0, 3).map((a) => `${a.name} ×${a.ytd_ratio}`).join(", ") + ".",
+    L ? `Indonesia: ×${nf(n.ytd_ratio!, 2)} dari normal sejauh ini tahun ini (persentil ${Math.round(n.ytd_pct)} dari 2001–2025).`
+      : `Indonesia: ${nf(n.ytd_ratio!, 2)} times normal so far this year (percentile ${Math.round(n.ytd_pct)} of 2001–2025).`,
+    (L ? "Provinsi untuk dipantau: " : "Provinces to watch: ") + top.slice(0, 3).map((a) => `${a.name} ×${nf(a.ytd_ratio!, 2)}`).join(", ") + ".",
     analog ? (L ? `Tahun paling mirip sejauh ini: ${analog} (kemiripan kurva, bukan prakiraan).` : `Most similar year so far: ${analog} (a likeness of the curve, not a forecast).`) : "",
   ].filter(Boolean);
   const download = () => {
@@ -47,7 +47,7 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
         <p className="note">{L ? "Peringkat menurut persentil tahun ini dibanding minggu yang sama 2001–2025. Hanya provinsi dengan minimal 1.000 hari-api pada tahun rata-rata, agar basis kecil tidak mendominasi." : "Ranked by this year's percentile against the same weeks in 2001–2025. Only provinces with at least 1,000 fire-days in an average year, so tiny bases do not dominate."}</p>
         <ol className="watchlist">{top.map((a) => (
           <li key={a.id} className={hl === a.id ? "hl" : undefined} {...hlProps(a.id)}><a href={`#/area/${a.id}`}>{a.name}</a><span className="bar"><i style={{ width: `${Math.max(4, Math.round(a.ytd_pct))}%` }} /></span>
-            <span className="s">×{a.ytd_ratio} · {t("pctile")} {Math.round(a.ytd_pct)}</span></li>))}</ol>
+            <span className="s">×{nf(a.ytd_ratio!, 2)} · {t("pctile")} {Math.round(a.ytd_pct)}</span></li>))}</ol>
       </div>
       <div className="watchcol">
         <h2>{L ? "Kartu minggu ini" : "This week's card"}</h2>

@@ -8,6 +8,7 @@ function Three({ index }: { index: AreaIndex[] }) {
   const [id, setId] = useState("kalimantan-tengah");
   const [a, setA] = useState<Area | null>(null);
   useEffect(() => { loadArea(id).then(setA); }, [id]);
+  const d = (x: number) => nf(x, Number.isInteger(x) ? 0 : 1);  // same helper as the rest of the app: ID 2.239,1 / EN 2,239.1
   const get = (m: (number | null)[], y: number, w: number) => matrix(m)[y - 2001]?.[w - 1];
   const row = (y: number, w: number) => a && ({
     harm: get(a.h, y, w), lo: get(a.lo, y, w), hi: get(a.hi, y, w), m: get(a.m, y, w), v: get(a.v, y, w),
@@ -20,8 +21,8 @@ function Three({ index }: { index: AreaIndex[] }) {
         {index.filter((x) => x.level === "province").map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
       <table><thead><tr><th>{L("Week", "Minggu")}</th><th>{L("Raw MODIS (Aqua fire-days)", "MODIS mentah (hari-api Aqua)")}</th><th>{L("Raw VIIRS (S-NPP fire-days)", "VIIRS mentah (hari-api S-NPP)")}</th><th>{L("Harmonized", "Terharmonisasi")}</th></tr></thead>
         <tbody>{ex.map(({ y, w, r }) => r && (
-          <tr key={y}><td>{y}, {L("week", "minggu")} {w} ({L("from", "mulai")} {weekLabel(w)})</td><td>{r.m ?? "n/a"}</td><td>{r.v ?? L("not flown yet", "belum mengorbit")}</td>
-            <td>{r.harm ?? "n/a"}{y < 2012 && r.lo != null ? (lang === "id" ? ` (90%: ${r.lo} sampai ${r.hi}), perkiraan` : ` (90%: ${r.lo} to ${r.hi}), estimated`) : (lang === "id" ? ", VIIRS teramati" : ", observed VIIRS")}</td></tr>))}</tbody></table>
+          <tr key={y}><td>{y}, {L("week", "minggu")} {w} ({L("from", "mulai")} {weekLabel(w)})</td><td>{r.m != null ? d(r.m) : "n/a"}</td><td>{r.v != null ? d(r.v) : L("not flown yet", "belum mengorbit")}</td>
+            <td>{r.harm != null ? d(r.harm) : "n/a"}{y < 2012 && r.lo != null ? (lang === "id" ? ` (90%: ${d(r.lo)} sampai ${d(r.hi!)}), perkiraan` : ` (90%: ${d(r.lo)} to ${d(r.hi!)}), estimated`) : (lang === "id" ? ", VIIRS teramati" : ", observed VIIRS")}</td></tr>))}</tbody></table>
       <p className="note">{L("Before 2012 only MODIS exists, so the harmonized value is an estimate with a band. From 2012 the harmonized value is the observed VIIRS fire-day count.", "Sebelum 2012 hanya ada MODIS, jadi nilai terharmonisasi adalah perkiraan dengan rentang. Mulai 2012 nilai terharmonisasi adalah jumlah hari-api VIIRS yang teramati.")}</p>
     </>
   );
@@ -123,9 +124,9 @@ export default function Method({ index }: { index: AreaIndex[] }) {
       <h2>{L("References", "Referensi")}</h2>
       <ul>
         <li>Giglio, L., Schroeder, W., Justice, C. O. (2016). The collection 6 MODIS active fire detection algorithm and fire products. <i>Remote Sensing of Environment</i>, 178, 31–41. <a href="https://doi.org/10.1016/j.rse.2016.02.054" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2016.02.054</a></li>
-        <li>Schroeder, W., Oliva, P., Giglio, L., Csiszar, I. A. (2014). The new VIIRS 375 m active fire detection data product. <i>Remote Sensing of Environment</i>, 143, 85–96. <a href="https://doi.org/10.1016/j.rse.2013.12.008" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2013.12.008</a></li>
+        <li>Schroeder, W., Oliva, P., Giglio, L., Csiszar, I. A. (2014). The new VIIRS 375 m active fire detection data product: Algorithm description and initial assessment. <i>Remote Sensing of Environment</i>, 143, 85–96. <a href="https://doi.org/10.1016/j.rse.2013.12.008" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2013.12.008</a></li>
         <li>Giglio, L., Boschetti, L., Roy, D. P., Hall, J. V., Zubkova, M., Humber, M., Huang, H., Oles, V. (2025). The NASA VIIRS burned area product, global validation, and intercomparison with the NASA MODIS burned area product. <i>Remote Sensing of Environment</i>, 331, 115006. <a href="https://doi.org/10.1016/j.rse.2025.115006" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2025.115006</a></li>
-        <li>Gaveau, D. L. A., et al. (2021). Indonesian fire burned-area dataset for 2019. <i>Earth System Science Data</i>, 13, 5353. <a href="https://doi.org/10.5194/essd-13-5353-2021" target="_blank" rel="noreferrer">doi:10.5194/essd-13-5353-2021</a></li>
+        <li>Gaveau, D. L. A., Descals, A., Salim, M. A., Sheil, D., Sloan, S. (2021). Refined burned-area mapping protocol using Sentinel-2 data increases estimate of 2019 Indonesian burning. <i>Earth System Science Data</i>, 13, 5353–5368. <a href="https://doi.org/10.5194/essd-13-5353-2021" target="_blank" rel="noreferrer">doi:10.5194/essd-13-5353-2021</a></li>
       </ul>
     </section>
   );

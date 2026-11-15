@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { AreaIndex, Enso, loadEnso, loadOni, loadProvinces, Oni } from "./data";
+import { AreaIndex, Enso, loadEnso, loadOni, loadProvinces, Oni, nf } from "./data";
 import { ensoLabel, fmtP } from "./EnsoPanel";
 import Legend from "./Legend";
 import { useT } from "./i18n";
@@ -43,7 +43,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       map.on("mousemove", "fill", (e) => {
         map.getCanvas().style.cursor = "pointer";
         const p = e.features?.[0]?.properties as any;
-        if (p) setTip(`${p.name}: ρ = ${p.rho} (${p.lab}), ${fmtP(p.p)}`);
+        if (p) setTip(`${p.name}: ρ = ${nf(p.rho, 2)} (${p.lab}), ${fmtP(p.p)}`);
       });
       map.on("mouseleave", "fill", () => { map.getCanvas().style.cursor = ""; setTip(""); });
     });
@@ -77,7 +77,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       <table>
         <thead><tr><th>{id ? "Provinsi" : "Province"}</th><th>ρ</th><th>p</th><th>{id ? "Kaitan" : "Link"}</th><th>{id ? "El Niño vs netral" : "El Niño vs neutral"}</th></tr></thead>
         <tbody>{rows.map(({ a, e }) => (
-          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{e.rho}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
+          <tr key={a.id}><td><a href={`#/area/${a.id}`}>{a.name}</a></td><td>{nf(e.rho, 2)}</td><td>{fmtP(e.p).replace("p ", "")}</td><td>{id ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}</td><td>{e.ratio_el_neu ? `×${e.ratio_el_neu}` : "n/a"}</td></tr>
         ))}</tbody>
       </table>
       <p className="note">{id ? "Terdapat 38 provinsi dan banyak kabupaten; nilai q (Benjamini–Hochberg, FDR) menyesuaikan p untuk uji berganda. Label: clear (jelas) = q < 0,05, p < 0,01 dan ρ ≥ 0,4; suggestive (indikasi) = q < 0,05 dan ρ ≥ 0,4; lemah (weak) = p < 0,15. Hanya 5 tahun El Niño: baca sebagai petunjuk." : "38 provinces and many kabupaten are tested; q (Benjamini–Hochberg false discovery rate) adjusts p for the many tests. Labels: clear = q < 0.05, p < 0.01 and ρ ≥ 0.4; suggestive = q < 0.05 and ρ ≥ 0.4; weak = p < 0.15. With only 5 El Niño years, read all of this as a lead, not proof."}</p>

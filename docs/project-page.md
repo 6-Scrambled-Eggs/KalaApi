@@ -64,8 +64,8 @@ We built KalaApi with AI assistance. Claude (Anthropic) helped write the Python 
 5. Global Forest Watch, Global Peatlands: https://data.globalforestwatch.org/
 6. NOAA CPC, Oceanic Nino Index: https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/ (ONI v6)
 7. Giglio, L., Boschetti, L., Roy, D. P., Hall, J. V., Zubkova, M., Humber, M., Huang, H., Oles, V. (2025). The NASA VIIRS burned area product, global validation, and intercomparison with the NASA MODIS burned area product. Remote Sensing of Environment, 331, 115006. https://doi.org/10.1016/j.rse.2025.115006
-8. Fu, Y., et al. (2020). MODIS (MYD14) and VIIRS (VNP14IMG) active fire comparison, Northeast Asia. Remote Sensing, 12(18), 2870. https://doi.org/10.3390/rs12182870
-9. Gaveau, D. L. A., et al. (2021). Indonesian fire burned-area dataset for 2019. Earth System Science Data, 13, 5353. https://doi.org/10.5194/essd-13-5353-2021
+8. Fu, Y., Li, R., Wang, X., Bergeron, Y., Valeria, O., Chavardès, R. D., Wang, Y., Hu, J. (2020). Fire Detection and Fire Radiative Power in Forests and Low-Biomass Lands in Northeast Asia: MODIS versus VIIRS Fire Products. Remote Sensing, 12(18), 2870. https://doi.org/10.3390/rs12182870
+9. Gaveau, D. L. A., Descals, A., Salim, M. A., Sheil, D., Sloan, S. (2021). Refined burned-area mapping protocol using Sentinel-2 data increases estimate of 2019 Indonesian burning. Earth System Science Data, 13, 5353–5368. https://doi.org/10.5194/essd-13-5353-2021
 10. NASA Earthdata: MCD64A1 v6.1 and VNP64A1 v2 burned-area products (validation route, not yet used) and FIRMS notice that S-NPP VIIRS production ceased 2 Nov 2026. https://www.earthdata.nasa.gov/data/tools/firms/faq
 11. SiPongi national burned area 2015-2025 as reproduced by GoodStats: https://data.goodstats.id/statistic/tren-luas-karhutla-di-indonesia-per-maret-2026-hampir-seluas-jakarta-I0vpd
 12. Verify the BRIN and SiPongi claims before you cite them (see below).

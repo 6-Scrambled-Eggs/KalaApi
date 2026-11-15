@@ -69,11 +69,11 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
     const w = a.last_week, r = readiness(a), e = enso?.areas[a.id];
     const now = upto(a, a.last_year, w), u15 = upto(a, 2015, w);
     return {
-      ytd: a.ytd_ratio != null ? `×${a.ytd_ratio} (${L ? "persentil" : "percentile"} ${Math.round(a.ytd_pct)})` : "n/a",
+      ytd: a.ytd_ratio != null ? `×${nf(a.ytd_ratio, 2)} (${L ? "persentil" : "percentile"} ${Math.round(a.ytd_pct)})` : "n/a",
       vs15: u15 > 0 ? `${Math.round((now / u15) * 100)}%` : "n/a",
       onset: r ? `${L ? "minggu" : "wk"} ${r.median} (${weekLabel(r.median)}), ${L ? "rentang" : "range"} ${r.earliest}–${r.latest}` : "n/a",
       peak: `${L ? "minggu" : "wk"} ${a.typical_period.peak} (${weekLabel(a.typical_period.peak)})`,
-      enso: e ? `${L ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}, ρ = ${e.rho}` : "n/a",
+      enso: e ? `${L ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}, ρ = ${nf(e.rho, 2)}` : "n/a",
       mean: nf(Math.round(a.mean_annual_fire_days)),
     };
   };
