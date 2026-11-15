@@ -109,3 +109,8 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 | E3 per-province NOAA-20 coefficients | alpha 0.80 (DI Yogyakarta) to 1.14 (Central Kalimantan), pooled 1.08, shared b 0.975; one national value off by +34% / -5% at the extremes | (this commit) |
 
 - v1.0-submission tag created locally 13:50Z 15 Nov 2026 on b97ad1b+docs commit; live checks: home, indonesia, kalimantan-tengah, custom (box), method; 390px no overflow; 1366 ok.
+
+### PRD v5 sprint
+| Task | Result | Commit |
+|---|---|---|
+| T1 provisional layer by day (`pipeline/21_provisional_daily.py`) | 29 Oct-2 Nov observed S-NPP; 3-14 Nov NOAA-20 bridged (alpha, b from bridge.json, no refit; factor at week-equivalent activity). 6 Nov missing (NOAA-20 21 rows vs 546 NOAA-21), 15 Nov not used (in progress). National "November so far": 5,816 fire-days, 13 days with data, same days 2001-2025 median 2,239, x2.60. Central Kalimantan: 459 vs 102, x4.49; overlap +42.8% so the caution line shows. Provinces above 20% overlap: Kalimantan Barat +60.6, Kalimantan Selatan -52.8, Kalimantan Tengah +42.8, Bangka Belitung -24.4, NTT +23.8, NTB +20.8. Largest area file 88 KB. NOAA-20 data from the user's FIRMS downloads (shell cannot reach FIRMS). | (this commit) |

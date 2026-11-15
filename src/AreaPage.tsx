@@ -50,7 +50,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const endLine = endDate ? `${L("Data to", "Data sampai")} ${endDate} (${L("end of S-NPP VIIRS", "akhir S-NPP VIIRS")})` : "";
   const pdate = (s: string) => new Date(s + "T00:00:00Z").toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", timeZone: "UTC" });
   const pv = area.prov && area.prov.weeks.length ? area.prov : null;
-  const endLine2 = endLine && pv ? `${endLine} ${fmt(t("provHead"), pdate(pv.through))}` : endLine;
+  const endLine2 = endLine && pv ? `${endLine} ${fmt(t("provHead"), pdate(pv.through))}${pv.missing.length ? " " + fmt(t("provMissing"), pv.missing.map(pdate).join(", ")) : ""}` : endLine;
   const mc = area.mcur;
   const monthName = mc ? new Date(Date.UTC(2001, mc.month - 1, 1)).toLocaleDateString(dateLocale.v, { month: "long", timeZone: "UTC" }) : "";
   const summary = (() => {
@@ -118,10 +118,11 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
         </dl>
         {pv && pv.tile && (
-          <div className="provtile"><b>{fmt(t("provTileTitle"), pdate(pv.from), pdate(pv.through))}</b>
+          <div className="provtile"><b>{t("provTileTitle")}</b>
             <div className="fig">{pv.tile.ratio != null ? `×${nf(pv.tile.ratio, 2)}` : "n/a"}</div>
-            <div>{fmt(t("provTileBody"), nf(Math.round(pv.tile.value)), pv.tile.median != null ? nf(Math.round(pv.tile.median)) : "n/a")}</div>
-            <small>{t("provTileNote")}</small></div>
+            <div>{fmt(t("provTileBody"), nf(Math.round(pv.tile.value)), pdate(pv.tile.through), pv.tile.days, pv.tile.median != null ? nf(Math.round(pv.tile.median)) : "n/a")}</div>
+            <small>{t("provTileNote")}</small>
+            {pv.overlap && <small style={{ display: "block", marginTop: 4 }}>{fmt(t("provOverlap"), pv.overlap.name ?? area.name, `${pv.overlap.pct > 0 ? "+" : ""}${nf(pv.overlap.pct, 1)}`)}{Math.abs(pv.overlap.pct) > 20 ? " " + t("provCare") : ""}</small>}</div>
         )}
         <p className="note">{L("× = ratio to the median of 2001–2025. Percentile = rank among those 25 years. They measure different things, and the month and the year to date can differ.", "× = rasio terhadap median 2001–2025. Persentil = peringkat di antara 25 tahun itu. Keduanya mengukur hal berbeda, dan bulan serta tahun berjalan bisa berbeda.")}</p>
         {area.low_data && <div className="warn">{t("lowData")}</div>}

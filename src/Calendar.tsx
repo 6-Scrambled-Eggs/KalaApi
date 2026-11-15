@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import Chart from "./Chart";
 import { Area, Oni, WPY, dateLocale, matrix, nf, weekLabel } from "./data";
-import { useT } from "./i18n";
+import { fmt, useT } from "./i18n";
 import { buildPieces } from "./pieces";
 import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
 import { shortNum } from "./num";
@@ -29,8 +29,8 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     const pv = mode === "h" && area.prov && area.prov.weeks.length ? area.prov : null;  // provisional NOAA-20 weeks (separate layer)
     const pyi = pv ? pv.year - area.start_year : -1;
     M.forEach((row, yi) => row.forEach((v, w) => {
-      const k = pv && yi === pyi ? pv.weeks.indexOf(w + 1) : -1;
-      if (v == null && k >= 0) { data.push({ value: [w, yi, pv!.values[k]], itemStyle: { decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pv!.values[k]); return; }
+      const k = pv && yi === pyi ? pv.weeks.findIndex((x) => x.week === w + 1) : -1;
+      if (v == null && k >= 0) { const pw = pv!.weeks[k]; data.push({ value: [w, yi, pw.value], itemStyle: { ...(pw.days < 7 ? { borderColor: "#16212b", borderWidth: 1.6, borderType: "dashed" } : {}), decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pw.value); return; }
       data.push([w, yi, v == null ? "-" : v]);
       if (v != null) vals.push(v);
     }));
@@ -52,10 +52,10 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           const [w, yi] = p.value as number[];
           const y = area.start_year + yi;
           const f = (a: (number | null)[][]) => (a[yi][w] == null ? "–" : String(a[yi][w]));
-          const pk = pv && yi === pyi ? pv.weeks.indexOf(w + 1) : -1;
+          const pk = pv && yi === pyi ? pv.weeks.findIndex((x) => x.week === w + 1) : -1;
           if (pk >= 0) {
-            const tl = pv!.tile;
-            return `<b>${y}, ${t("week")} ${w + 1}</b> (${t("fromWord")} ${weekLabel(w + 1)})<br/><i>${t("provTip")}</i><br/>${t("harmonized")}: ${nf(pv!.values[pk], 1)}${tl && tl.ratio != null ? `<br/>×${nf(tl.ratio, 2)}` : ""}`;
+            const pw = pv!.weeks[pk];
+            return `<b>${y}, ${t("week")} ${w + 1}</b> (${t("fromWord")} ${weekLabel(w + 1)})<br/><i>${t("provTip")}</i><br/>${t("harmonized")}: ${nf(pw.value, 1)}${pw.days < 7 ? `<br/><i>${fmt(t("provWeekTip"), pw.days)}</i>` : ""}`;
           }
           const est = y < 2012 || (y === 2012 && w < 3);
           const band = est && LO[yi][w] != null ? ` (90%: ${LO[yi][w]} to ${HI[yi][w]})` : "";

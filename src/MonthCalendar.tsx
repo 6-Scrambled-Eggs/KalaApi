@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Chart from "./Chart";
 import { Area, dateLocale, nf } from "./data";
-import { useL, useT } from "./i18n";
+import { fmt, useL, useT } from "./i18n";
 import { buildPieces } from "./pieces";
 import { shortNum } from "./num";
 import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
@@ -50,7 +50,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
           const est = y < 2012;
           const band = est && lo[i] != null ? ` (90%: ${nf(Math.round(lo[i]!))} ${L("to", "sampai")} ${nf(Math.round(hi[i]!))})` : "";
           const pmp = area.mpartial && area.mpartial.index === i ? area.mpartial : null;
-          const provd = pm && i === pidx ? `<br/><i>${t("provMonthTip")}: 1–${pm.days} ${mname(m)} ${y}</i>` : "";
+          const provd = pm && i === pidx ? `<br/><i>${t("provMonthTip")}: 1–${new Date(area.prov!.through + "T00:00:00Z").getUTCDate()} ${mname(m)} ${y}</i>` : "";
           const partial = provd || (pmp ? `<br/><i>${L("Partial month", "Bulan parsial")}: ${pmp.days > 1 ? `1–${pmp.days}` : "1"} ${mname(m)} ${y}</i>` : "");
           return `<b>${mname(m, "long")} ${y}</b>${partial}<br/>${L("Harmonized", "Harmonisasi")}: ${nf(Math.round(v))}${band}${est ? " *" : ""}<br/>${L("Median 2001–2025", "Median 2001–2025")}: ${nf(Math.round(med[m] ?? 0))}`;
         },
@@ -82,7 +82,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
       {area.mpartial && <p className="partialkey"><i aria-hidden="true" />{L("dashed border = partial month", "garis putus-putus = bulan belum lengkap")}</p>}
     </div></div>
     <Legend pieces={legendRef.current} extra={pmShown ? t("provLegend") : undefined} />
-    {pmShown && <p className="note">{t("provTotal")}</p>}
+    {pmShown && <p className="note">{fmt(t("provTotal"), new Date(area.prov!.through + "T00:00:00Z").getUTCDate())}</p>}
     </>
   );
 }
