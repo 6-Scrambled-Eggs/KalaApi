@@ -113,7 +113,6 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
         </dl>
-        {summary && <p className="summary">{summary}</p>}
         {area.low_data && <div className="warn">{t("lowData")}</div>}
       </div>
       <SheetMargin area={area} index={index} tools={tools} />
@@ -130,15 +129,16 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       </div>
       {grain === "m" && area.mh ? (
         <>
-          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}</p>
           <MonthCalendar area={area} year={y} onYear={setYear} onReady={(c) => { chart.current = c; }} />
+          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}</p>
         </>
       ) : (
         <>
-          <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
           <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
+          <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
         </>
       )}
+      {summary && <p className="summary">{summary}</p>}
       <h2>{t("profile")}: {y}</h2>
       <Seasonal area={area} year={y} />
       <h2>{t("anomalies")}: {y}</h2>

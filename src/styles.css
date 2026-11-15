@@ -372,3 +372,19 @@ details.more .tools { flex-direction: row; flex-wrap: wrap; margin: 4px 0 10px -
   .answers.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .answers.three > div:nth-child(3) { grid-column: 1 / -1; border-left: 0; padding-left: 0; border-top: 1px solid var(--hair); }
 }
+
+.customgrid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px 28px; margin: 14px 0; align-items: start; }
+.cform { display: grid; gap: 10px; }
+.cform label { display: grid; gap: 3px; font-size: 13px; color: var(--mute); }
+.cform input { font: inherit; padding: 6px 8px; border: 1px solid var(--ink); background: #fff; color: var(--ink); min-height: 36px; }
+.cform input[type=range] { padding: 0; }
+.cform .cta:disabled { opacity: .5; }
+@media (max-width: 760px) { .customgrid { grid-template-columns: 1fr; } }
+
+@media (min-width: 761px) {
+  .sheettitle { font-size: clamp(2rem, 1.2rem + 2vw, 2.9rem); margin-bottom: 2px; }
+  .sheethead .answers { margin: 10px 0 0; }
+  .sheethead .answers .fig { font-size: clamp(1.5rem, 1.2rem + .8vw, 1.9rem); margin: 0 0 2px; }
+  .sheethead .answers > div { padding: 6px 12px 8px; }
+  .sheetbody > .sechead:first-child { margin-top: 14px; }
+}

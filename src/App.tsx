@@ -10,6 +10,7 @@ import { Lang, LangCtx, makeT } from "./i18n";
 const AreaPage = lazy(() => import("./AreaPage"));
 const Brief = lazy(() => import("./Brief"));
 const Card = lazy(() => import("./Card"));
+const CustomArea = lazy(() => import("./CustomArea"));
 const Compare = lazy(() => import("./Compare"));
 const EnsoView = lazy(() => import("./EnsoView"));
 const Hero = lazy(() => import("./Hero"));
@@ -47,6 +48,7 @@ export default function App() {
         <a className="brand" href="#/"><b>KalaApi</b><span>{t("tagline")}</span></a>
         <nav>
           <a href="#/" className={route === "home" ? "on" : ""}>{t("home")}</a>
+          <a href="#/custom" className={route === "custom" ? "on" : ""}>{lang === "id" ? "Area sendiri" : "Your area"}</a>
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
           <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>
         </nav>
@@ -54,13 +56,14 @@ export default function App() {
       </header>
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<p>{t("loading")}</p>}>
-        {!index ? (["area","surge","story","card","brief","compare","enso","method"].includes(route) ? <p>{t("loading")}</p> : <section><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p><div className="homehero" aria-busy="true"><div className="hh" /><div className="hh" /><p className="note hhnote">{t("heroNote")}</p></div></section>) : route === "area" ? (
+        {!index ? (["area","surge","story","card","brief","compare","enso","method","custom"].includes(route) ? <p>{t("loading")}</p> : <section><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p><div className="homehero" aria-busy="true"><div className="hh" /><div className="hh" /><p className="note hhnote">{t("heroNote")}</p></div></section>) : route === "area" ? (
           <AreaPage id={id} index={index} year={year} mode={mode} setYear={(y) => setQ("y", String(y))} setMode={(m) => setQ("m", m)} go={go} />
         ) : route === "surge" ? <Hero areaId={path[1] || "indonesia"} index={index} onPick={(a) => go(`/surge/${a}`)} />
         : route === "story" ? <Story id={id} />
         : route === "card" ? <Card id={id} />
         : route === "brief" ? <Brief id={id} />
         : route === "compare" ? <Compare idA={path[1] || "papua-selatan"} idB={path[2] || "kalimantan-barat"} index={index} go={go} />
+        : route === "custom" ? <CustomArea />
         : route === "enso" ? <EnsoView index={index} onSelect={(a) => go(`/area/${a}`)} />
         : route === "method" ? <Method index={index} />
         : (
@@ -68,7 +71,7 @@ export default function App() {
             <h1>{t("tagline")}</h1>
             <p className="lead">{t("lead")}</p>
             <HomeHero index={index} />
-            <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a></p>
+            <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a> <a className="cta alt" href="#/custom">{lang === "id" ? "Pilih area sendiri" : "Pick your own area"}</a></p>
             <OnVisible minHeight={520}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
             <ProvList index={index} />
           </section>
