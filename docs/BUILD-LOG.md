@@ -107,3 +107,5 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 | D' province burned area (SIPONGI KEMENHUT, 2018-2024) | 225 province-years, pooled log r 0.81, Spearman 0.834; within-province median rho 0.75, 27/31 positive, 20/31 >= 0.7; anomaly r 0.741 (n=216); national rho 0.96, r 0.94. Weak in NTT (-0.07), NTB (0.14). `pipeline/20_burned_area_province.py` | a14ab25 |
 | E1 fixed ratio (b=1) vs published (b=0.875) | V1: within +-20% 71% vs 80%, median abs err 9.8 vs 7.1 (busy 12.5 vs 6.7). V6: 72% vs 84%, 12.2 vs 10.1. National: fixed closer in 2023 (+1.4 vs +3.2) and 2012-2015, worse 2016-17. Published run reproduces +1.8, +3.2, 80%, 84%. `pipeline/19_fixed_vs_power.py` | ec82eea |
 | E3 per-province NOAA-20 coefficients | alpha 0.80 (DI Yogyakarta) to 1.14 (Central Kalimantan), pooled 1.08, shared b 0.975; one national value off by +34% / -5% at the extremes | (this commit) |
+
+- v1.0-submission tag created locally 13:50Z 15 Nov 2026 on b97ad1b+docs commit; live checks: home, indonesia, kalimantan-tengah, custom (box), method; 390px no overflow; 1366 ok.
