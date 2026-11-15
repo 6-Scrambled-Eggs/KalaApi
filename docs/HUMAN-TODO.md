@@ -28,5 +28,5 @@ Deadline: submit by 22:00 WIB (hard stop 23:59 WIB), Sun 15 Nov 2026. Code freez
 
 ## FINAL project-page sentences (v5; replace the earlier ones if they differ)
 - Provisional layer: "After S-NPP VIIRS ended on 2 Nov 2026, KalaApi shows a provisional layer built by day: observed S-NPP to 2 Nov, then NOAA-20 bridged to S-NPP with a per-province fit, up to 14 Nov 2026. It is hatched on the calendars and it is not part of the baseline, the flags or the validation."
-- Raw hotspots: "On the custom-area page you can also download raw FIRMS hotspots (CSV) for your circle or box, with your own free FIRMS MAP_KEY; the key never leaves your browser."
+- Raw hotspots: "On the custom-area page you can build a FIRMS request for your circle or box (your own free MAP_KEY, up to 5 days) and filter the raw detections to your area as a CSV. FIRMS may block direct browser calls, so the page also offers the FIRMS link and filters a file you download there." (Check with your own key first; if it works in your browser, say it downloads directly.)
 - D' and E1: use the sentences above.
