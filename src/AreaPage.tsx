@@ -8,7 +8,6 @@ import SheetMargin from "./SheetMargin";
 import Seasonal from "./Seasonal";
 import { Area, AreaIndex, Enso, Oni, WPY, dateLocale, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
 import { fmt, useL, useT } from "./i18n";
-import { ensoLabel } from "./EnsoPanel";
 
 const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
 
@@ -45,7 +44,6 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const onsetDiff = cur ? cur[0] - area.typical_period.onset : null;
   const tp = area.typical_period;
   const hasSplit = !!(area.h_peat && area.h_min);
-  const e0 = enso?.areas[area.id];
   const mc = area.mcur;
   const monthName = mc ? new Date(Date.UTC(2001, mc.month - 1, 1)).toLocaleDateString(dateLocale.v, { month: "long", timeZone: "UTC" }) : "";
   const summary = (() => {
@@ -55,7 +53,6 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       bits.push(fmt(t(r >= 1.15 ? "sumRatioHigh" : r <= 0.85 ? "sumRatioLow" : "sumRatioMid"), r));
     }
     if (onsetDiff != null) bits.push(onsetDiff === 0 ? t("sumOnTime") : fmt(t(onsetDiff < 0 ? "sumEarly" : "sumLate"), Math.abs(onsetDiff)));
-    if (e0 && ensoLabel(e0) === "clear" && e0.ratio_el_neu != null && e0.ratio_el_neu > 1) bits.push(fmt(t("sumEl"), e0.ratio_el_neu));
     return bits.length ? `${area.name}: ${bits.join("; ")}.` : "";
   })();
   const exportMonthCsv = () => {
