@@ -48,6 +48,9 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const hasSplit = !!(area.h_peat && area.h_min);
   const endDate = meta ? new Date(meta.data_end + "T00:00:00Z").toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "";
   const endLine = endDate ? `${L("Data to", "Data sampai")} ${endDate} (${L("end of S-NPP VIIRS", "akhir S-NPP VIIRS")})` : "";
+  const pdate = (s: string) => new Date(s + "T00:00:00Z").toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", timeZone: "UTC" });
+  const pv = area.prov && area.prov.weeks.length ? area.prov : null;
+  const endLine2 = endLine && pv ? `${endLine} ${fmt(t("provHead"), pdate(pv.through))}` : endLine;
   const mc = area.mcur;
   const monthName = mc ? new Date(Date.UTC(2001, mc.month - 1, 1)).toLocaleDateString(dateLocale.v, { month: "long", timeZone: "UTC" }) : "";
   const summary = (() => {
@@ -108,12 +111,18 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     <section className="sheet">
       <div className="sheethead">
         <h1 className="sheettitle">{area.name}</h1>
-        <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {endLine}</div>
+        <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {endLine2}</div>
         <dl className="answers three">
           {mc && <div><dt>{monthName} {mc.year}{mc.partial ? ` (${mc.days}/${mc.days_in_month} ${L("days", "hari")})` : ""}</dt><dd className="fig">{mc.ratio != null ? `×${nf(mc.ratio, 2)}` : "n/a"}</dd><dd>{nf(Math.round(mc.value))} {t("fireDays")} {L("vs median", "vs median")} {nf(Math.round(mc.median))} · {t("pctile")} {Math.round(mc.pct)} {t("pctOf")}</dd></div>}
           <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${nf(area.ytd_ratio, 2)}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
         </dl>
+        {pv && pv.tile && (
+          <div className="provtile"><b>{fmt(t("provTileTitle"), pdate(pv.from), pdate(pv.through))}</b>
+            <div className="fig">{pv.tile.ratio != null ? `×${nf(pv.tile.ratio, 2)}` : "n/a"}</div>
+            <div>{fmt(t("provTileBody"), nf(Math.round(pv.tile.value)), pv.tile.median != null ? nf(Math.round(pv.tile.median)) : "n/a")}</div>
+            <small>{t("provTileNote")}</small></div>
+        )}
         <p className="note">{L("× = ratio to the median of 2001–2025. Percentile = rank among those 25 years. They measure different things, and the month and the year to date can differ.", "× = rasio terhadap median 2001–2025. Persentil = peringkat di antara 25 tahun itu. Keduanya mengukur hal berbeda, dan bulan serta tahun berjalan bisa berbeda.")}</p>
         {area.low_data && <div className="warn">{t("lowData")}</div>}
       </div>

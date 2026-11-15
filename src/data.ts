@@ -16,6 +16,7 @@ export type Area = AreaIndex & {
   mh?: Series; mlo?: Series; mhi?: Series;
   mstat?: { med: number[]; p25: number[]; p75: number[] };
   mcur?: { year: number; month: number; days: number; days_in_month: number; value: number; median: number; ratio: number | null; pct: number; partial: boolean };
+  prov?: { year: number; weeks: number[]; values: number[]; from: string; through: string; source: string; tile: { week: number; value: number; median: number | null; ratio: number | null } | null; month: { year: number; month: number; days: number; value: number } };
   mpartial?: { index: number; days: number; days_in_month: number } | null;
 };
 export type Meta = {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import Chart from "./Chart";
-import { Area, Oni, WPY, dateLocale, matrix, weekLabel } from "./data";
+import { Area, Oni, WPY, dateLocale, matrix, nf, weekLabel } from "./data";
 import { useT } from "./i18n";
 import { buildPieces } from "./pieces";
 import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
@@ -26,7 +26,11 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     const MM = matrix(area.m), VV = matrix(area.v), P = matrix(area.pct);
     const vals: number[] = [];
     const data: [number, number, number | string][] = [];
+    const pv = mode === "h" && area.prov && area.prov.weeks.length ? area.prov : null;  // provisional NOAA-20 weeks (separate layer)
+    const pyi = pv ? pv.year - area.start_year : -1;
     M.forEach((row, yi) => row.forEach((v, w) => {
+      const k = pv && yi === pyi ? pv.weeks.indexOf(w + 1) : -1;
+      if (v == null && k >= 0) { data.push({ value: [w, yi, pv!.values[k]], itemStyle: { decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pv!.values[k]); return; }
       data.push([w, yi, v == null ? "-" : v]);
       if (v != null) vals.push(v);
     }));
@@ -48,6 +52,11 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           const [w, yi] = p.value as number[];
           const y = area.start_year + yi;
           const f = (a: (number | null)[][]) => (a[yi][w] == null ? "–" : String(a[yi][w]));
+          const pk = pv && yi === pyi ? pv.weeks.indexOf(w + 1) : -1;
+          if (pk >= 0) {
+            const tl = pv!.tile;
+            return `<b>${y}, ${t("week")} ${w + 1}</b> (${t("fromWord")} ${weekLabel(w + 1)})<br/><i>${t("provTip")}</i><br/>${t("harmonized")}: ${nf(pv!.values[pk], 1)}${tl && tl.ratio != null ? `<br/>×${nf(tl.ratio, 2)}` : ""}`;
+          }
           const est = y < 2012 || (y === 2012 && w < 3);
           const band = est && LO[yi][w] != null ? ` (90%: ${LO[yi][w]} to ${HI[yi][w]})` : "";
           const pct = P[yi][w] == null ? "" : `<br/>${t("pctile").charAt(0).toUpperCase() + t("pctile").slice(1)}: ${P[yi][w]}`;
@@ -105,7 +114,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: rowH * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={HEIGHT} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />
     </div></div>
-    <Legend pieces={legendRef.current} />
+    <Legend pieces={legendRef.current} extra={mode === "h" && area.prov && area.prov.weeks.length ? t("provLegend") : undefined} />
     </>
   );
 }

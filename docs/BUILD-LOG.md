@@ -92,3 +92,9 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 | P0-5 | Method page: 7 scientist questions. `08_enso_signal.py` adds BH q-values (288 pass, 47 weak, 87 none). Finer b grid: 0.870 (no change). Kalteng week 3 2026 checked: real, no filter change. | `#/method`. |
 | P1-1 | `pipeline/16_noaa20_bridge_test.py`: bridge NOT good enough (national error up to 12.5%). Not merged. Reported on Method page. | `public/data/bridge_test.json`. |
 | Docs | `docs/HUMAN-TODO.md`, `docs/JUDGE-QA.md`. | |
+
+## PRD v4 final sprint (15 Nov 2026, evening WIB)
+
+| Task | What changed | Numbers (from pipeline output) |
+|---|---|---|
+| A | `pipeline/18_provisional_noaa20.py`: per-province bridge S-NPP = alpha x NOAA-20^b (fit 2019-01-01 to 2026-10-21, b = 0.975, 38 provinces with own alpha, pooled alpha 1.079). New `prov` array in each of 422 area files and `public/data/bridge.json`. Calendar (hatched cell), month cell (Nov 1-4), tile "29 Oct to 4 Nov", header line, Method Q6. Calibrated arrays unchanged (checked: all 422 files equal to HEAD except `prov`). | Overlap check 27 Oct-2 Nov 2026: S-NPP 3,600; NOAA-20 raw 3,949 (+9.7%); bridged 3,710 (+3.1%). Provisional week 44 (29 Oct-4 Nov): nation 3,871.3 vs median 1,625.0 = x2.38; Kalimantan Tengah 386.1 vs 63.0 = x6.13. NOAA-20 day 6 Nov has 21 rows (NOAA-21: 546), so week 45 (5-11 Nov) is not shown. |

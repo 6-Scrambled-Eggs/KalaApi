@@ -403,3 +403,8 @@ details.more .tools { flex-direction: row; flex-wrap: wrap; margin: 4px 0 10px -
 .pleg li { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .pleg i { display: inline-block; width: 18px; height: 12px; border: 1px solid rgba(22,33,43,.25); }
 .pleg .u { color: var(--mute); flex-basis: 100%; font-size: 11.5px; }
+.pleg i.hatch { background: repeating-linear-gradient(45deg, #fe9929 0 2px, #fff 2px 5px); border-color: var(--ink); }
+.provtile { margin: 8px 0 0; padding: 8px 10px; border: 1px dashed var(--ink); background: var(--sheet); font-size: 13px; }
+.provtile b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--mute); }
+.provtile .fig { font-size: 22px; font-weight: 700; margin: 2px 0; }
+.provtile small { display: block; color: var(--mute); margin-top: 2px; font-size: 11.5px; }

@@ -23,11 +23,13 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
     const val = (i: number) => (i === hide || mh[i] == null ? null : mh[i]);
     const data: any[] = [];
     const pidx = area.mpartial ? area.mpartial.index : -1;  // partial month: normal ramp colour plus a dashed border
+    const pm = area.prov && area.prov.weeks.length && area.mpartial && area.prov.month ? area.prov.month : null;  // provisional November (NOAA-20 bridged)
     const vals: number[] = [];
     for (let y = 0; y < nYears; y++) for (let m = 0; m < 12; m++) {
       const i = y * 12 + m, v = val(i);
       if (v != null) vals.push(v);
-      if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
+      if (i === pidx && pm) { data.push({ value: [m, y, pm.value], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed", decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pm.value); }
+      else if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
       else data.push([m, y, v == null ? "-" : v]);
     }
     const pieces: any[] = buildPieces(vals, shortNum);
@@ -43,12 +45,13 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
         formatter: (p: any) => {
           const [m, yi] = p.value as number[];
           const y = area.start_year + yi, i = yi * 12 + m;
-          const v = val(i);
+          const v = pm && i === pidx ? pm.value : val(i);
           if (v == null) return `<b>${mname(m, "long")} ${y}</b><br/>–`;
           const est = y < 2012;
           const band = est && lo[i] != null ? ` (90%: ${nf(Math.round(lo[i]!))} ${L("to", "sampai")} ${nf(Math.round(hi[i]!))})` : "";
-          const pm = area.mpartial && area.mpartial.index === i ? area.mpartial : null;
-          const partial = pm ? `<br/><i>${L("Partial month", "Bulan parsial")}: ${pm.days > 1 ? `1–${pm.days}` : "1"} ${mname(m)} ${y}</i>` : "";
+          const pmp = area.mpartial && area.mpartial.index === i ? area.mpartial : null;
+          const provd = pm && i === pidx ? `<br/><i>${t("provMonthTip")}: 1–${pm.days} ${mname(m)} ${y}</i>` : "";
+          const partial = provd || (pmp ? `<br/><i>${L("Partial month", "Bulan parsial")}: ${pmp.days > 1 ? `1–${pmp.days}` : "1"} ${mname(m)} ${y}</i>` : "");
           return `<b>${mname(m, "long")} ${y}</b>${partial}<br/>${L("Harmonized", "Harmonisasi")}: ${nf(Math.round(v))}${band}${est ? " *" : ""}<br/>${L("Median 2001–2025", "Median 2001–2025")}: ${nf(Math.round(med[m] ?? 0))}`;
         },
       },
