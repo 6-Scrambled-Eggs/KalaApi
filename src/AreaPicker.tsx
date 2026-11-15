@@ -8,6 +8,7 @@ export default function AreaPicker({ index, onPick }: { index: AreaIndex[]; onPi
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const listId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const names = useMemo(() => {
     const byId = new Map(index.map((a) => [a.id, a]));
@@ -31,13 +32,14 @@ export default function AreaPicker({ index, onPick }: { index: AreaIndex[]; onPi
     setV("");
     setActive(-1);
     setOpen(false);
+    inputRef.current?.blur();
     onPick(id);
   }
   return (
     <div className="picker" onBlur={(e) => {
       if (!e.currentTarget.contains(e.relatedTarget)) { setOpen(false); setActive(-1); }
     }}>
-      <input value={v} placeholder={t("search")} aria-label={t("search")}
+      <input ref={inputRef} value={v} placeholder={t("search")} aria-label={t("search")}
         role="combobox" aria-autocomplete="list" aria-expanded={open}
         aria-controls={open && matches.length ? listId : undefined}
         aria-activedescendant={open && active >= 0 && matches[active] ? `${listId}-${active}` : undefined}

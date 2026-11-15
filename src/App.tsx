@@ -55,7 +55,7 @@ export default function App() {
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
           <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>
         </nav>
-        <AreaPicker index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
+        <AreaPicker key={path.join("/")} index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
       </header>
       <main id="main-content" className={route === "home" ? "home-main" : undefined} tabIndex={-1}>
         <Suspense fallback={<p>{t("loading")}</p>}>
