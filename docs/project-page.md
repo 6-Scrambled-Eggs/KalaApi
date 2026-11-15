@@ -19,7 +19,7 @@ KalaApi joins 25 years of NASA MODIS and VIIRS hot spots into one comparable fir
 - peat-only and mineral-only views, an El Nino marker for each year, and CSV and PNG export;
 - a **readiness window**: the earliest, median and latest week the fire season started over 25 years, and a "be ready by" date;
 - a **one-page BPBD brief** (print or save as PDF, English and Bahasa Indonesia) with where the area stands now, the readiness window, the El Nino link and the limits of the numbers;
-- an **El Nino link** map and chart: for each province, whether years with El Nino (July-September ONI) are also years with more fire-days. 298 of 422 areas show a clear link, 37 a weak one and 87 none (only 5 El Nino years in 25; exploratory, not a forecast);
+- an **El Nino link** map and chart: for each province, whether years with El Nino (July-September ONI) are also years with more fire-days. 288 of 422 areas pass a false-discovery-rate test (q < 0.05; 248 clear, 40 suggestive), 47 show a weak link and 87 none (only 5 El Nino years in 25; exploratory, not a forecast);
 - an **analog year**: the past year whose fire curve so far is closest to this year (a likeness, not a prediction).
 The interface is in English and Bahasa Indonesia.
 

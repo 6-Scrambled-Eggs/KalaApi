@@ -126,7 +126,7 @@ export default function CustomArea() {
   }, [lat, lon, radius, valid]);
 
   const result = useMemo(() => {
-    if (!rows || !idx || !rangeOk) return null;
+    if (!rows || !idx || !rangeOk || !valid) return null;
     const n = s2 - s1 + 1;
     const H = new Array(n).fill(0), M = new Array(n).fill(0), V = new Array(n).fill(0);
     const byYear = new Map<number, number>();
@@ -145,7 +145,7 @@ export default function CustomArea() {
     const baseV = years.filter((y) => y <= 2025).map((y) => byYear.get(y) ?? 0).sort((a, b) => a - b);
     const med = baseV.length ? (baseV[Math.floor((baseV.length - 1) / 2)] + baseV[Math.ceil((baseV.length - 1) / 2)]) / 2 : 0;
     return { n, H, M, V, total, years, yv, selY, med, wrap, cur: byYear.get(selY) ?? 0 };
-  }, [rows, s1, s2, idx, rangeOk]);
+  }, [rows, s1, s2, idx, rangeOk, valid]);
 
   const f = (x: number) => Math.round(x).toLocaleString(dateLocale.v);
   const lineOpt = useMemo(() => {
@@ -187,7 +187,7 @@ export default function CustomArea() {
   };
 
   return (
-    <section className="sheet custom">
+    <section className="custom">
       <h1>{L("Your own area", "Area pilihan Anda")}</h1>
       <p className="lead">{L("Pick a point on the map and a radius. KalaApi sums the harmonized fire-days of all 0.05° grid cells (about 5.5 km) inside the circle, for the dates you choose.", "Pilih satu titik di peta dan radius. KalaApi menjumlahkan hari-api terharmonisasi semua sel grid 0,05° (sekitar 5,5 km) di dalam lingkaran, untuk tanggal yang Anda pilih.")}</p>
       <div className="customgrid">

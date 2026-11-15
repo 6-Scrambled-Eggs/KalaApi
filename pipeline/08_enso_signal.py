@@ -8,7 +8,9 @@ Method (kept simple on purpose, n = 25 years):
 - Class per year: El Nino if ONI JAS >= 0.5, La Nina if <= -0.5, else neutral.
 - rho = Spearman rank correlation of annual fire-days with ONI JAS.
 - p = two-sided permutation p-value (5000 shuffles, fixed seed).
-- label: "clear" if p < 0.05 and rho >= 0.4; "weak" if p < 0.15 and rho > 0;
+- q = Benjamini-Hochberg false-discovery-rate adjusted p across all areas (about 420 tests; areas are spatially
+  correlated, so q is a guide, not a guarantee).
+- label: "clear" if q < 0.05 and rho >= 0.4; "weak" if p < 0.15 and rho > 0 (and not clear);
   "none" otherwise; "reverse" if p < 0.15 and rho < 0.
 This is exploratory. It is not a forecast and it is not a causal test.
 """
@@ -57,6 +59,7 @@ def main():
                      "la": [y for y, c in zip(years, cls) if c == "la"],
                      "neu": [y for y, c in zip(years, cls) if c == "neu"]},
            "n_perm": N_PERM, "areas": {}}
+    pend = []
     for f in sorted((DATA / "areas").glob("*.json")):
         a = json.loads(f.read_text())
         h = a["h"]
@@ -75,7 +78,15 @@ def main():
         null = (ro_perm @ rt_c) / denom if denom else np.zeros(N_PERM)
         p = float((np.abs(null) >= abs(rho) - 1e-12).mean())
         med = {k: float(np.median(t[cls == k])) if (cls == k).any() else None for k in ("el", "neu", "la")}
-        if p < 0.05 and rho >= 0.4:
+        pend.append((a["id"], rho, p, med))
+    ps = np.array([x[2] for x in pend])
+    order = np.argsort(ps)
+    m = len(ps)
+    q = np.empty(m)
+    q[order] = np.minimum.accumulate((ps[order] * m / (np.arange(m) + 1))[::-1])[::-1]
+    q = np.minimum(q, 1.0)
+    for (aid, rho, p, med), qq in zip(pend, q):
+        if qq < 0.05 and rho >= 0.4:
             label = "clear"
         elif p < 0.15 and rho > 0:
             label = "weak"
@@ -84,11 +95,11 @@ def main():
         else:
             label = "none"
         ratio = (med["el"] / med["neu"]) if med["el"] and med["neu"] else None
-        out["areas"][a["id"]] = {"rho": round(rho, 2), "p": round(p, 3), "label": label,
-                                 "med_el": round(med["el"]) if med["el"] is not None else None,
-                                 "med_neu": round(med["neu"]) if med["neu"] is not None else None,
-                                 "med_la": round(med["la"]) if med["la"] is not None else None,
-                                 "ratio_el_neu": round(ratio, 2) if ratio else None}
+        out["areas"][aid] = {"rho": round(rho, 2), "p": round(p, 3), "q": round(float(qq), 3), "label": label,
+                             "med_el": round(med["el"]) if med["el"] is not None else None,
+                             "med_neu": round(med["neu"]) if med["neu"] is not None else None,
+                             "med_la": round(med["la"]) if med["la"] is not None else None,
+                             "ratio_el_neu": round(ratio, 2) if ratio else None}
     (DATA / "enso.json").write_text(json.dumps(out, separators=(",", ":")))
     prov = {k: v for k, v in out["areas"].items() if k in ("indonesia", "papua-selatan", "kalimantan-barat", "kalimantan-tengah", "riau", "sumatera-selatan")}
     print("years el/la/neu:", {k: len(v) for k, v in out["years"].items()})

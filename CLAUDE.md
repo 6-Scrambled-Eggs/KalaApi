@@ -50,7 +50,7 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 
 ## Added 14 Nov evening (from the winning-factor research)
 - Readiness window, BPBD brief (`#/brief/<id>`, 1 A4 page), El Niño link (`pipeline/08_enso_signal.py` -> `public/data/enso.json`; panel + `#/enso` map), analog year. See `docs/WINNING-IDEAS.md` and `docs/BUILD-LOG.md`.
-- Honest numbers: 298 of 422 areas show a clear El Niño link, 37 weak, 87 none; only 5 El Niño years in 2001-2025; p not corrected for multiple tests. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
+- Honest numbers: 288 of 422 areas pass a Benjamini-Hochberg test (q < 0.05; 248 clear, 40 suggestive), 47 weak, 87 none; only 5 El Niño years in 2001-2025; q is a guide because neighbouring areas are correlated. West Kalimantan is clear (rho 0.74), so do NOT say "El Niño does not explain West Kalimantan". Riau is weak (0.35).
 
 - Compare view `#/compare/<a>/<b>`. Papers verified (Giglio 2016 RSE 178:31-41; Schroeder 2014 RSE 143:85-96).
 

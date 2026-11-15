@@ -53,7 +53,7 @@ Success: an officer opens their area, understands within a minute where this yea
 - Validation (Method page, `public/data/validation.json`): V-1 holdout 2019 and 2023, national annual error +1.8% and +3.2%, 80% of province-years within ±20%, weekly r 0.90. V-6 reverse holdout: 84% within ±20%, weekly r 0.95.
 - Known events: Central Kalimantan and South Sumatra reach weekly percentile 98 in 2015. Report honestly that not every peak week is flagged.
 - Yearly national fire-days rank 2015–2025 the same way official burned hectares do (Spearman ρ 0.90, n = 11).
-- El Niño link: 298 of 422 areas clear, 37 weak, 87 none. Only 5 El Niño years in 2001–2025, and p is not corrected for multiple tests.
+- El Niño link: 288 of 422 areas pass q < 0.05 (248 clear, 40 suggestive), 47 weak, 87 none. Only 5 El Niño years in 2001–2025. q is a Benjamini–Hochberg false-discovery-rate value.
 - Absent: there are no user testimonials, agency endorsements, deployment or adoption figures. Do not invent any.
 
 ## Product Principles
