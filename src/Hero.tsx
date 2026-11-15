@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Chart from "./Chart";
-import { Area, AreaIndex, WPY, annualTotals, loadArea } from "./data";
+import { Area, AreaIndex, WPY, annualTotals, loadArea, nf } from "./data";
 import { useT } from "./i18n";
 
 function mean(xs: (number | null)[]) {
@@ -46,8 +46,8 @@ export default function Hero({ areaId, index, onPick }: { areaId: string; index:
       {!view ? <p>{t("loading")}</p> : (
         <>
           <div className="stepRow">
-            <div className="step bad"><span className="big">×{view.stepRaw.toFixed(1)}</span><span>{t("heroRaw")}</span></div>
-            <div className="step good"><span className="big">×{view.stepH.toFixed(1)}</span><span>{t("heroH")}</span></div>
+            <div className="step bad"><span className="big">×{nf(view.stepRaw, 1)}</span><span>{t("heroRaw")}</span></div>
+            <div className="step good"><span className="big">×{nf(view.stepH, 1)}</span><span>{t("heroH")}</span></div>
           </div>
           <Chart option={view.rawOpt} height={260} label="Raw stitched hotspot counts" />
           <Chart option={view.hOpt} height={260} label="Harmonized fire-days" />

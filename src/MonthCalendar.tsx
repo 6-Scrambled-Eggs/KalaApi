@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import Chart from "./Chart";
-import { Area, dateLocale } from "./data";
+import { Area, dateLocale, nf } from "./data";
 import { useL, useT } from "./i18n";
 import { buildPieces } from "./pieces";
 
@@ -27,7 +27,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
       if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
       else data.push([m, y, v == null ? "-" : v]);
     }
-    const pieces: any[] = buildPieces(vals, (n) => n.toLocaleString(dateLocale.v));
+    const pieces: any[] = buildPieces(vals, (n) => nf(n));
     const mname = (m: number, style: "short" | "long" = "short") => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: style, timeZone: "UTC" });
     const totals = Array.from({ length: nYears }, (_, y) => Math.round(Array.from({ length: 12 }, (_, m) => val(y * 12 + m) ?? 0).reduce((a, b) => a + b, 0)).toLocaleString(dateLocale.v));
     const lastBack = Math.floor(area.back_cast_end_slot / 52);
@@ -42,10 +42,10 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
           const v = val(i);
           if (v == null) return `<b>${mname(m, "long")} ${y}</b><br/>–`;
           const est = y < 2012;
-          const band = est && lo[i] != null ? ` (90%: ${Math.round(lo[i]!).toLocaleString(dateLocale.v)} ${L("to", "sampai")} ${Math.round(hi[i]!).toLocaleString(dateLocale.v)})` : "";
+          const band = est && lo[i] != null ? ` (90%: ${nf(Math.round(lo[i]!))} ${L("to", "sampai")} ${nf(Math.round(hi[i]!))})` : "";
           const pm = area.mpartial && area.mpartial.index === i ? area.mpartial : null;
           const partial = pm ? `<br/><i>${L("Partial month", "Bulan parsial")}: ${pm.days > 1 ? `1–${pm.days}` : "1"} ${mname(m)} ${y}</i>` : "";
-          return `<b>${mname(m, "long")} ${y}</b>${partial}<br/>${L("Harmonized", "Harmonisasi")}: ${Math.round(v).toLocaleString(dateLocale.v)}${band}${est ? " *" : ""}<br/>${L("Median 2001–2025", "Median 2001–2025")}: ${Math.round(med[m] ?? 0).toLocaleString(dateLocale.v)}`;
+          return `<b>${mname(m, "long")} ${y}</b>${partial}<br/>${L("Harmonized", "Harmonisasi")}: ${nf(Math.round(v))}${band}${est ? " *" : ""}<br/>${L("Median 2001–2025", "Median 2001–2025")}: ${nf(Math.round(med[m] ?? 0))}`;
         },
       },
       xAxis: [

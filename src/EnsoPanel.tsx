@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import Chart from "./Chart";
-import { Area, Enso, Oni, WPY, matrix } from "./data";
+import { Area, Enso, Oni, WPY, matrix, nf } from "./data";
 import { useT } from "./i18n";
 
 /** Display label: "clear" needs p <= 0.01 because p is not corrected for the many tests; p up to 0.05 is only "suggestive". */
 export const ensoLabel = (e: { label: string; p: number }) => (e.label === "clear" && e.p > 0.01 ? "suggestive" : e.label);
-export const fmtP = (p: number) => (p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(3)}`);
+export const fmtP = (p: number) => (p < 0.001 ? `p < ${nf(0.001, 3)}` : `p = ${nf(p, 3)}`);
 const COLORS = { el: "#c0392b", la: "#2e86c1", neu: "#9aa5ad" };
 
 /** El Nino link per area: yearly fire-days coloured by ONI class, plus a plain verdict with n and p. */
@@ -27,7 +27,7 @@ export default function EnsoPanel({ area, enso, oni, compact }: { area: Area; en
     }
     return {
       grid: { left: 64, right: 12, top: 28, bottom: 30 },
-      tooltip: { trigger: "item", formatter: (p: any) => `${years[p.dataIndex]}: ${p.value.toLocaleString()} ${t("fireDays")}<br/>ONI Jul–Sep ${p.data.oni > 0 ? "+" : ""}${p.data.oni}` },
+      tooltip: { trigger: "item", formatter: (p: any) => `${years[p.dataIndex]}: ${nf(p.value)} ${t("fireDays")}<br/>ONI Jul–Sep ${p.data.oni > 0 ? "+" : ""}${p.data.oni}` },
       xAxis: { type: "category", data: years.map(String), axisLabel: { interval: 1 } },
       yAxis: { type: "value", name: t("fireDays"), nameGap: 8 },
       series: [{ type: "bar", data: vals, barCategoryGap: "25%" }],

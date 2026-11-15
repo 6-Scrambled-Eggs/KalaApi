@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Chart from "./Chart";
 import { ensoLabel } from "./EnsoPanel";
-import { Area, AreaIndex, Enso, WPY, loadArea, loadEnso, matrix, readiness, seasonal, upto, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, WPY, loadArea, loadEnso, matrix, readiness, seasonal, upto, weekLabel, nf } from "./data";
 import { useT } from "./i18n";
 
 const COLS = ["#b03a12", "#1f6fa8"];
@@ -74,7 +74,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
       onset: r ? `${L ? "mgg" : "wk"} ${r.median} (${weekLabel(r.median)}), ${L ? "rentang" : "range"} ${r.earliest}–${r.latest}` : "n/a",
       peak: `${L ? "mgg" : "wk"} ${a.typical_period.peak} (${weekLabel(a.typical_period.peak)})`,
       enso: e ? `${L ? ({ clear: "jelas", suggestive: "indikasi", weak: "lemah", none: "tidak ada", reverse: "terbalik" } as Record<string, string>)[ensoLabel(e)] : ensoLabel(e)}, ρ = ${e.rho}` : "n/a",
-      mean: Math.round(a.mean_annual_fire_days).toLocaleString(),
+      mean: nf(Math.round(a.mean_annual_fire_days)),
     };
   };
   const ra = A ? row(A) : null, rb = B ? row(B) : null;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AreaIndex, annualTotals, loadArea } from "./data";
+import { AreaIndex, annualTotals, loadArea, nf } from "./data";
 import { useT } from "./i18n";
 
 const mean = (xs: (number | null)[]) => { const v = xs.filter((x): x is number => x != null); return v.reduce((a, b) => a + b, 0) / v.length; };
@@ -17,8 +17,8 @@ export default function HomeHero(_: { index: AreaIndex[] }) {
   }, []);
   return (
     <div className="homehero">
-      <div className="hh bad"><span className="big">{step ? `×${step.raw.toFixed(1)}` : "…"}</span><span>{t("heroRaw")}</span></div>
-      <div className="hh good"><span className="big">{step ? `×${step.h.toFixed(1)}` : "…"}</span><span>{t("heroH")}</span></div>
+      <div className="hh bad"><span className="big">{step ? `×${nf(step.raw, 1)}` : "…"}</span><span>{t("heroRaw")}</span></div>
+      <div className="hh good"><span className="big">{step ? `×${nf(step.h, 1)}` : "…"}</span><span>{t("heroH")}</span></div>
       <p className="note hhnote">{t("heroNote")}</p>
     </div>
   );

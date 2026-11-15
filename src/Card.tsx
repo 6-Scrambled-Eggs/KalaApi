@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useT } from "./i18n";
-import { Area, WPY, loadArea, matrix, weekLabel } from "./data";
+import { Area, WPY, loadArea, matrix, weekLabel, nf } from "./data";
 
 /** FR-20: one-page A4 readiness card, print-styled. */
 export default function Card({ id }: { id: string }) {
@@ -22,7 +22,7 @@ export default function Card({ id }: { id: string }) {
       <table><tbody>
         <tr><th>{L("Fire season, typical", "Musim api, tipikal")}</th><td>{L("starts", "mulai")} {weekLabel(tp.onset)} · {L("peaks", "puncak")} {weekLabel(tp.peak)} · {L("ends", "berakhir")} {weekLabel(tp.end)}</td></tr>
         <tr><th>{L("This year", "Tahun ini")} ({a.last_year})</th><td>{lang === "id" ? `minggu ${wk + 1} berada di persentil ke-${pct == null ? "n/a" : Math.round(pct)} dari minggu yang sama pada 2001–2025. Sejak awal tahun: ×${a.ytd_ratio ?? "n/a"} dari jumlah normal (persentil ${Math.round(a.ytd_pct)}).` : `week ${wk + 1} is at the ${pct == null ? "n/a" : Math.round(pct)}th percentile of the same week in 2001–2025. Year to date: ×${a.ytd_ratio ?? "n/a"} of the normal amount (percentile ${Math.round(a.ytd_pct)}).`}</td></tr>
-        <tr><th>{L("Average year", "Tahun rata-rata")}</th><td>{Math.round(a.mean_annual_fire_days).toLocaleString()} {L("harmonized fire-days", "hari-api terharmonisasi")}</td></tr>
+        <tr><th>{L("Average year", "Tahun rata-rata")}</th><td>{nf(Math.round(a.mean_annual_fire_days))} {L("harmonized fire-days", "hari-api terharmonisasi")}</td></tr>
       </tbody></table>
       <h2>{L("Three things to know", "Tiga hal yang perlu diketahui")}</h2>
       <ol>

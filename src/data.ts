@@ -96,6 +96,8 @@ export function seasonal(area: Area, y0 = 2001, y1 = 2025) {
 
 /** Approximate date label of a week slot (7-day blocks of the year). */
 export const dateLocale = { v: "en-GB" };
+/** One number formatter for the whole app: ID 27.756 and 0,90; EN 27,756 and 0.90. */
+export const nf = (x: number, d = 0): string => x.toLocaleString(dateLocale.v, { minimumFractionDigits: d, maximumFractionDigits: d });
 export function weekLabel(w: number): string {
   const d = new Date(Date.UTC(2001, 0, 1 + 7 * (w - 1)));
   return d.toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", timeZone: "UTC" });

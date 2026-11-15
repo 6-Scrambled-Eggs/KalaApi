@@ -1,4 +1,4 @@
-import { Area, analogYears, upto } from "./data";
+import { Area, analogYears, upto, nf } from "./data";
 import { useT } from "./i18n";
 
 /** "This year is most like ...": closest past cumulative curve up to the current week. */
@@ -12,7 +12,7 @@ export default function Analog({ area }: { area: Area }) {
   const line = (x: { year: number }) => {
     const past = upto(area, x.year, w);
     const r = past > 0 ? now / past : NaN;
-    return `${x.year}${x.year < 2012 ? (id ? " (perkiraan dari MODIS)" : " (estimated from MODIS)") : ""}, ×${Number.isFinite(r) ? r.toFixed(2) : "n/a"}`;
+    return `${x.year}${x.year < 2012 ? (id ? " (perkiraan dari MODIS)" : " (estimated from MODIS)") : ""}, ×${Number.isFinite(r) ? nf(r, 2) : "n/a"}`;
   };
   return (
     <div>

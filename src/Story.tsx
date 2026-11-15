@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Chart from "./Chart";
-import { Area, WPY, loadArea, matrix } from "./data";
+import { Area, WPY, loadArea, matrix, nf } from "./data";
 
 const YEARS = [2015, 2019, 2023, 2026];
 const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2023: "#2e86c1", 2026: "#16212b" };
@@ -45,10 +45,10 @@ export default function Story({ id }: { id: string }) {
       <h2>Fire radiative power (VIIRS era)</h2>
       <Chart option={d.foption} height={320} label="Cumulative fire radiative power for 2015, 2019, 2023 and 2026" />
       <div className="cards">
-        <div className="tile"><div className="k">1. The yardstick</div><div className="s">2015 is the reference fire year: {Math.round(r15.total).toLocaleString()} fire-days over the full year, {Math.round(r15.ytd).toLocaleString()} by week {d.w}.</div></div>
-        <div className="tile"><div className="k">2. The other years</div><div className="s">2019: {Math.round(d.rows[1].total).toLocaleString()}. 2023: {Math.round(d.rows[2].total).toLocaleString()}. Full-year totals.</div></div>
-        <div className="tile"><div className="k">3. Is {r26.y} worse than 2015?</div><div className="s">By week {d.w}, {r26.y} stands at {Math.round(r26.ytd).toLocaleString()} fire-days, {ratio == null ? "n/a" : `${(ratio * 100).toFixed(0)}% of 2015`} for the same weeks. Fire-days count how often cells burn. They do not measure how intense the fires are.</div></div>
-        <div className="tile"><div className="k">4. How intense? (fire radiative power)</div><div className="s">By week {d.w}, {r26.y} stands at {Math.round(r26.fytd).toLocaleString()} MW of summed daily peak FRP, {fratio == null ? "n/a" : `${(fratio * 100).toFixed(0)}% of 2015`} for the same weeks. FRP is a heat measure from VIIRS (2012 onward). It is not burned area, and it is not harmonized with MODIS.</div></div>
+        <div className="tile"><div className="k">1. The yardstick</div><div className="s">2015 is the reference fire year: {nf(Math.round(r15.total))} fire-days over the full year, {nf(Math.round(r15.ytd))} by week {d.w}.</div></div>
+        <div className="tile"><div className="k">2. The other years</div><div className="s">2019: {nf(Math.round(d.rows[1].total))}. 2023: {nf(Math.round(d.rows[2].total))}. Full-year totals.</div></div>
+        <div className="tile"><div className="k">3. Is {r26.y} worse than 2015?</div><div className="s">By week {d.w}, {r26.y} stands at {nf(Math.round(r26.ytd))} fire-days, {ratio == null ? "n/a" : `${nf((ratio * 100), 0)}% of 2015`} for the same weeks. Fire-days count how often cells burn. They do not measure how intense the fires are.</div></div>
+        <div className="tile"><div className="k">4. How intense? (fire radiative power)</div><div className="s">By week {d.w}, {r26.y} stands at {nf(Math.round(r26.fytd))} MW of summed daily peak FRP, {fratio == null ? "n/a" : `${nf((fratio * 100), 0)}% of 2015`} for the same weeks. FRP is a heat measure from VIIRS (2012 onward). It is not burned area, and it is not harmonized with MODIS.</div></div>
       </div>
     </section>
   );

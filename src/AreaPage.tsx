@@ -6,7 +6,7 @@ import EnsoPanel from "./EnsoPanel";
 import Readiness from "./Readiness";
 import SheetMargin, { Neighbours } from "./SheetMargin";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Meta, Oni, WPY, dateLocale, loadMeta, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Meta, Oni, WPY, dateLocale, loadMeta, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel, nf } from "./data";
 import { fmt, useL, useT } from "./i18n";
 
 const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
@@ -54,7 +54,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     const bits: string[] = [];
     if (area.ytd_ratio != null) {
       const r = area.ytd_ratio;
-      bits.push(fmt(t(r >= 1.15 ? "sumRatioHigh" : r <= 0.85 ? "sumRatioLow" : "sumRatioMid"), r));
+      bits.push(fmt(t(r >= 1.15 ? "sumRatioHigh" : r <= 0.85 ? "sumRatioLow" : "sumRatioMid"), nf(r, 2)));
     }
     if (onsetDiff != null) bits.push(onsetDiff === 0 ? t("sumOnTime") : fmt(t(onsetDiff < 0 ? "sumEarly" : "sumLate"), Math.abs(onsetDiff)));
     return bits.length ? `${area.name}: ${bits.join("; ")}.` : "";
@@ -110,8 +110,8 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
         <h1 className="sheettitle">{area.name}</h1>
         <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {endLine}</div>
         <dl className="answers three">
-          {mc && <div><dt>{monthName} {mc.year}{mc.partial ? ` (${mc.days}/${mc.days_in_month} ${L("days", "hari")})` : ""}</dt><dd className="fig">{mc.ratio != null ? `×${mc.ratio}` : "n/a"}</dd><dd>{Math.round(mc.value).toLocaleString(dateLocale.v)} {t("fireDays")} {L("vs median", "vs median")} {Math.round(mc.median).toLocaleString(dateLocale.v)} · {t("pctile")} {Math.round(mc.pct)} {t("pctOf")}</dd></div>}
-          <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
+          {mc && <div><dt>{monthName} {mc.year}{mc.partial ? ` (${mc.days}/${mc.days_in_month} ${L("days", "hari")})` : ""}</dt><dd className="fig">{mc.ratio != null ? `×${nf(mc.ratio, 2)}` : "n/a"}</dd><dd>{nf(Math.round(mc.value))} {t("fireDays")} {L("vs median", "vs median")} {nf(Math.round(mc.median))} · {t("pctile")} {Math.round(mc.pct)} {t("pctOf")}</dd></div>}
+          <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${nf(area.ytd_ratio, 2)}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
         </dl>
         <p className="note">{L("× = ratio to the median of 2001–2025. Percentile = rank among those 25 years. They measure different things, and the month and the year to date can differ.", "× = rasio terhadap median 2001–2025. Persentil = peringkat di antara 25 tahun itu. Keduanya mengukur hal berbeda, dan bulan serta tahun berjalan bisa berbeda.")}</p>
@@ -154,7 +154,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <details className="more noprint">
         <summary>{L("More analysis", "Analisis lanjutan")}</summary>
         {more}
-        <p className="note">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent} ${t("vsRecent")}` : ""}</p>
+        <p className="note">{area.ytd_ratio_recent != null ? `×${nf(area.ytd_ratio_recent, 2)} ${t("vsRecent")}` : ""}</p>
         <Readiness area={area} />
         <Analog area={area} />
         <EnsoPanel area={area} enso={enso} oni={oni} />

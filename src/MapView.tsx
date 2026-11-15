@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { AreaIndex, loadProvinces } from "./data";
+import { AreaIndex, loadProvinces, nf } from "./data";
 import { fmt, useT } from "./i18n";
 import Legend from "./Legend";
 import { onHighlight, setHighlight } from "./hl";
@@ -48,7 +48,7 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
         map.getCanvas().style.cursor = "pointer";
         const p = e.features?.[0]?.properties as any;
         if (p) setHighlight(p.id);
-        if (p) setTip(p.pct < 0 ? `${p.name}: ${tr.current("legNoData")}` : `${p.name}: ${tr.current("pctile")} ${Math.round(p.pct)}${p.ratio ? `, ${fmt(tr.current("ofNormal"), p.ratio)}` : ""}`);
+        if (p) setTip(p.pct < 0 ? `${p.name}: ${tr.current("legNoData")}` : `${p.name}: ${tr.current("pctile")} ${Math.round(p.pct)}${p.ratio ? `, ${fmt(tr.current("ofNormal"), nf(p.ratio, 2))}` : ""}`);
       });
       map.on("mouseleave", "fill", () => { map.getCanvas().style.cursor = ""; setTip(""); setHighlight(null); });
     });
