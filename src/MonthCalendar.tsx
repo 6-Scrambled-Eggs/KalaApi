@@ -74,13 +74,15 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
   void year;
   // Years before the first full S-NPP VIIRS week are estimates: same bracket as the week view.
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / 52), nYears);
+  const pmShown = !!(area.prov && area.prov.weeks.length && area.mpartial && area.prov.month);
   return (
     <><div className="calscroll"><div style={{ position: "relative" }}>
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: ROW * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${L("Monthly calendar", "Kalender bulanan")}: ${area.name}`} />
       {area.mpartial && <p className="partialkey"><i aria-hidden="true" />{L("dashed border = partial month", "garis putus-putus = bulan belum lengkap")}</p>}
     </div></div>
-    <Legend pieces={legendRef.current} />
+    <Legend pieces={legendRef.current} extra={pmShown ? t("provLegend") : undefined} />
+    {pmShown && <p className="note">{t("provTotal")}</p>}
     </>
   );
 }
