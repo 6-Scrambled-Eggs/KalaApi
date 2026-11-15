@@ -85,6 +85,16 @@ export default function CustomArea() {
     const upd = () => { const s = map.getSource("circ") as maplibregl.GeoJSONSource | undefined; s?.setData(circle(lat, lon, radius)); };
     if (map.getSource("circ")) upd(); else map.once("kala-ready" as any, upd);
   }, [lat, lon, radius]);
+  // Zoom to the circle when the radius changes (and on first show); a click only moves the circle.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const zoom = () => {
+      const dla = radius / 110.57, dlo = radius / (111.32 * Math.cos((lat * Math.PI) / 180));
+      map.fitBounds([[lon - dlo * 3, lat - dla * 3], [lon + dlo * 3, lat + dla * 3]], { duration: 0, padding: 10, maxZoom: 9 });
+    };
+    if (map.loaded()) zoom(); else map.once("load", zoom);
+  }, [radius]);
 
   const valid = Number.isFinite(lat) && Number.isFinite(lon) && lat >= -12 && lat <= 7 && lon >= 94 && lon <= 142 && radius >= 5 && radius <= 100;
   const s1 = from ? slotOfDate(new Date(from + "T00:00:00Z")) : 0, s2 = to ? slotOfDate(new Date(to + "T00:00:00Z")) : 0;

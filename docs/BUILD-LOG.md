@@ -80,3 +80,15 @@ Ideas for a stronger story are in `docs/WINNING-IDEAS.md` (written after our res
 | `63cafcb` | Batch B: `pipeline/12_flag_baseline.py` and `flag_check.json` (flags vs VIIRS-only 2012-2025 baseline), "(low base)" flag labels, "VIIRS only" tile wording, "Not an official product" on brief, card and readiness, CLAUDE.md numbers | Spearman 0.94 over 27,756 weeks; every elevated week >= 80th and every extreme week >= 90th percentile on the VIIRS-only baseline. See `#/method`. |
 | `7978306` | Batch C and Method limits: "Provinces to watch", shareable weekly card (text + PNG), keyboard province list, skip link, focus rings, mobile nav row, grouped area-page buttons; honest limits for the flag check and the low-base rule | Open `#/` and tab through the page. At 390 px the nav scrolls sideways. |
 | `d801c29` | "Provinces to watch" only counts provinces with at least 1,000 fire-days in an average year; card wording | Top rows: Papua Selatan, Maluku, Kalimantan Timur. |
+
+## Judge-review PRD batch (15 Nov, Sydney afternoon)
+
+| Task | What changed | How to check |
+|---|---|---|
+| P0-1 | Calendar-first area page: quantile colour classes, peak week in view, 3 tiles, "More analysis" folded, shorter home and nav. LiveStrip and watch list removed from home. | `#/area/indonesia` at 1366x768: grid visible without scrolling far. |
+| P0-2 | `pipeline/14_monthly.py` adds `mh/mlo/mhi/mstat/mcur` to area files. `src/MonthCalendar.tsx`, Months/Weeks toggle, "October 2026" tile, monthly CSV. | Monthly totals = weekly totals (gap 0.000%). |
+| P0-3 | `pipeline/15_grid_tiles.py` writes 373 tiles in `public/data/grid/`. `src/CustomArea.tsx` at `#/custom`. | Tile totals = national weekly total (gap 0.000%). Home loads no tiles. |
+| P0-4 | One raw-jump value (6.5x). CLAUDE.md and AGENTS.md describe the power law only. | `grep -rn "fixed ratio"` shows only history notes. |
+| P0-5 | Method page: 7 scientist questions. `08_enso_signal.py` adds BH q-values (288 pass, 47 weak, 87 none). Finer b grid: 0.870 (no change). Kalteng week 3 2026 checked: real, no filter change. | `#/method`. |
+| P1-1 | `pipeline/16_noaa20_bridge_test.py`: bridge NOT good enough (national error up to 12.5%). Not merged. Reported on Method page. | `public/data/bridge_test.json`. |
+| Docs | `docs/HUMAN-TODO.md`, `docs/JUDGE-QA.md`. | |
