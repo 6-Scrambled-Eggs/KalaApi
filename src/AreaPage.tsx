@@ -114,6 +114,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
         </dl>
+        <p className="note">{L("× = ratio to the median of 2001–2025. Percentile = rank among those 25 years. They measure different things, and the month and the year to date can differ.", "× = rasio terhadap median 2001–2025. Persentil = peringkat di antara 25 tahun itu. Keduanya mengukur hal berbeda, dan bulan serta tahun berjalan bisa berbeda.")}</p>
         {area.low_data && <div className="warn">{t("lowData")}</div>}
       </div>
       <SheetMargin area={area} index={index} tools={tools} />
@@ -131,7 +132,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       {grain === "m" && area.mh ? (
         <>
           <MonthCalendar area={area} year={y} onYear={setYear} onReady={(c) => { chart.current = c; }} />
-          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}{area.mpartial ? ` ${L("The 2026 total includes", "Total 2026 termasuk")} 1${area.mpartial.days > 1 ? `–${area.mpartial.days}` : ""} ${new Date(Date.UTC(2001, area.mpartial.index % 12, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" })}.` : ""}</p>
+          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")} {L("Years before 2012 are estimates and can rank above observed years (see Method, question 2).", "Tahun sebelum 2012 adalah perkiraan dan bisa berada di atas tahun teramati (lihat Metode, pertanyaan 2).")}{area.mpartial ? ` ${L("The 2026 total includes", "Total 2026 termasuk")} 1${area.mpartial.days > 1 ? `–${area.mpartial.days}` : ""} ${new Date(Date.UTC(2001, area.mpartial.index % 12, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" })}.` : ""}</p>
         </>
       ) : (
         <>

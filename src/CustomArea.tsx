@@ -266,7 +266,7 @@ export default function CustomArea() {
       {result && (
         <div aria-live="polite">
           <dl className="answers three">
-            <div><dt>{L("Harmonized fire-days", "Hari-api terharmonisasi")}</dt><dd className="fig">{f(result.total)}</dd><dd>{from} → {to} · {result.n} {L("weeks", "minggu")}</dd></div>
+            <div><dt>{L("Harmonized fire-days", "Hari-api terharmonisasi")}</dt><dd className="fig">{f(result.cur)}</dd><dd>{from} → {to} · {L("exact dates", "tanggal tepat")}. {L("Chart and CSV use whole 7-day weeks:", "Grafik dan CSV memakai minggu penuh 7 hari:")} {result.n} {L("weeks", "minggu")}, {f(result.total)}.</dd></div>
             <div><dt>{L("Grid cells in circle", "Sel grid dalam lingkaran")}</dt><dd className="fig">{nCells.toLocaleString(dateLocale.v)}</dd><dd>≈ {f(nCells * 30)} km²</dd></div>
             <div><dt>{L("Is this period unusual?", "Apakah periode ini tidak biasa?")}</dt><dd className="fig">{result.med > 0 ? `×${(result.cur / result.med).toFixed(2)}` : "n/a"}</dd><dd>{L("Selected period:", "Periode terpilih:")} {f(result.cur)} {L("fire-days. Same dates in 2001–2025: median", "hari-api. Tanggal sama pada 2001–2025: median")} {f(result.med)} · {L("percentile", "persentil")} {Math.round(result.pct)} {L("of", "dari")} {result.nBase} {L("years", "tahun")}</dd></div>
           </dl>

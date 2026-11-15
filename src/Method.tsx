@@ -32,10 +32,11 @@ export default function Method({ index }: { index: AreaIndex[] }) {
   const L = (en: string, idt: string) => (lang === "id" ? idt : en);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [val, setVal] = useState<Validation | null>(null);
+  const [valFail, setValFail] = useState(false);
   const [ha, setHa] = useState<HaCheck | null>(null);
   const [fc, setFc] = useState<FlagCheck | null>(null);
   useEffect(() => { loadFlagCheck().then(setFc).catch(() => setFc(null)); }, []);
-  useEffect(() => { loadMeta().then(setMeta); loadValidation().then(setVal).catch(() => setVal(null)); loadHaCheck().then(setHa).catch(() => setHa(null)); }, []);
+  useEffect(() => { loadMeta().then(setMeta); loadValidation().then(setVal).catch(() => { setVal(null); setValFail(true); }); loadHaCheck().then(setHa).catch(() => setHa(null)); }, []);
   const pct = (x: number) => `${(x * 100).toFixed(0)}%`;
   const errs = (h: Validation["V1_holdout"]) => Object.entries(h.national_err_pct).map(([y, e]) => `${y}: ${e > 0 ? "+" : ""}${e.toFixed(1)}%`).join(", ");
   return (
@@ -67,11 +68,12 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <li>{lang === "id" ? <><b>Daya radiatif api (FRP)</b>: hanya tampil di mode cerita dan di CSV mulai 2012. Ini nilai VIIRS, dijumlahkan dari maksimum harian tiap sel. Nilai ini tidak diharmonisasi dengan MODIS dan bukan luas terbakar.</> : <><b>Fire radiative power (FRP)</b>: shown in story mode and in the CSV from 2012 onward only. It is the VIIRS value, summed from the daily maximum in each cell. It is not harmonized with MODIS and it is not burned area.</>}</li>
           <li>{lang === "id" ? <><b>Penanda El Niño</b>: titik di samping tiap tahun memakai Oceanic Niño Index NOAA untuk Juli–September (El Niño pada +0,5 atau lebih, La Niña pada −0,5 atau kurang).</> : <><b>El Niño marker</b>: the dot beside each year uses NOAA's Oceanic Niño Index for July to September (El Niño at +0.5 or higher, La Niña at −0.5 or lower).</>}</li>
         </ul>
-      ) : <p>{L("Validation results are not available.", "Hasil validasi belum tersedia.")}</p>}
+      ) : <p>{valFail ? L("Validation results are not available.", "Hasil validasi belum tersedia.") : L("Loading validation…", "Memuat validasi…")}</p>}
       {meta && (<>
         <h2>{L("Calibration ratios", "Rasio kalibrasi")}</h2>
         <table><thead><tr><th>{L("Stratum", "Strata")}</th><th>{L("Peat", "Gambut")}</th><th>k (VIIRS ÷ MODIS)</th><th>{L("90% interval", "Interval 90%")}</th></tr></thead>
           <tbody>{meta.strata.map((s) => <tr key={s.stratum + s.peat}><td>{s.stratum}</td><td>{s.peat}</td><td>{s.k.toFixed(2)}</td><td>{s.k_lo.toFixed(2)} {L("to", "sampai")} {s.k_hi.toFixed(2)}</td></tr>)}</tbody></table>
+        <p className="note">{L("k is the average VIIRS ÷ MODIS ratio on the 2012–2026 overlap. It is high where fires are small and scattered and lower where fires are large, which is why the back-cast uses V = α × M^b and not k alone.", "k adalah rasio rata-rata VIIRS ÷ MODIS pada periode tumpang tindih 2012–2026. Nilainya tinggi di tempat api kecil dan tersebar, dan lebih rendah di tempat api besar, itulah sebabnya hitung-mundur memakai V = α × M^b dan bukan k saja.")}</p>
         <p className="note">{L("Data as of", "Data per")} {meta.data_end}. {L("Baseline for anomalies", "Baseline untuk anomali")}: {meta.baseline}. {L("Built", "Dibuat")} {meta.generated}.</p>
       </>)}
       <h2>{L("Readiness, El Niño link and analog year", "Kesiapsiagaan, kaitan El Niño, dan tahun analog")}</h2>
