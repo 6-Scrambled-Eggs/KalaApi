@@ -19,3 +19,8 @@ Deadline: submit by 22:00 WIB (hard stop 23:59 WIB), Sun 15 Nov 2026. Code freez
 - "After S-NPP ended on 2 Nov 2026 we added a clearly marked provisional layer: NOAA-20 fire-days bridged to S-NPP. On the overlap week (27 Oct to 2 Nov) it was +3.1% against observed S-NPP nationally. It is not part of the calibrated record, the baseline or the validation."
 - "We tested whether Aqua's orbit drift since 2021 biases the calibration: refitting on 2012-2021 gives the same exponent (b = 0.875) and changes the 2001-2011 back-cast by +2.9% nationally."
 - "The custom-area page now offers a Box mode (two corners or W/S/E/N, up to 3 x 3 degrees) next to the circle."
+
+## Sentences for the project page (paste after 23:00 WIB; both are live on the Method page)
+- D': "Against official SiPongi burned area per province (2018-2024, 225 province-years), yearly fire-days correlate at log r = 0.81; tested within each province, the median Spearman is 0.75 (27 of 31 provinces positive). It does not hold in East and West Nusa Tenggara. Source: SIPONGI KEMENHUT."
+- E1: "Our own holdouts show why one fixed ratio is not enough: with the activity-dependent fit, 80% of province-years fall within +-20% in the 2019/2023 holdout and 84% in the 2012-2017 reverse test, against 71% and 72% for a fixed ratio (b = 1). The fixed ratio is closer on some national totals (for example 2023: +1.4% against +3.2%), so the gain is at province level."
+- E3 (optional): "The NOAA-20 to S-NPP coefficients differ by province, from 0.80 (DI Yogyakarta) to 1.14 (Central Kalimantan); one national factor would be off by about 34% at the low end."
