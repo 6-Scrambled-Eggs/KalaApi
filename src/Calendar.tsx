@@ -3,6 +3,8 @@ import Chart from "./Chart";
 import { Area, Oni, WPY, dateLocale, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
 import { buildPieces } from "./pieces";
+import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
+import { shortNum } from "./num";
 
 /** Chart colours mirror the tokens in styles.css (--ink, --mute). */
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
@@ -15,6 +17,7 @@ export type Mode = "h" | "m" | "v" | "p" | "n" | "a";
 
 export default function Calendar({ area, mode, year, onYear, oni, onReady }: { area: Area; mode: Mode; year: number; onYear: (y: number) => void; oni?: Oni | null; onReady?: (c: any) => void }) {
   const { t } = useT();
+  const legendRef = useLegendRef();
   const option = useMemo(() => {
     const years: number[] = [];
     for (let y = area.start_year; y <= area.last_year; y++) years.push(y);
@@ -31,7 +34,8 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     const anom = mode === "a";
     const vmax = anom ? 100 : Math.max(5, vals[Math.floor(vals.length * 0.99)] || 5);
     // Quantile colour classes (non-zero values) so quiet and busy weeks look different; half-open ranges (src/pieces.ts).
-    const pieces = buildPieces(vals);
+    const pieces = buildPieces(vals, shortNum);
+    legendRef.current = anom ? [] : pieces;
     const lastBack = Math.floor(area.back_cast_end_slot / WPY);
     const weeks = Array.from({ length: WPY }, (_, i) => String(i + 1));
     const months = MONTH_START.map((_, m) => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" }).slice(0, 3));
@@ -75,7 +79,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       ],
       visualMap: anom
         ? { type: "continuous", min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: [t("busiest"), t("quietest")], inRange: { color: ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] } }
-        : { type: "piecewise", pieces, orient: "horizontal", left: 56, bottom: 4, itemWidth: 22, itemHeight: 12, itemGap: 10, textStyle: { fontSize: 11, color: INK, fontFamily: FONT }, showLabel: true },
+        : { type: "piecewise", pieces, show: false },
       series: [{
         type: "heatmap", data, progressive: 0,
         itemStyle: { borderColor: "#ffffff", borderWidth: 0.5 },
@@ -97,9 +101,11 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / WPY), nYears);
   const rowH = (HEIGHT - GRID.top - GRID.bottom) / nYears;
   return (
-    <div className="calscroll" ref={scroller}><div className="calinner">
+    <><div className="calscroll" ref={scroller}><div className="calinner">
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: rowH * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={HEIGHT} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />
     </div></div>
+    <Legend pieces={legendRef.current} />
+    </>
   );
 }

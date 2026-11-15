@@ -3,6 +3,8 @@ import Chart from "./Chart";
 import { Area, dateLocale, nf } from "./data";
 import { useL, useT } from "./i18n";
 import { buildPieces } from "./pieces";
+import { shortNum } from "./num";
+import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
 
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
 const GRID = { left: 58, right: 62, top: 30, bottom: 66 }, ROW = 20;
@@ -14,6 +16,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
   const { t } = useT();
   const nYears = area.last_year - area.start_year + 1;
   const height = GRID.top + GRID.bottom + ROW * nYears;
+  const legendRef = useLegendRef();
   const option = useMemo(() => {
     const mh = area.mh ?? [], lo = area.mlo ?? [], hi = area.mhi ?? [];
     const hide = -1;  // the partial month is drawn too; its tooltip says how many days it holds
@@ -27,7 +30,8 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
       if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
       else data.push([m, y, v == null ? "-" : v]);
     }
-    const pieces: any[] = buildPieces(vals, (n) => nf(n));
+    const pieces: any[] = buildPieces(vals, shortNum);
+    legendRef.current = pieces;
     const mname = (m: number, style: "short" | "long" = "short") => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: style, timeZone: "UTC" });
     const totals = Array.from({ length: nYears }, (_, y) => Math.round(Array.from({ length: 12 }, (_, m) => val(y * 12 + m) ?? 0).reduce((a, b) => a + b, 0)).toLocaleString(dateLocale.v));
     const lastBack = Math.floor(area.back_cast_end_slot / 52);
@@ -55,7 +59,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
         { type: "category", data: Array.from({ length: nYears }, (_, i) => String(area.start_year + i)), inverse: true, axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 11, color: MUTE, fontFamily: FONT, formatter: (v: string) => (v === String(area.last_year) ? `{c|${v}}` : v), rich: { c: { color: INK, fontWeight: 800 } } } },
         { type: "category", data: totals, inverse: true, position: "right", axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 10.5, color: INK, fontFamily: FONT } },
       ],
-      visualMap: { type: "piecewise", pieces, orient: "horizontal", left: 40, bottom: 4, itemWidth: 20, itemHeight: 12, itemGap: 8, textStyle: { fontSize: 10.5, color: INK, fontFamily: FONT } },
+      visualMap: { type: "piecewise", pieces, show: false },
       series: [{
         type: "heatmap", data, progressive: 0, itemStyle: { borderColor: "#ffffff", borderWidth: 0.6 },
         markLine: { silent: true, symbol: "none", lineStyle: { color: INK, type: "dashed" }, label: { formatter: "VIIRS", position: "insideEndTop", color: INK, fontWeight: 700 }, data: [{ yAxis: String(area.start_year + lastBack) }] },
@@ -68,10 +72,12 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
   // Years before the first full S-NPP VIIRS week are estimates: same bracket as the week view.
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / 52), nYears);
   return (
-    <div className="calscroll"><div style={{ position: "relative" }}>
+    <><div className="calscroll"><div style={{ position: "relative" }}>
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: ROW * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${L("Monthly calendar", "Kalender bulanan")}: ${area.name}`} />
       {area.mpartial && <p className="partialkey"><i aria-hidden="true" />{L("dashed border = partial month", "garis putus-putus = bulan belum lengkap")}</p>}
     </div></div>
+    <Legend pieces={legendRef.current} />
+    </>
   );
 }
