@@ -1,0 +1,103 @@
+{
+ "source": "SIPONGI KEMENHUT",
+ "years": [
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024
+ ],
+ "n_units": 34,
+ "pooled_n": 225,
+ "pooled_pearson_log": 0.81,
+ "pooled_spearman": 0.834,
+ "within": {
+  "n_units": 31,
+  "median_rho": 0.75,
+  "n_pos": 27,
+  "n_ge_07": 20,
+  "rho": {
+   "Kalimantan Tengah": 1.0,
+   "Jambi": 0.96,
+   "Sumatera Selatan": 0.96,
+   "Kalimantan Timur": 0.93,
+   "Sulawesi Barat": 0.93,
+   "Bangka Belitung": 0.89,
+   "Jawa Barat": 0.89,
+   "Kalimantan Barat": 0.89,
+   "Sumatera Barat": 0.89,
+   "Papua*": 0.89,
+   "Kalimantan Selatan": 0.86,
+   "Sulawesi Selatan": 0.86,
+   "Bali": 0.83,
+   "Riau": 0.79,
+   "Jawa Timur": 0.75,
+   "Kepulauan Riau": 0.75,
+   "Maluku": 0.71,
+   "Sulawesi Tengah": 0.71,
+   "Sulawesi Tenggara": 0.71,
+   "Papua Barat*": 0.71,
+   "Gorontalo": 0.68,
+   "Lampung": 0.61,
+   "Jawa Tengah": 0.57,
+   "Kalimantan Utara": 0.46,
+   "Sulawesi Utara": 0.46,
+   "Maluku Utara": 0.21,
+   "Nusa Tenggara Barat": 0.14,
+   "Sumatera Utara": -0.04,
+   "Nusa Tenggara Timur": -0.07,
+   "Aceh": -0.18,
+   "Bengkulu": -0.36
+  }
+ },
+ "anomaly_pearson": 0.741,
+ "anomaly_n": 216,
+ "national": {
+  "spearman": 0.96,
+  "pearson": 0.94
+ },
+ "top10": {
+  "Nusa Tenggara Timur": {
+   "rho": -0.07,
+   "ha_total": 732674
+  },
+  "Kalimantan Tengah": {
+   "rho": 1.0,
+   "ha_total": 555426
+  },
+  "Sumatera Selatan": {
+   "rho": 0.96,
+   "ha_total": 510448
+  },
+  "Kalimantan Selatan": {
+   "rho": 0.86,
+   "ha_total": 444945
+  },
+  "Papua*": {
+   "rho": 0.89,
+   "ha_total": 432419
+  },
+  "Kalimantan Barat": {
+   "rho": 0.89,
+   "ha_total": 406416
+  },
+  "Nusa Tenggara Barat": {
+   "rho": 0.14,
+   "ha_total": 348499
+  },
+  "Riau": {
+   "rho": 0.79,
+   "ha_total": 175408
+  },
+  "Kalimantan Timur": {
+   "rho": 0.93,
+   "ha_total": 167105
+  },
+  "Maluku": {
+   "rho": 0.71,
+   "ha_total": 148553
+  }
+ }
+}
