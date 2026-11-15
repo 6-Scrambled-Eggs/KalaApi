@@ -415,3 +415,18 @@ details.more .tools { flex-direction: row; flex-wrap: wrap; margin: 4px 0 10px -
 .rawhot label { display: flex; flex-direction: column; font-size: 12px; gap: 2px; }
 .rawhot input, .rawhot select { font: inherit; min-height: 32px; }
 .rawhot input[type=number] { width: 70px; }
+
+/* Screen type roles. Print retains its compact A4 rules. */
+@media screen {
+  body { font-size: 16px; }
+  .note, .sub, .flags .s, .watchlist .s, .provlist .s { font-size: 15px; line-height: 1.55; }
+  .mk, .margin h4, .answers dt, .tile .k, thead th, .legend .lt { font-size: 13px; font-stretch: 100%; letter-spacing: .04em; }
+  .cta, .toggles button, .seg button, .a4 > button.noprint, .tools button { font-size: 15px; }
+  .answers dd, .tile .s, .cards .tile .s, .margin, .hh, .warn { font-size: 15px; }
+  .margin .mk, .margin .basis, .badge, .legend .llab, .legend .lnone,
+  .partialkey, .pleg, .pleg .u, .provtile b, .provtile small, .rawhot label, .foot { font-size: 14px; }
+  .provtile, .mapTip { font-size: 15px; line-height: 1.45; }
+  table { font-size: 15px; }
+  .grat, .locator .gx, .locator .gy { font-size: 11px; }
+  .estbr span { font-size: 12px; }
+}

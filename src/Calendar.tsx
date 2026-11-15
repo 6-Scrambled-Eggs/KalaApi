@@ -8,7 +8,7 @@ import { shortNum } from "./num";
 
 /** Chart colours mirror the tokens in styles.css (--ink, --mute). */
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
-const GRID = { left: 74, right: 68, top: 30, bottom: 78 }, HEIGHT = 640;
+const GRID = { left: 90, right: 96, top: 38, bottom: 82 }, ROW = 22;
 
 /** Index of the 7-day block that holds the 1st of each month (week 1 starts 1 Jan). */
 const MONTH_START = Array.from({ length: 12 }, (_, m) => Math.floor((Date.UTC(2001, m, 1) - Date.UTC(2001, 0, 1)) / 6048e5));
@@ -46,7 +46,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     const totals = (mode === "a" ? H : M).map((row) => Math.round(row.reduce<number>((a, v) => a + (v ?? 0), 0)).toLocaleString(dateLocale.v));
     return {
       grid: GRID,
-      title: { text: t("fireDays"), right: 2, top: 10, textStyle: { fontSize: 10, fontWeight: 600, color: MUTE, fontFamily: FONT } },
+      title: { text: t("fireDays"), right: 2, top: 10, textStyle: { fontSize: 12, fontWeight: 600, color: MUTE, fontFamily: FONT } },
       tooltip: {
         formatter: (p: any) => {
           const [w, yi] = p.value as number[];
@@ -65,14 +65,14 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
         },
       },
       xAxis: [
-        { type: "category", data: weeks, splitArea: { show: false }, axisLine: { lineStyle: { color: INK } }, axisTick: { show: true, inside: true, length: 5, interval: (i: number) => MONTH_START.includes(i), lineStyle: { color: INK } }, axisLabel: { color: MUTE, align: "left", interval: (i: number) => MONTH_START.includes(i), formatter: (_v: string, i: number) => months[MONTH_START.indexOf(i)] ?? "" } },
-        { type: "category", data: weeks, position: "top", axisLine: { lineStyle: { color: INK } }, axisTick: { show: true, inside: true, length: 5, interval: 0, lineStyle: { color: INK } }, axisLabel: { color: INK, fontSize: 10, fontWeight: 600, interval: (i: number) => [0, 9, 19, 29, 39, 51].includes(i) } },
+        { type: "category", data: weeks, splitArea: { show: false }, axisLine: { lineStyle: { color: INK } }, axisTick: { show: true, inside: true, length: 5, interval: (i: number) => MONTH_START.includes(i), lineStyle: { color: INK } }, axisLabel: { color: MUTE, fontSize: 13, align: "left", interval: (i: number) => MONTH_START.includes(i), formatter: (_v: string, i: number) => months[MONTH_START.indexOf(i)] ?? "" } },
+        { type: "category", data: weeks, position: "top", axisLine: { lineStyle: { color: INK } }, axisTick: { show: true, inside: true, length: 5, interval: 0, lineStyle: { color: INK } }, axisLabel: { color: INK, fontSize: 12, fontWeight: 600, interval: (i: number) => [0, 9, 19, 29, 39, 51].includes(i) } },
       ],
       yAxis: [
         {
           type: "category", data: years.map(String), inverse: true, axisLine: { lineStyle: { color: INK } }, axisTick: { show: false },
           axisLabel: {
-            interval: 0, fontSize: 11, color: "#4a5864", fontFamily: FONT,
+            interval: 0, fontSize: 13, color: "#4a5864", fontFamily: FONT,
             rich: { n: { color: "transparent" }, e: { color: INK }, l: { color: INK }, c: { color: INK, fontWeight: 800 } },
             formatter: (v: string) => {
               const o = oni?.jas?.[v];
@@ -83,7 +83,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
         },
         {
           type: "category", data: totals, inverse: true, position: "right", axisLine: { lineStyle: { color: INK } }, axisTick: { show: false },
-          axisLabel: { interval: 0, fontSize: 10.5, color: INK, fontFamily: FONT },
+          axisLabel: { interval: 0, fontSize: 13, color: INK, fontFamily: FONT },
         },
       ],
       visualMap: anom
@@ -108,11 +108,11 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
   // Back-cast years carry a drawn bracket in the year collar, so "estimated" is visible without a hover.
   const nYears = area.last_year - area.start_year + 1;
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / WPY), nYears);
-  const rowH = (HEIGHT - GRID.top - GRID.bottom) / nYears;
+  const height = GRID.top + GRID.bottom + ROW * nYears;
   return (
-    <><div className="calscroll" ref={scroller}><div className="calinner">
-      {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: rowH * nBack - 4 }}><span>{t("estimate")}</span></div>}
-      <Chart option={option} height={HEIGHT} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />
+    <><div className="calscroll" ref={scroller}><div className="calinner" style={{ minWidth: 860 }}>
+      {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: ROW * nBack - 4 }}><span>{t("estimate")}</span></div>}
+      <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />
     </div></div>
     <Legend pieces={legendRef.current} extra={mode === "h" && area.prov && area.prov.weeks.length ? t("provLegend") : undefined} />
     </>

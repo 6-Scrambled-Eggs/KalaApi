@@ -28,6 +28,7 @@ function useHash() {
 export default function App() {
   const [index, setIndex] = useState<AreaIndex[] | null>(null);
   const [lang, setLang] = useState<Lang>(() => (localStorageGet("lang") as Lang) || "en");
+  const [menuOpen, setMenuOpen] = useState(false);
   const { path, params } = useHash();
   const t = useMemo(() => makeT(lang), [lang]);
   useEffect(() => { loadIndex().then(setIndex); }, []);
@@ -45,16 +46,18 @@ export default function App() {
     <LangCtx.Provider value={{ lang, t }}>
       <a className="skip" href="#main-content" onClick={(e) => { e.preventDefault(); document.getElementById("main-content")?.focus(); }}>{lang === "id" ? "Lewati ke isi" : "Skip to content"}</a>
       <header className="top noprint">
-        <a className="brand" href="#/"><b>KalaApi</b><span>{t("tagline")}</span></a>
-        <nav>
+        <a className="brand" href="#/"><span className="brand-mark" aria-hidden="true">K</span><b>KalaApi</b></a>
+        <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen(!menuOpen)}>{t("menu")}</button>
+        <nav id="site-nav" className={menuOpen ? "open" : ""} onClick={() => setMenuOpen(false)}>
           <a href="#/" className={route === "home" ? "on" : ""}>{t("home")}</a>
           <a href="#/custom" className={route === "custom" ? "on" : ""}>{lang === "id" ? "Area sendiri" : "Your area"}</a>
+          <a href="#/compare/papua-selatan/kalimantan-barat" className={route === "compare" ? "on" : ""}>{t("compare")}</a>
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
           <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>
         </nav>
         <AreaPicker index={index ?? []} onPick={(a) => go(`/area/${a}`)} />
       </header>
-      <main id="main-content" tabIndex={-1}>
+      <main id="main-content" className={route === "home" ? "home-main" : undefined} tabIndex={-1}>
         <Suspense fallback={<p>{t("loading")}</p>}>
         {!index ? (["area","surge","story","card","brief","compare","enso","method","custom"].includes(route) ? <p>{t("loading")}</p> : <section><h1>{t("tagline")}</h1><p className="lead">{t("lead")}</p><div className="homehero" aria-busy="true"><div className="hh" /><div className="hh" /><p className="note hhnote">{t("heroNote")}</p></div></section>) : route === "area" ? (
           <AreaPage id={id} index={index} year={year} mode={mode} setYear={(y) => setQ("y", String(y))} setMode={(m) => setQ("m", m)} go={go} />
@@ -67,14 +70,33 @@ export default function App() {
         : route === "enso" ? <EnsoView index={index} onSelect={(a) => go(`/area/${a}`)} />
         : route === "method" ? <Method index={index} />
         : (
-          <section>
-            <h1>{t("tagline")}</h1>
-            <p className="lead">{t("lead")}</p>
-            <HomeHero index={index} />
-            <p className="cta-row"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a> <a className="cta alt" href="#/compare/papua-selatan/kalimantan-barat">{t("ctaCompare")}</a> <a className="cta alt" href="#/custom">{lang === "id" ? "Pilih area sendiri" : "Pick your own area"}</a></p>
-            <OnVisible minHeight={520}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
-            <ProvList index={index} />
-          </section>
+          <div className="home-page">
+            <section className="home-opening">
+              <div className="home-intro">
+                <h1>{t("tagline")}</h1>
+                <p className="lead">{t("lead")}</p>
+                <div className="home-actions"><a className="cta" href="#/area/indonesia">{t("ctaNational")}</a><a className="home-text-link" href="#/custom">{t("homeCustom")}</a></div>
+                <p className="home-source">{t("homeSource")}</p>
+              </div>
+              <div className="home-map">
+                <div className="home-map-head"><h2>{t("homeMapTitle")}</h2></div>
+                <OnVisible minHeight={420}><Suspense fallback={<div className="mapBox"><div className="map" /></div>}><MapView index={index} onSelect={(a) => go(`/area/${a}`)} /></Suspense></OnVisible>
+                <ProvList index={index} />
+              </div>
+            </section>
+            <section className="home-story">
+              <div><h2>{t("homeStoryTitle")}</h2><p>{t("homeStoryBody")}</p><a href="#/method">{t("method")} →</a></div>
+              <div className="home-proof"><h3>{t("homeProofTitle")}</h3><HomeHero index={index} /><a href="#/surge/indonesia">{t("ctaStep")} →</a></div>
+            </section>
+            <section className="home-explore">
+              <div className="home-explore-head"><h2>{t("homeExploreTitle")}</h2></div>
+              <div className="home-links">
+                <a href="#/compare/papua-selatan/kalimantan-barat"><span>{t("homeCompareBody")}</span><strong>{t("ctaCompare")} <span aria-hidden="true">↗</span></strong></a>
+                <a href="#/custom"><span>{t("homeCustomBody")}</span><strong>{t("homeCustom")} <span aria-hidden="true">↗</span></strong></a>
+                <a href="#/enso"><span>{t("homeEnsoBody")}</span><strong>{t("ctaEnso")} <span aria-hidden="true">↗</span></strong></a>
+              </div>
+            </section>
+          </div>
         )}
         </Suspense>
       </main>

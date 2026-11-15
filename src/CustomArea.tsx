@@ -6,6 +6,7 @@ import Chart from "./Chart";
 import MonthCalendar from "./MonthCalendar";
 import { dateLocale, loadProvinces, nf } from "./data";
 import { useL, useT } from "./i18n";
+import "./tool-pages.css";
 
 const base = import.meta.env.BASE_URL;
 const WPY = 52;
@@ -243,11 +244,11 @@ export default function CustomArea() {
     const labels = Array.from({ length: result.n }, (_, i) => { const d = slotStart(s1 + i); return `${d.getUTCFullYear()} w${(s1 + i) % WPY + 1}`; });
     const raw = (a: number[], first: number) => a.map((v, i) => (s1 + i < first ? null : Math.round(v)));
     return {
-      grid: { left: 48, right: 14, top: 34, bottom: 84 },
-      legend: { bottom: 0, itemGap: 10, textStyle: { fontSize: 11 } },
+      grid: { left: 16, right: 16, top: 38, bottom: 100, containLabel: true },
+      legend: { bottom: 0, left: 8, right: 8, itemGap: 10, textStyle: { fontSize: 13 } },
       tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: labels, axisLabel: { hideOverlap: true, fontSize: 10 } },
-      yAxis: { type: "value", name: L("fire-days / week", "hari-api / minggu"), nameTextStyle: { fontSize: 10 } },
+      xAxis: { type: "category", data: labels, axisLabel: { hideOverlap: true, fontSize: 12 } },
+      yAxis: { type: "value", name: L("fire-days / week", "hari-api / minggu"), nameTextStyle: { fontSize: 12 }, axisLabel: { fontSize: 12 } },
       series: [
         { name: L("Harmonized", "Harmonisasi"), type: "line", showSymbol: false, data: result.H.map((v) => Math.round(v * 10) / 10), lineStyle: { width: 2.4, color: "#993404" }, itemStyle: { color: "#993404" } },
         { name: L("Raw MODIS (Aqua)", "MODIS mentah (Aqua)"), type: "line", showSymbol: false, data: raw(result.M, idx.a0), lineStyle: { width: 1.2, type: "dashed", color: "#2b6cb0" }, itemStyle: { color: "#2b6cb0" } },
@@ -258,10 +259,10 @@ export default function CustomArea() {
   const barOpt = useMemo(() => {
     if (!result) return null;
     return {
-      grid: { left: 48, right: 14, top: 14, bottom: 30 },
+      grid: { left: 16, right: 16, top: 14, bottom: 12, containLabel: true },
       tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: result.years.map(String), axisLabel: { fontSize: 10, interval: 2 } },
-      yAxis: { type: "value", axisLabel: { fontSize: 10 } },
+      xAxis: { type: "category", data: result.years.map(String), axisLabel: { fontSize: 12, interval: 2, hideOverlap: true } },
+      yAxis: { type: "value", axisLabel: { fontSize: 12 } },
       series: [{ type: "bar", data: result.yv.map((v, i) => ({ value: v ?? "-", itemStyle: { color: result.years[i] === result.selY ? "#993404" : "#fec44f" } })) }],
     } as any;
   }, [result]);
@@ -312,7 +313,7 @@ export default function CustomArea() {
       </div>
       {err && <p className="error">{err}</p>}
       {result && (
-        <div aria-live="polite">
+        <div className="custom-results" aria-live="polite">
           <dl className="answers three">
             <div><dt>{L("Harmonized fire-days", "Hari-api terharmonisasi")}</dt><dd className="fig">{f(result.cur)}</dd><dd>{from} → {to} · {L("exact dates", "tanggal tepat")}. {L("Chart and CSV use whole 7-day weeks:", "Grafik dan CSV memakai minggu penuh 7 hari:")} {result.n} {L("weeks", "minggu")}, {f(result.total)}.</dd></div>
             <div><dt>{mode === "box" ? t("boxCells") : L("Grid cells in circle", "Sel grid dalam lingkaran")}</dt><dd className="fig">{nf(nCells)}</dd><dd>≈ {f(nCells * 30)} km²</dd></div>

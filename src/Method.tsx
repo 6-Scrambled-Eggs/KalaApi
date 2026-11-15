@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useT } from "./i18n";
 import { Area, AreaIndex, FlagCheck, HaCheck, Meta, Validation, loadArea, loadFlagCheck, loadHaCheck, loadMeta, loadValidation, matrix, weekLabel, nf } from "./data";
+import "./method.css";
 
 function Three({ index }: { index: AreaIndex[] }) {
   const { lang } = useT();
@@ -16,20 +17,49 @@ function Three({ index }: { index: AreaIndex[] }) {
   const ex = [[2015, 38], [2009, 38]].map(([y, w]) => ({ y, w, r: row(y, w) }));
   return (
     <>
-      <h3>{L("One week, three ways", "Satu minggu, tiga cara")}</h3>
       <label className="row">{L("Area", "Wilayah")}: <select value={id} onChange={(e) => setId(e.target.value)}>
         {index.filter((x) => x.level === "province").map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+      <div className="method-table" role="region" aria-labelledby="method-example" tabIndex={0}>
       <table><thead><tr><th>{L("Week", "Minggu")}</th><th>{L("Raw MODIS (Aqua fire-days)", "MODIS mentah (hari-api Aqua)")}</th><th>{L("Raw VIIRS (S-NPP fire-days)", "VIIRS mentah (hari-api S-NPP)")}</th><th>{L("Harmonized", "Terharmonisasi")}</th></tr></thead>
         <tbody>{ex.map(({ y, w, r }) => r && (
           <tr key={y}><td>{y}, {L("week", "minggu")} {w} ({L("from", "mulai")} {weekLabel(w)})</td><td>{r.m != null ? d(r.m) : "n/a"}</td><td>{r.v != null ? d(r.v) : L("not flown yet", "belum mengorbit")}</td>
             <td>{r.harm != null ? d(r.harm) : "n/a"}{y < 2012 && r.lo != null ? (lang === "id" ? ` (90%: ${d(r.lo)} sampai ${d(r.hi!)}), perkiraan` : ` (90%: ${d(r.lo)} to ${d(r.hi!)}), estimated`) : (lang === "id" ? ", VIIRS teramati" : ", observed VIIRS")}</td></tr>))}</tbody></table>
+      </div>
       <p className="note">{L("Before 2012 only MODIS exists, so the harmonized value is an estimate with a band. From 2012 the harmonized value is the observed VIIRS fire-day count.", "Sebelum 2012 hanya ada MODIS, jadi nilai terharmonisasi adalah perkiraan dengan rentang. Mulai 2012 nilai terharmonisasi adalah jumlah hari-api VIIRS yang teramati.")}</p>
     </>
   );
 }
 
 export default function Method({ index }: { index: AreaIndex[] }) {
-  const { lang } = useT();
+  const { lang, t } = useT();
+  const [showIndexInitially] = useState(() => window.matchMedia("(min-width: 601px)").matches);
+  const [activeSection, setActiveSection] = useState("method-example");
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const sections = document.querySelectorAll<HTMLElement>(".method-content > .method-section");
+      if (!sections.length) return;
+      let active = sections[0].id;
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= 120) active = section.id;
+        else break;
+      }
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        active = sections[sections.length - 1].id;
+      }
+      setActiveSection(active);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
   const L = (en: string, idt: string) => (lang === "id" ? idt : en);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [val, setVal] = useState<Validation | null>(null);
@@ -45,10 +75,50 @@ export default function Method({ index }: { index: AreaIndex[] }) {
   const pct = (x: number) => `${nf((x * 100), 0)}%`;
   const errs = (h: Validation["V1_holdout"]) => Object.entries(h.national_err_pct).map(([y, e]) => `${y}: ${e > 0 ? "+" : ""}${nf(e, 1)}%`).join(", ");
   return (
-    <section>
-      <h1>{L("Method and data", "Metode dan data")}</h1>
-      <p className="lead">{L("We harmonize fire-days, not hotspot counts, and calibrate MODIS to VIIRS on the 2012–2026 overlap. The output unit is the VIIRS-equivalent fire-day.", "Kami menyelaraskan hari-api, bukan jumlah titik panas, dan mengkalibrasi MODIS ke VIIRS pada periode tumpang tindih 2012–2026. Satuan keluarannya adalah hari-api setara VIIRS.")}</p>
-      <Three index={index} />
+    <section className="method-page">
+      <header className="method-hero">
+        <h1>{L("Method and data", "Metode dan data")}</h1>
+        <p className="lead">{L("We harmonize fire-days, not hotspot counts, and calibrate MODIS to VIIRS on the 2012–2026 overlap. The output unit is the VIIRS-equivalent fire-day.", "Kami menyelaraskan hari-api, bukan jumlah titik panas, dan mengkalibrasi MODIS ke VIIRS pada periode tumpang tindih 2012–2026. Satuan keluarannya adalah hari-api setara VIIRS.")}</p>
+      </header>
+      <div className="method-layout">
+      <aside className="method-sidebar">
+        <details className="method-sidebar-menu" open={showIndexInitially}>
+        <summary>{t("methodContents")}</summary>
+        <nav className="method-nav" aria-label={t("methodContents")}>
+          {[
+            { title: t("methodGroupBasics"), items: [
+              ["method-example", L("One week, three ways", "Satu minggu, tiga cara")],
+              ["method-how", L("How it works", "Cara kerjanya")],
+              ["method-readiness", L("Readiness, El Niño link and analog year", "Kesiapsiagaan, kaitan El Niño, dan tahun analog")],
+            ] },
+            { title: t("methodGroupEvidence"), items: [
+              ["method-validation", L("Validation", "Validasi")],
+              ...(meta ? [["method-calibration", L("Calibration ratios", "Rasio kalibrasi")]] : []),
+              ["scientists", L("Questions a remote-sensing scientist will ask", "Pertanyaan ilmiah yang akan diajukan")],
+              ["method-limits", L("Limits", "Batasan")],
+            ] },
+            { title: t("methodGroupSources"), items: [
+              ["method-sources", L("Sources", "Sumber")],
+              ["method-references", t("methodReferences")],
+            ] },
+          ].map((group) => (
+            <div className="method-nav-group" key={group.title}>
+              <h3>{group.title}</h3>
+              {group.items.map(([target, label]) => <button key={target} type="button" aria-current={activeSection === target ? "location" : undefined} onClick={() => {
+                const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
+                document.getElementById(target)?.scrollIntoView({ block: "start", behavior });
+              }}>{label}</button>)}
+            </div>
+          ))}
+        </nav>
+        </details>
+      </aside>
+      <div className="method-content">
+      <section className="method-section method-example" id="method-example">
+        <h2>{L("One week, three ways", "Satu minggu, tiga cara")}</h2>
+        <Three index={index} />
+      </section>
+      <section className="method-section" id="method-how">
       <h2>{L("How it works", "Cara kerjanya")}</h2>
       <ol>
         <li>{L("Keep vegetation-fire detections, daytime passes only (afternoon orbit: Aqua MODIS, S-NPP VIIRS). Local solar date. MODIS confidence ≥ 30, VIIRS nominal or high.", "Ambil deteksi kebakaran vegetasi, hanya lintasan siang (orbit sore: Aqua MODIS, S-NPP VIIRS). Tanggal matahari lokal. Kepercayaan MODIS ≥ 30, VIIRS nominal atau tinggi.")}</li>
@@ -58,6 +128,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
         <li>{L("The 90% band comes from 1,000 bootstrap draws that resample years. It shows the uncertainty of the ratio only. The real error is larger: see Limits.", "Rentang 90% berasal dari 1.000 sampel bootstrap yang mengacak tahun. Rentang ini hanya menunjukkan ketidakpastian rasio. Galat sebenarnya lebih besar: lihat Batasan.")}</li>
         <li>{L("From 2012 the series is the observed S-NPP VIIRS count.", "Mulai 2012 deret ini adalah hitungan S-NPP VIIRS yang teramati.")}</li>
       </ol>
+      </section>
+      <section className="method-section" id="method-validation">
       <h2>{L("Validation", "Validasi")}</h2>
       {val ? (
         <ul>
@@ -75,21 +147,29 @@ export default function Method({ index }: { index: AreaIndex[] }) {
           <li>{lang === "id" ? <><b>Penanda El Niño</b>: titik di samping tiap tahun memakai Oceanic Niño Index NOAA untuk Juli–September (El Niño pada +0,5 atau lebih, La Niña pada −0,5 atau kurang).</> : <><b>El Niño marker</b>: the dot beside each year uses NOAA's Oceanic Niño Index for July to September (El Niño at +0.5 or higher, La Niña at −0.5 or lower).</>}</li>
         </ul>
       ) : <p>{valFail ? L("Validation results are not available.", "Hasil validasi belum tersedia.") : L("Loading validation…", "Memuat validasi…")}</p>}
+      </section>
       {meta && (<>
+        <section className="method-section" id="method-calibration">
         <h2>{L("Calibration ratios", "Rasio kalibrasi")}</h2>
+        <div className="method-table" role="region" aria-labelledby="method-calibration" tabIndex={0}>
         <table><thead><tr><th>{L("Stratum", "Strata")}</th><th>{L("Peat", "Gambut")}</th><th>k (VIIRS ÷ MODIS)</th><th>{L("90% interval", "Interval 90%")}</th></tr></thead>
           <tbody>{meta.strata.map((s) => <tr key={s.stratum + s.peat}><td>{s.stratum}</td><td>{peatLabel(s.peat)}{s.peat === "peat" && pooledK.has(s.k.toFixed(3)) ? " *" : ""}</td><td>{nf(s.k, 2)}</td><td>{nf(s.k_lo, 2)} {L("to", "sampai")} {nf(s.k_hi, 2)}</td></tr>)}</tbody></table>
+        </div>
         <p className="note">{L("k is the average VIIRS ÷ MODIS ratio on the 2012–2026 overlap. It is high where fires are small and scattered and lower where fires are large, which is why the back-cast uses V = α × M^b and not k alone.", "k adalah rasio rata-rata VIIRS ÷ MODIS pada periode tumpang tindih 2012–2026. Nilainya tinggi di tempat api kecil dan tersebar, dan lebih rendah di tempat api besar, itulah sebabnya hitung-mundur memakai V = α × M^b dan bukan k saja.")}</p>
         <p className="note">{L("* Pooled ratio. A peat stratum with fewer than 500 Aqua MODIS fire-days on the 2012–2026 overlap is too thin to fit alone, so it takes the pooled ratio of all peat cells (3.14). This is why ten rows show the same value. The pipeline does this in calibrate() with THIN = 500 (pipeline/harmonize_lib.py). Lampung and Papua also use it; their intervals differ because they come from their own bootstrap draws.", "* Rasio gabungan. Strata gambut dengan kurang dari 500 hari-api Aqua MODIS pada periode tumpang tindih 2012–2026 terlalu tipis untuk dicocokkan sendiri, jadi memakai rasio gabungan seluruh sel gambut (3,14). Itu sebabnya sepuluh baris bernilai sama. Pipeline melakukannya di calibrate() dengan THIN = 500 (pipeline/harmonize_lib.py). Lampung dan Papua juga memakainya; intervalnya berbeda karena berasal dari bootstrap mereka sendiri.")}</p>
         <p className="note">{L("Data as of", "Data per")} {meta.data_end}. {L("Baseline for anomalies", "Baseline untuk anomali")}: {meta.baseline}. {L("Built", "Dibuat")} {meta.generated}.</p>
+        </section>
       </>)}
+      <section className="method-section" id="method-readiness">
       <h2>{L("Readiness, El Niño link and analog year", "Kesiapsiagaan, kaitan El Niño, dan tahun analog")}</h2>
       <ul>
         <li>{lang === "id" ? <><b>Jendela kesiapsiagaan</b>: awal = minggu pertama saat 10% hari-api setahun sudah terjadi, dari 2001 sampai tahun lengkap terakhir. Ini menandai mulainya aktivitas titik panas, bukan kekeringan atau penyulutan. "Siap sebelum" adalah minggu awal-dini (persentil ke-10) dikurangi 4 minggu. Angka 4 minggu adalah asumsi kami.</> : <><b>Readiness window</b>: onset = the first week when 10% of a year's fire-days have happened, over 2001 to the last complete year. It marks the start of hotspot activity, not of drought or ignition. "Be ready by" is the early-onset week (10th percentile) minus 4 weeks. The 4 weeks is our assumption.</>}</li>
         <li>{lang === "id" ? <><b>Kaitan El Niño</b>: korelasi peringkat Spearman antara hari-api terharmonisasi tahunan (2001–2025) dan ONI Juli–September, dengan nilai p permutasi 5000 kali acak (<code>pipeline/08_enso_signal.py</code>). Hanya 5 dari 25 tahun adalah tahun El Niño. Nilai p disesuaikan untuk banyaknya wilayah yang diuji dengan Benjamini–Hochberg (FDR, nilai q); label "jelas" dan "indikasi" butuh q &lt; 0,05. Wilayah saling berdekatan sehingga q hanya panduan. Ini bersifat eksploratif, bukan prakiraan dan bukan uji sebab-akibat.</> : <><b>El Niño link</b>: Spearman rank correlation of yearly harmonized fire-days (2001–2025) with the July–September ONI, with a 5000-shuffle permutation p-value (<code>pipeline/08_enso_signal.py</code>). Only 5 of the 25 years are El Niño years. p is adjusted for the many areas tested with Benjamini–Hochberg (false discovery rate, q); "clear" and "suggestive" need q &lt; 0.05. Neighbouring areas are correlated, so q is a guide, not a guarantee. This is exploratory. It is not a forecast and not a test of cause.</>}</li>
         <li>{lang === "id" ? <><b>Tahun analog</b>: tahun lampau yang kurva hari-api kumulatifnya sampai minggu ini paling dekat (selisih akar rata-rata kuadrat) dengan tahun ini. Ini kemiripan kurva sejauh ini. Ia tidak memprediksi sisa tahun.</> : <><b>Analog year</b>: the past year whose cumulative fire-day curve up to the current week is closest (root-mean-square gap) to this year. It is a likeness of the curve so far. It does not predict the rest of the year.</>}</li>
       </ul>
-      <h2 id="scientists">{L("Questions a remote-sensing scientist will ask", "Pertanyaan ilmiah yang akan diajukan")}</h2>
+      </section>
+      <section className="method-section" id="scientists">
+      <h2>{L("Questions a remote-sensing scientist will ask", "Pertanyaan ilmiah yang akan diajukan")}</h2>
       <dl className="qa">
         <dt>{L("1. What exactly is a fire-day, and which detections count?", "1. Apa itu hari-api, dan deteksi mana yang dihitung?")}</dt>
         <dd>{L("One 0.05° cell (about 5.5 km) on one local solar day with at least one daytime detection. We keep vegetation-fire detections only (FIRMS type 0, so volcanoes and static land sources are out in the archive), MODIS confidence of 30 or more, and VIIRS nominal or high confidence. Night passes are left out so that Aqua MODIS and S-NPP VIIRS see the fire at the same hour (about 13:30). We count fire-days, not hotspots, because VIIRS gives many more small pixels for the same fire. Near-real-time files have no type flag, so we drop cells that look static (see Limits). BRIN's hotspot system mainly uses VIIRS on S-NPP and NOAA-20; KalaApi is a long, comparable history, not a replacement for it.", "Satu sel 0,05° (sekitar 5,5 km) pada satu hari matahari lokal dengan sedikitnya satu deteksi siang. Kami hanya memakai deteksi kebakaran vegetasi (tipe FIRMS 0, jadi gunung api dan sumber statis keluar pada arsip), kepercayaan MODIS 30 atau lebih, dan VIIRS nominal atau tinggi. Lintasan malam tidak dipakai agar Aqua MODIS dan S-NPP VIIRS melihat api pada jam yang sama (sekitar 13.30). Kami menghitung hari-api, bukan titik panas, karena VIIRS memberi lebih banyak piksel kecil untuk api yang sama. Berkas near-real-time tidak punya penanda tipe, jadi sel yang tampak statis dibuang (lihat Batasan). Sistem hotspot BRIN terutama memakai VIIRS pada S-NPP dan NOAA-20; KalaApi adalah riwayat panjang yang sebanding, bukan pengganti sistem itu.")}</dd>
@@ -110,6 +190,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
         <dt>{L("9. Why not one fixed ratio per region?", "9. Mengapa tidak satu rasio tetap per wilayah?")}</dt>
         <dd>{L("We ran both on our own holdouts (pipeline/19_fixed_vs_power.py). Per province, the activity-dependent fit (b = 0.875) is closer: 80% of province-years fall within ±20% against 71% for a fixed ratio (b = 1) in the 2019 and 2023 holdout, and 84% against 72% in the reverse test on 2012 to 2017. The median province-year error is 7.1% against 9.8%, and 10.1% against 12.2%. In busy province-years of the 2019 and 2023 holdout it is 6.7% against 12.5%. The fixed ratio is not better everywhere: its national total is closer in 2023 (+1.4% against +3.2%) and in 2012 to 2015, but further off in 2016 and 2017 (about −10%). Both hold the national total within about 11%, so the gain is at province level.", "Kami menjalankan keduanya pada uji tahan kami sendiri (pipeline/19_fixed_vs_power.py). Per provinsi, model yang bergantung pada aktivitas (b = 0,875) lebih dekat: 80% provinsi-tahun berada dalam ±20% dibanding 71% untuk rasio tetap (b = 1) pada uji 2019 dan 2023, serta 84% dibanding 72% pada uji terbalik 2012 sampai 2017. Galat median provinsi-tahun adalah 7,1% dibanding 9,8%, dan 10,1% dibanding 12,2%. Pada provinsi-tahun yang ramai di uji 2019 dan 2023 galatnya 6,7% dibanding 12,5%. Rasio tetap tidak lebih buruk di semua tempat: total nasionalnya lebih dekat pada 2023 (+1,4% dibanding +3,2%) dan pada 2012 sampai 2015, tetapi lebih jauh pada 2016 dan 2017 (sekitar −10%). Keduanya menjaga total nasional dalam sekitar 11%, jadi keunggulannya ada di tingkat provinsi.")}</dd>
       </dl>
+      </section>
+      <section className="method-section" id="method-limits">
       <h2>{L("Limits", "Batasan")}</h2>
       <ul>
         <li>{L("Aqua has crossed later in the afternoon since 2021. A refit on 2012–2021 changes the 2001–2011 back-cast by +2.9% nationally and up to +5.8% in one province. The published model is not changed.", "Aqua melintas lebih sore sejak 2021. Kecocokan ulang pada 2012–2021 mengubah hitung-mundur 2001–2011 sebesar +2,9% secara nasional dan hingga +5,8% di satu provinsi. Model terbit tidak diubah.")}</li>
@@ -120,6 +202,8 @@ export default function Method({ index }: { index: AreaIndex[] }) {
                 <li>{L("Near-real-time files (after July–August 2026) have no vegetation-fire type flag. We drop cells that look static (detections on at least 30% of days, almost no past fire-days). Other static sources may remain.", "Berkas near-real-time (setelah Juli–Agustus 2026) tidak punya penanda tipe kebakaran vegetasi. Kami membuang sel yang tampak statis (deteksi pada minimal 30% hari, nyaris tanpa hari-api masa lalu). Sumber statis lain mungkin masih tersisa.")}</li>
         <li>{L("S-NPP VIIRS stopped delivering data on 2 Nov 2026, which is where our series ends. NOAA-20 and NOAA-21 continue it. We have not merged them: that needs its own calibration. NASA plans to retire Terra and Aqua MODIS in 2027, so a calibrated bridge matters now.", "S-NPP VIIRS berhenti mengirim data pada 2 Nov 2026, di situlah deret kami berakhir. NOAA-20 dan NOAA-21 melanjutkannya. Belum kami gabungkan: itu butuh kalibrasi tersendiri. NASA berencana memensiunkan MODIS Terra dan Aqua pada 2027, jadi jembatan terkalibrasi penting sekarang.")}</li>
       </ul>
+      </section>
+      <section className="method-section" id="method-sources">
       <h2>{L("Sources", "Sumber")}</h2>
       <ul>
         <li>{L("Calibrated series: NASA FIRMS MODIS C6.1 (Terra and Aqua) and VIIRS S-NPP 375 m, Indonesia, 2001 to 2 Nov 2026. NOAA-20 and NOAA-21 are used only for the bridge test and the week-3 2026 check, not in the series.", "Deret terkalibrasi: NASA FIRMS MODIS C6.1 (Terra dan Aqua) dan VIIRS S-NPP 375 m, Indonesia, 2001 sampai 2 Nov 2026. NOAA-20 dan NOAA-21 hanya dipakai untuk uji jembatan dan pemeriksaan minggu ke-3 2026, bukan dalam deret.")}</li>
@@ -128,13 +212,18 @@ export default function Method({ index }: { index: AreaIndex[] }) {
         <li>{L("Peat map: Global Forest Watch peatlands, 30 m.", "Peta gambut: Global Forest Watch peatlands, 30 m.")} <a href="https://data.globalforestwatch.org/" target="_blank" rel="noreferrer">data.globalforestwatch.org</a></li>
         <li>{L("El Niño index: NOAA CPC Oceanic Niño Index (ONI) v6.", "Indeks El Niño: NOAA CPC Oceanic Niño Index (ONI) v6.")} <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/" target="_blank" rel="noreferrer">cpc.ncep.noaa.gov</a></li>
       </ul>
-      <h2>{L("References", "Referensi")}</h2>
+      </section>
+      <section className="method-section" id="method-references">
+      <h2>{t("methodReferences")}</h2>
       <ul>
         <li>Giglio, L., Schroeder, W., Justice, C. O. (2016). The collection 6 MODIS active fire detection algorithm and fire products. <i>Remote Sensing of Environment</i>, 178, 31–41. <a href="https://doi.org/10.1016/j.rse.2016.02.054" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2016.02.054</a></li>
         <li>Schroeder, W., Oliva, P., Giglio, L., Csiszar, I. A. (2014). The new VIIRS 375 m active fire detection data product: Algorithm description and initial assessment. <i>Remote Sensing of Environment</i>, 143, 85–96. <a href="https://doi.org/10.1016/j.rse.2013.12.008" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2013.12.008</a></li>
         <li>Giglio, L., Boschetti, L., Roy, D. P., Hall, J. V., Zubkova, M., Humber, M., Huang, H., Oles, V. (2025). The NASA VIIRS burned area product, global validation, and intercomparison with the NASA MODIS burned area product. <i>Remote Sensing of Environment</i>, 331, 115006. <a href="https://doi.org/10.1016/j.rse.2025.115006" target="_blank" rel="noreferrer">doi:10.1016/j.rse.2025.115006</a></li>
         <li>Gaveau, D. L. A., Descals, A., Salim, M. A., Sheil, D., Sloan, S. (2021). Refined burned-area mapping protocol using Sentinel-2 data increases estimate of 2019 Indonesian burning. <i>Earth System Science Data</i>, 13, 5353–5368. <a href="https://doi.org/10.5194/essd-13-5353-2021" target="_blank" rel="noreferrer">doi:10.5194/essd-13-5353-2021</a></li>
       </ul>
+      </section>
+      </div>
+      </div>
     </section>
   );
 }

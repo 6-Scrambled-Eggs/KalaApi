@@ -3,6 +3,7 @@ import Chart from "./Chart";
 import { ensoLabel } from "./EnsoPanel";
 import { Area, AreaIndex, Enso, WPY, loadArea, loadEnso, matrix, readiness, seasonal, upto, weekLabel, nf } from "./data";
 import { useT } from "./i18n";
+import "./tool-pages.css";
 
 const COLS = ["#b03a12", "#1f6fa8"];
 
@@ -86,6 +87,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
         <button className="cta alt" onClick={() => pick(idB, idA)}>{L ? "Tukar" : "Swap"}</button></div>
       {!A || !B || !charts || !ra || !rb ? <p>{L ? "Memuat…" : "Loading…"}</p> : (
         <>
+          <div className="cmp-table-wrap" role="region" aria-label={L ? "Bandingkan dua wilayah" : "Compare two places"} tabIndex={0}>
           <table>
             <thead><tr><th></th><th style={{ color: COLS[0] }}>{A.name}</th><th style={{ color: COLS[1] }}>{B.name}</th></tr></thead>
             <tbody>
@@ -97,6 +99,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
               <tr><th>{L ? "Hari-api rata-rata per tahun" : "Fire-days in an average year"}</th><td>{ra.mean}</td><td>{rb.mean}</td></tr>
             </tbody>
           </table>
+          </div>
           <h2>{L ? "Bentuk musim yang biasa" : "Typical season shape"}</h2>
           <p className="note">{L ? "Median bagian hari-api tahunan per minggu, 2001–2025. Dinormalkan, jadi wilayah besar dan kecil bisa dibandingkan." : "Median share of each year's fire-days by week, 2001–2025. Normalized, so a big and a small area can be compared."}</p>
           <Chart option={charts.shapeOpt} height={260} label="Typical season shape of both areas" />
