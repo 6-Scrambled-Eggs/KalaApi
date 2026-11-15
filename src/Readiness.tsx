@@ -1,7 +1,7 @@
 import { Area, readiness, weekLabel } from "./data";
 import { useT } from "./i18n";
 
-const LEAD = 4;
+export const LEAD = 4;
 
 /** Readiness window: when the fire season usually starts here, and a simple "be ready by" date. */
 export default function Readiness({ area }: { area: Area }) {

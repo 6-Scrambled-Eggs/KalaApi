@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Area, AreaIndex, analogYears, loadArea, loadMeta } from "./data";
 import { fmt, useT } from "./i18n";
+import { hlProps, useHighlight } from "./hl";
 
 /** Home: provinces to watch (highest percentile this year vs normal), and a shareable weekly card. */
 export default function HomeWatch({ index }: { index: AreaIndex[] }) {
   const { lang, t } = useT();
   const L = lang === "id";
+  const hl = useHighlight();
   const [nat, setNat] = useState<Area | null>(null);
   const [week, setWeek] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -21,23 +23,22 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
     (L ? "Provinsi untuk dipantau: " : "Provinces to watch: ") + top.slice(0, 3).map((a) => `${a.name} ×${a.ytd_ratio}`).join(", ") + ".",
     analog ? (L ? `Tahun paling mirip sejauh ini: ${analog} (kemiripan kurva, bukan prakiraan).` : `Most similar year so far: ${analog} (a likeness of the curve, not a forecast).`) : "",
   ].filter(Boolean);
-  const canvas = useRef<HTMLCanvasElement>(null);
   const download = () => {
     const c = document.createElement("canvas"); c.width = 1200; c.height = 630;
     const g = c.getContext("2d"); if (!g) return;
-    g.fillStyle = "#fff"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#993404"; g.fillRect(0, 0, 1200, 14);
-    g.fillStyle = "#111"; g.font = "bold 44px sans-serif"; g.fillText(lines[0], 60, 100);
-    g.font = "32px sans-serif";
-    let y = 190;
+    const SANS = '"Archivo Variable", system-ui, sans-serif', SERIF = SANS;
+    g.fillStyle = "#f2f4ef"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#0f4c6e"; g.fillRect(0, 0, 1200, 64); g.strokeStyle = "#16212b"; g.lineWidth = 2; g.strokeRect(40, 96, 1120, 474);
+    g.fillStyle = "#ffffff"; g.font = `800 34px ${SERIF}`; g.fillText(lines[0], 60, 44); g.fillStyle = "#16212b";
+    g.font = `32px ${SANS}`;
+    let y = 160;
     lines.slice(1).forEach((l) => { const words = l.split(" "); let cur = "";
       words.forEach((w) => { if (g.measureText(cur + w).width > 1080) { g.fillText(cur, 60, y); y += 46; cur = ""; } cur += w + " "; });
       g.fillText(cur, 60, y); y += 70; });
-    g.fillStyle = "#666"; g.font = "24px sans-serif";
-    g.fillText(L ? "Bukan produk resmi · data NASA FIRMS · 6 Scrambled Eggs · NASA Space Apps 2026" : "Not an official product · NASA FIRMS data · 6 Scrambled Eggs · NASA Space Apps 2026", 60, 590);
+    g.fillStyle = "#4a5864"; g.font = `22px ${SANS}`;
+    g.fillText(L ? "Bukan produk resmi · data NASA FIRMS · 6 Scrambled Eggs · NASA Space Apps 2026" : "Not an official product · NASA FIRMS data · 6 Scrambled Eggs · NASA Space Apps 2026", 40, 608);
     const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = `kalaapi_week${week}.png`; a.click();
   };
   const copy = () => navigator.clipboard?.writeText(lines.join("\n")).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined);
-  void canvas;
   if (!top.length) return null;
   return (
     <div className="watch">
@@ -45,7 +46,7 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
         <h2>{L ? "Provinsi untuk dipantau" : "Provinces to watch"}</h2>
         <p className="note">{L ? "Peringkat menurut persentil tahun ini dibanding minggu yang sama 2001–2025. Hanya provinsi dengan minimal 1.000 hari-api pada tahun rata-rata, agar basis kecil tidak mendominasi." : "Ranked by this year's percentile against the same weeks in 2001–2025. Only provinces with at least 1,000 fire-days in an average year, so tiny bases do not dominate."}</p>
         <ol className="watchlist">{top.map((a) => (
-          <li key={a.id}><a href={`#/area/${a.id}`}>{a.name}</a><span className="bar"><i style={{ width: `${Math.max(4, Math.round(a.ytd_pct))}%` }} /></span>
+          <li key={a.id} className={hl === a.id ? "hl" : undefined} {...hlProps(a.id)}><a href={`#/area/${a.id}`}>{a.name}</a><span className="bar"><i style={{ width: `${Math.max(4, Math.round(a.ytd_pct))}%` }} /></span>
             <span className="s">×{a.ytd_ratio} · {t("pctile")} {Math.round(a.ytd_pct)}</span></li>))}</ol>
       </div>
       <div className="watchcol">

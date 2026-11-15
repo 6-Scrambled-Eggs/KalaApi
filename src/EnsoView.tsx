@@ -21,8 +21,8 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
     if (!el.current || !enso) return;
     const map = new maplibregl.Map({
       container: el.current,
-      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#e8eef3" } }] },
-      bounds: [[94, -11.5], [141.5, 6.5]], fitBoundsOptions: { padding: 12 }, attributionControl: false,
+      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#d4e6f0" } }] },
+      bounds: [[94, -11.5], [141.5, 6.5]], fitBoundsOptions: { padding: 12 }, attributionControl: false, scrollZoom: false, dragRotate: false,
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     map.on("load", async () => {
@@ -37,7 +37,7 @@ export default function EnsoView({ index, onSelect }: { index: AreaIndex[]; onSe
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: {
         "fill-color": ["case", ["<", ["get", "rho"], -5], "#ccc", ["interpolate", ["linear"], ["get", "rho"], -0.2, "#d9d9d9", 0, "#f0f0f0", 0.3, "#c6dbef", 0.6, "#6a51a3", 0.9, "#3f007d"],],
         "fill-opacity": 0.92 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fff", "line-width": 0.8 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#ffffff", "line-width": 0.8 } });
       setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });
       map.on("mousemove", "fill", (e) => {

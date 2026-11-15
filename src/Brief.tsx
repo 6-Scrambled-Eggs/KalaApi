@@ -7,7 +7,7 @@ import { Area, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, upto } from 
 import { useT } from "./i18n";
 
 const YEARS = [2015, 2019, 2026];
-const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2026: "#000000" };
+const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2026: "#16212b" };
 
 /** One-page A4 brief for a local disaster agency (BPBD): where we stand, when to be ready, what the numbers cannot say. */
 export default function Brief({ id }: { id: string }) {
@@ -22,7 +22,7 @@ export default function Brief({ id }: { id: string }) {
     const M = matrix(a.h);
     const cum = (y: number) => { let s = 0; return (M[y - a.start_year] || []).map((v) => (v == null ? null : (s += v))); };
     return {
-      grid: { left: 56, right: 12, top: 28, bottom: 28 }, legend: { top: 0 }, animation: false,
+      grid: { left: 56, right: 12, top: 40, bottom: 28 }, legend: { top: 0, right: 0 }, animation: false,
       xAxis: { type: "category", data: Array.from({ length: WPY }, (_, i) => String(i + 1)), name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 20 },
       yAxis: { type: "value", name: L ? "hari-api kumulatif" : "cumulative fire-days" },
       series: YEARS.map((y) => ({ name: String(y), type: "line", showSymbol: false, data: cum(y).map((v) => (v == null ? "-" : Math.round(v))), lineStyle: { color: COL[y], width: y === 2026 ? 3 : 2 }, itemStyle: { color: COL[y] } })),
