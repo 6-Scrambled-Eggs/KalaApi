@@ -37,7 +37,7 @@ export default function AreaPicker({ index, onPick }: { index: AreaIndex[]; onPi
   }
   return (
     <div className="picker" onBlur={(e) => {
-      if (!e.currentTarget.contains(e.relatedTarget)) { setOpen(false); setActive(-1); }
+      if (!e.currentTarget.contains(e.relatedTarget)) { setV(""); setOpen(false); setActive(-1); }
     }}>
       <input ref={inputRef} value={v} placeholder={t("search")} aria-label={t("search")}
         role="combobox" aria-autocomplete="list" aria-expanded={open}

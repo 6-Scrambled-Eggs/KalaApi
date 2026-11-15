@@ -31,7 +31,7 @@ npm run preview    # serve dist/ locally
 | Page (hash route) | What it shows |
 |---|---|
 | `#/` | Map of Indonesia. Click a province, then a kabupaten. |
-| `#/area/<id>` | Calendar, seasonal chart and anomaly for one area. Use `?m=h` (harmonized), `m` (MODIS) or `v` (VIIRS). |
+| `#/area/<id>` | Calendar, seasonal chart and anomaly for one area. The calendar link in the navigation opens Indonesia; search for a province or kabupaten to open its record. Use `?m=h` (harmonized), `m` (MODIS) or `v` (VIIRS). |
 | `#/surge/<id>` | The 2012 "sensor step" hero: raw detections rise about 6.5x in 2012. Harmonized fire-days rise about 1.2x. |
 | `#/story/<id>` | Story mode for key years. |
 | `#/card/<id>` | One-page print card (A4). |

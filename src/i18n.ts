@@ -5,6 +5,7 @@ const dict = {
   en: {
     methodContents: "On this page", methodGroupBasics: "The method", methodGroupEvidence: "Evidence and limits", methodGroupSources: "Sources and references", methodReferences: "References",
     menu: "Menu", homeCustom: "Pick your own area", homeSource: "NASA FIRMS data · MODIS and VIIRS",
+    navCalendar: "Fire calendar", navCustom: "Your area",
     homeMapTitle: "Explore Indonesia",
     homeStoryTitle: "A clearer view across two sensors", homeStoryBody: "MODIS and VIIRS see fires differently. KalaApi brings their observations together so the fire record can be compared across years.",
     homeProofTitle: "The 2012 sensor change", homeExploreTitle: "Explore the fire record",
@@ -49,6 +50,7 @@ const dict = {
   id: {
     methodContents: "Daftar isi", methodGroupBasics: "Metode", methodGroupEvidence: "Bukti dan batasan", methodGroupSources: "Sumber dan referensi", methodReferences: "Daftar pustaka",
     menu: "Menu", homeCustom: "Pilih area sendiri", homeSource: "Data NASA FIRMS · MODIS dan VIIRS",
+    navCalendar: "Kalender api", navCustom: "Area sendiri",
     homeMapTitle: "Jelajahi Indonesia",
     homeStoryTitle: "Melihat lebih jelas melalui dua sensor", homeStoryBody: "MODIS dan VIIRS melihat api secara berbeda. KalaApi menyatukan pengamatannya agar catatan api dapat dibandingkan antar tahun.",
     homeProofTitle: "Pergantian sensor pada 2012", homeExploreTitle: "Jelajahi rekam jejak api",

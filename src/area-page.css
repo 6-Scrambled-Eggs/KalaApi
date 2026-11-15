@@ -1,0 +1,162 @@
+/* Area screens share the application's forest and mineral surfaces. Print keeps the map-sheet layout. */
+@media screen {
+  .area-page {
+    grid-template-columns: 252px minmax(0, 1fr);
+    gap: 0 24px;
+    align-items: start;
+  }
+
+  .area-page .sheethead,
+  .area-page .margin {
+    border: 1px solid #e1e8e0;
+    border-radius: var(--home-radius, 20px);
+    background: #fbfcf8;
+    box-shadow: var(--home-shadow, 0 8px 24px rgba(31, 51, 45, .08));
+  }
+
+  .area-page .sheethead { padding: clamp(22px, 3vw, 36px); }
+  .area-page .sheettitle {
+    margin: 0 0 10px;
+    font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+    font-stretch: 90%;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .area-page .sheethead .sub {
+    color: var(--mute);
+    font-stretch: 100%;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.55;
+  }
+  .area-page .sheethead .answers {
+    margin: 24px 0 16px;
+    border: 1px solid #dce6de;
+    border-radius: 14px;
+    background: #f0f5f1;
+    overflow: hidden;
+  }
+  .area-page .sheethead .answers > div,
+  .area-page .sheethead .answers > div:first-child {
+    min-width: 0;
+    padding: 18px;
+    border-color: #d6e2d9;
+  }
+  .area-page .answers dt { color: var(--ink-2); line-height: 1.4; }
+  .area-page .sheethead .answers .fig {
+    margin: 8px 0;
+    font-size: clamp(1.65rem, 1.3rem + 1vw, 2.15rem);
+    font-stretch: 100%;
+    overflow-wrap: anywhere;
+  }
+  .area-page .answers dd { line-height: 1.5; }
+  .area-page .sheethead > .note { max-width: none; margin: 12px 0 0; }
+  .area-page .provtile {
+    margin: 16px 0;
+    padding: 16px 18px;
+    border-color: #a7bdb1;
+    border-radius: 12px;
+    background: #f5f8f3;
+  }
+  .area-page .warn { border-radius: 10px; padding: 12px 14px; }
+
+  .area-page .margin { padding: 20px; font-size: 15px; line-height: 1.55; }
+  .area-page .margin .mk { padding-bottom: 12px; border-color: #dce6de; }
+  .area-page .margin h4 { margin-top: 18px; }
+  .area-page .locator { margin: 14px 0 8px; }
+  .area-page .locator svg { border-color: #bfd1c9; border-radius: 10px; }
+  .area-page .tools { gap: 4px; margin: 6px 0 0; }
+  .area-page .tools button {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    line-height: 1.3;
+  }
+  .area-page .tools button:hover { background: #e4eee7; }
+
+  .area-page .sheetbody { padding: 0 2px; }
+  .area-page .sheetbody > .sechead:first-child { margin: 34px 0 16px; }
+  .area-page .sechead { align-items: center; gap: 12px; }
+  .area-page .sheetbody h2 { font-stretch: 100%; }
+  .area-page .seg {
+    gap: 4px;
+    padding: 4px;
+    border-radius: 10px;
+    background: #e7eee8;
+  }
+  .area-page .seg button {
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--sea);
+  }
+  .area-page .seg button:hover { background: #d7e6dc; }
+  .area-page .seg button.on { background: var(--sea); color: #fff; }
+  .area-page .calscroll {
+    padding: 12px 8px 8px;
+    border-color: #d8e3da;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(31, 51, 45, .05);
+  }
+  .area-page .legend { max-width: none; margin: 14px 0; }
+  .area-page .sheetbody > .note { max-width: none; line-height: 1.6; }
+  .area-page .summary {
+    max-width: none;
+    margin: 20px 0 12px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: #e6efea;
+    line-height: 1.6;
+  }
+  .area-page .flags { max-width: none; border-color: #b9cbc0; }
+  .area-page .flags li { padding: 12px 4px; border-color: #dce5dd; }
+  .area-page .badge { border-radius: 6px; }
+  .area-page details.more {
+    margin-top: 36px;
+    padding: 0 20px 20px;
+    border: 1px solid #dce6de;
+    border-radius: 16px;
+    background: #fbfcf8;
+  }
+  .area-page details.more > summary { min-height: 52px; padding: 15px 0; }
+  .area-page details.more:not([open]) { padding-bottom: 0; }
+  .area-page details.more .tools { flex-direction: row; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
+  .area-page details.more .tools button { border: 1px solid #c9d9ce; background: #fff; }
+  .area-page details.more .tools button:hover { background: #e4eee7; }
+  .area-page .tile { border-color: #b9cbc0; }
+
+  @media (max-width: 960px) {
+    .area-page {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "head" "body" "margin";
+      grid-template-rows: auto;
+    }
+    .area-page .margin { margin-top: 28px; }
+  }
+  @media (min-width: 761px) and (max-width: 960px) {
+    .area-page .sheethead .answers > div:nth-child(3) { border-left: 1px solid #d6e2d9; }
+  }
+  @media (max-width: 760px) {
+    .area-page .sheethead .answers > div:nth-child(3) {
+      grid-column: 1 / -1;
+      border-top: 1px solid #d6e2d9;
+      border-left: 0;
+    }
+  }
+  @media (max-width: 480px) {
+    .area-page .sheethead { padding: 20px; }
+    .area-page .sheethead .answers.three { grid-template-columns: minmax(0, 1fr); }
+    .area-page .sheethead .answers > div + div {
+      grid-column: auto;
+      border-top: 1px solid #d6e2d9;
+      border-left: 0;
+    }
+    .area-page .sechead { align-items: flex-start; flex-direction: column; }
+    .area-page .seg { max-width: 100%; }
+    .area-page .margin { padding: 20px; }
+  }
+}

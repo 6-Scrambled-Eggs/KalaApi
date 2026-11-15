@@ -50,7 +50,8 @@ export default function App() {
         <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen(!menuOpen)}>{t("menu")}</button>
         <nav id="site-nav" className={menuOpen ? "open" : ""} onClick={() => setMenuOpen(false)}>
           <a href="#/" className={route === "home" ? "on" : ""}>{t("home")}</a>
-          <a href="#/custom" className={route === "custom" ? "on" : ""}>{lang === "id" ? "Area sendiri" : "Your area"}</a>
+          <a href="#/area/indonesia" className={route === "area" ? "on" : ""} aria-current={route === "area" ? "page" : undefined}>{t("navCalendar")}</a>
+          <a href="#/custom" className={route === "custom" ? "on" : ""}>{t("navCustom")}</a>
           <a href="#/compare/papua-selatan/kalimantan-barat" className={route === "compare" ? "on" : ""}>{t("compare")}</a>
           <a href="#/method" className={route === "method" ? "on" : ""}>{t("method")}</a>
           <button onClick={() => setLang(lang === "en" ? "id" : "en")} aria-label={`${lang === "en" ? "ID" : "EN"}: ${lang === "en" ? "Switch to Indonesian" : "Switch to English"}`}>{lang === "en" ? "ID" : "EN"}</button>

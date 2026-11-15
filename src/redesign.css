@@ -32,7 +32,7 @@
   border-radius: 12px; background: var(--sea); color: white; font-size: 19px;
   font-weight: 800; line-height: 1;
 }
-.top nav { gap: 3px; padding: 4px; background: #edf2ed; border-radius: 12px; }
+.top nav { gap: 3px; padding: 4px; background: #edf2ed; border-radius: 12px; white-space: nowrap; }
 .top nav a {
   color: #40554d; font-size: 15px; font-weight: 600; line-height: 1.2;
   padding: 10px 12px; border: 0; border-radius: 9px;
@@ -154,7 +154,7 @@ footer { border-top: 1px solid #d8dfd8; padding: 24px var(--home-gutter); font-s
   .top .picker input { width: min(220px, 21vw); }
   .home-opening { grid-template-columns: 1fr 1.1fr; }
 }
-@media (max-width: 850px) {
+@media (max-width: 1050px) {
   .top { display: flex; position: relative; }
   .brand { order: 1; }
   .menu-toggle {
