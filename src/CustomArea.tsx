@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import RawHotspots from "./RawHotspots";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Chart from "./Chart";
@@ -325,6 +326,7 @@ export default function CustomArea() {
           <Chart option={lineOpt} height={300} label={L("Weekly fire-days in your area", "Hari-api mingguan di area Anda")} />
           {barOpt && <><h2>{L("The same dates in every year", "Tanggal yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days on the same dates by year", "Hari-api pada tanggal yang sama per tahun")} /></>}
           <p className="tools noprint"><button onClick={csv}>{L("Download CSV (cell × week)", "Unduh CSV (sel × minggu)")}</button></p>
+          <RawHotspots shape={{ mode, lat, lon, radius, box: bx, valid }} />
           <p className="note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
         </div>
       )}
