@@ -24,3 +24,9 @@ Deadline: submit by 22:00 WIB (hard stop 23:59 WIB), Sun 15 Nov 2026. Code freez
 - D': "Against official SiPongi burned area per province (2018-2024, 225 province-years), yearly fire-days correlate at log r = 0.81; tested within each province, the median Spearman is 0.75 (27 of 31 provinces positive). It does not hold in East and West Nusa Tenggara. Source: SIPONGI KEMENHUT."
 - E1: "Our own holdouts show why one fixed ratio is not enough: with the activity-dependent fit, 80% of province-years fall within +-20% in the 2019/2023 holdout and 84% in the 2012-2017 reverse test, against 71% and 72% for a fixed ratio (b = 1). The fixed ratio is closer on some national totals (for example 2023: +1.4% against +3.2%), so the gain is at province level."
 - E3 (optional): "The NOAA-20 to S-NPP coefficients differ by province, from 0.80 (DI Yogyakarta) to 1.14 (Central Kalimantan); one national factor would be off by about 34% at the low end."
+
+
+## FINAL project-page sentences (v5; replace the earlier ones if they differ)
+- Provisional layer: "After S-NPP VIIRS ended on 2 Nov 2026, KalaApi shows a provisional layer built by day: observed S-NPP to 2 Nov, then NOAA-20 bridged to S-NPP with a per-province fit, up to 14 Nov 2026. It is hatched on the calendars and it is not part of the baseline, the flags or the validation."
+- Raw hotspots: "On the custom-area page you can also download raw FIRMS hotspots (CSV) for your circle or box, with your own free FIRMS MAP_KEY; the key never leaves your browser."
+- D' and E1: use the sentences above.

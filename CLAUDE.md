@@ -76,3 +76,11 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - Task B: `pipeline/17_drift_sensitivity.py` refits with the overlap 2012-2021: b = 0.875 again, back-cast 2001-2011 +2.9% nationally. Model unchanged. Method Q8.
 - Task C: box mode on `#/custom` (two clicks or W/S/E/N, 3 x 3 degree limit). Circle stays the default.
 - Task D (province hectares) not done: no machine-readable SiPongi province table could be fetched (see HUMAN-TODO H-5).
+
+
+## PRD v5 sprint (15 Nov 2026)
+- The provisional layer is by day (pipeline/21_provisional_daily.py, run after 18): observed S-NPP 29 Oct-2 Nov, NOAA-20 bridged from 3 Nov (alpha and b read from bridge.json, no refit). Missing days stay missing. Newest NRT day is not used.
+- `prov` in each area file: obs, daily, weeks (value, days), tile (November so far), month, overlap (province bridge difference).
+- Raw hotspots: src/RawHotspots.tsx on #/custom; the user's MAP_KEY stays in component state only.
+- Box check 113.4,-2.7,114.4,-1.7: 52-week total 1,594 = sum of the same grid cells.
+- Still no change to the model, baseline, flags, calibrated series or validation.json.

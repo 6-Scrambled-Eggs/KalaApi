@@ -28,3 +28,7 @@ Every number below comes from a pipeline output or the Method page. Check it aga
 - **Do official burned-area numbers agree with you by province?** Pooled log r 0.81 over 225 province-years (2018-2024); within-province median Spearman 0.75, 27 of 31 positive. Not in East and West Nusa Tenggara (savanna and grassland). Hectares are a soft target. Source: SIPONGI KEMENHUT.
 - **Why not one fixed ratio per region?** Province-years within +-20%: 80% vs 71% (2019/2023 holdout), 84% vs 72% (2012-2017). The fixed ratio is closer on some national totals (2023, 2012-2015). Method page Q9.
 - **Why per-province NOAA-20 coefficients?** They range 0.80 to 1.14 (pooled 1.08); one national factor would be off by +34% in DI Yogyakarta. Method page Q6.
+
+### Added in v5
+- **What happens after S-NPP ended?** The provisional layer is built by day: observed S-NPP to 2 Nov, NOAA-20 bridged to S-NPP from 3 Nov to 14 Nov (6 Nov missing, not filled). The overlap-week difference of each province's bridge is shown on its page, with a warning above 20%. It is not in the baseline, flags or validation.
+- **Can I get the raw hotspots?** Yes, on #/custom: raw FIRMS detections for the circle or box, with your own MAP_KEY, max 5 days per request. If the browser cannot call FIRMS, the page links to the FIRMS request and filters a downloaded CSV.
