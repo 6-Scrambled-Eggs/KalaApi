@@ -40,7 +40,7 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
         "fill-color": ["case", ["<", ["get", "pct"], 0], "#cccccc", ["interpolate", ["linear"], ["get", "pct"], 0, "#fff7bc", 50, "#fe9929", 90, "#d95f0e", 100, "#4d1a02"]],
         "fill-opacity": 0.92 } });
       map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#ffffff", "line-width": 0.8 } });
-      map.addLayer({ id: "hl", type: "line", source: "prov", paint: { "line-color": "#0f4c6e", "line-width": 2.5 }, filter: ["==", ["get", "id"], ""] });
+      map.addLayer({ id: "hl", type: "line", source: "prov", paint: { "line-color": "#7d2f20", "line-width": 2.5 }, filter: ["==", ["get", "id"], ""] });
       offHl = onHighlight((hid) => map.getLayer("hl") && map.setFilter("hl", ["==", ["get", "id"], hid ?? ""]));
       setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });

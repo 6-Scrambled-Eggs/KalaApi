@@ -45,6 +45,8 @@ The navigation search filters provinces and kabupaten as you type. Its results s
 
 On narrow screens, scroll the weekly and monthly calendars horizontally to read all labels and totals. Print layouts keep their compact A4 typography.
 
+The interface uses a warm fire-inspired palette; map water and contrasting data-series colors remain distinct for readability. On **Your area**, the summary cards, raw-hotspot download controls and data notes share the same visual system.
+
 ### Please test these things
 - Pick 3 areas (one on Sumatra, one on Kalimantan, one on Papua). Do the charts load?
 - Change the language. Is any text still missing?

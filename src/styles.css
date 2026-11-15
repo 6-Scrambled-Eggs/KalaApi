@@ -1,34 +1,32 @@
-/* KalaApi styles: the map-sheet world.
-   Each area reads as a sheet of the national map series: a sea-blue shell, a pale land ground,
-   ink neat-lines, one condensed-to-wide family (Archivo), and the fire ramp reserved for data.
-   Sea-blue is reserved for navigation and controls; the fire ramp is reserved for data. */
+/* KalaApi styles: warm controls and neutral map sheets.
+   The quantitative fire ramp and map water retain their distinct colors. */
 
 :root {
   color-scheme: light;
   /* ground and sheet */
-  --ground: #f2f4ef;
+  --ground: #faf6f1;
   --sheet: #ffffff;
-  --hair: #c5cdc8;
-  --hair-2: #dfe4dd;
+  --hair: #e8cfc0;
+  --hair-2: #f6e6da;
   /* ink */
-  --ink: #16212b;
-  --ink-2: #2c3a45;
-  --mute: #4a5864;
-  /* shell and controls (sea) */
-  --sea: #0f4c6e;
-  --sea-hover: #136089;
-  --sea-deep: #0b3a55;
-  --sea-tint: #d4e6f0;
-  --sea-line: #7fc4e8;
-  --on-sea: #e8f1f6;
-  --on-sea-2: #b9d3e1;
+  --ink: #39231e;
+  --ink-2: #594039;
+  --mute: #70564d;
+  /* shell and controls */
+  --sea: #a64025;
+  --sea-hover: #7d2f20;
+  --sea-deep: #7d2f20;
+  --sea-tint: #f6e6da;
+  --sea-line: #e8cfc0;
+  --on-sea: #fff7ee;
+  --on-sea-2: #f6e6da;
   /* data (fire ramp) */
   --fire-1: #fec44f;
   --fire-2: #d95f0e;
   --fire-3: #993404;
   --fire-ink: #a8430a;
   --extreme: #7b241c;
-  --land: #c9d3c4;
+  --land: #e8d8ca;
   --warn-bg: #fbf1cf;
   --warn-line: #e0c46c;
   /* type */
@@ -112,7 +110,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 26px var(--gutter) 64px; over
 
 footer { color: var(--mute); font-size: 12px; padding: 18px var(--gutter); border-top: 2px solid var(--ink); text-align: center; text-wrap: balance; }
 
-/* ---------- controls (sea) ---------- */
+/* ---------- controls ---------- */
 .cta, .toggles button, .seg button, .a4 > button.noprint {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   border: 1px solid var(--sea); border-radius: 2px; padding: 8px 14px; line-height: 1.25;
@@ -164,7 +162,7 @@ footer { color: var(--mute); font-size: 12px; padding: 18px var(--gutter); borde
 
 .locator { margin: 10px 0 2px; position: relative; }
 .locator svg { display: block; width: 100%; height: auto; border: 1px solid var(--ink); }
-.locator .sea { fill: var(--sea-tint); }
+.locator .sea { fill: #d4e6f0; }
 .locator path { stroke: #fff; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .locator .land { fill: var(--land); }
 .locator .me { fill: var(--sea); }
@@ -214,7 +212,7 @@ table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 10px 0;
 th, td { border-bottom: 1px solid var(--hair); padding: 8px 10px; text-align: left; vertical-align: top; }
 thead th { border-bottom: 1px solid var(--ink); }
 tbody th { font-weight: 600; color: var(--ink-2); }
-tbody tr:hover td { background: #f7f9f5; }
+tbody tr:hover td { background: #fff7ee; }
 
 /* ---------- home ---------- */
 .homehero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 18px 0 6px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
@@ -236,8 +234,8 @@ tbody tr:hover td { background: #f7f9f5; }
 .mapWrap { position: static; margin: 10px 0 4px; }
 .mapBox { position: relative; }
 .gr .mapBox { padding: 16px 0 16px 34px; }
-.map { height: 500px; border: 1px solid var(--ink); background: var(--sea-tint); overflow: hidden; }
-.mapLoad { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--sea-tint); color: var(--mute); border: 1px solid var(--ink); font-size: 14px; }
+.map { height: 500px; border: 1px solid var(--ink); background: #d4e6f0; overflow: hidden; }
+.mapLoad { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #d4e6f0; color: var(--mute); border: 1px solid var(--ink); font-size: 14px; }
 .mapTip { position: absolute; left: 44px; bottom: 26px; background: var(--sheet); border: 1px solid var(--ink); padding: 6px 10px; font-size: 13px; max-width: min(78%, 460px); font-variant-numeric: tabular-nums; pointer-events: none; }
 .grat { position: absolute; font-size: 10px; color: var(--mute); font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
 .grat.x { top: 0; transform: translateX(-50%); }

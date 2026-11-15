@@ -6,7 +6,7 @@ import { buildPieces } from "./pieces";
 import { shortNum } from "./num";
 import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
 
-const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
+const INK = "#39231e", MUTE = "#6b5148", FONT = '"Archivo Variable", system-ui, sans-serif';
 const GRID = { left: 74, right: 96, top: 38, bottom: 66 }, ROW = 22;
 
 
@@ -28,7 +28,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
     for (let y = 0; y < nYears; y++) for (let m = 0; m < 12; m++) {
       const i = y * 12 + m, v = val(i);
       if (v != null) vals.push(v);
-      if (i === pidx && pm) { data.push({ value: [m, y, pm.value], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed", decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pm.value); }
+      if (i === pidx && pm) { data.push({ value: [m, y, pm.value], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed", decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(57,35,30,.6)" } } } as any); vals.push(pm.value); }
       else if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
       else data.push([m, y, v == null ? "-" : v]);
     }

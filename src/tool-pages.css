@@ -1,4 +1,4 @@
-/* The working tools use the same forest, water and mineral surfaces as the homepage. */
+/* Warm surfaces connect the working tools to the fire-record palette. */
 .custom, .cmp {
   color: var(--ink);
   padding-top: clamp(8px, 2vw, 24px);
@@ -28,14 +28,14 @@
 }
 .customgrid > div {
   padding: 12px;
-  border: 1px solid #d6e1dc;
+  border: 1px solid #e8cfc0;
   border-radius: 20px;
-  background: #e4ede8;
+  background: #f6e6da;
   box-shadow: var(--home-shadow);
 }
 .custom .map {
   height: clamp(360px, 42vw, 570px);
-  border: 1px solid #b7cbc5;
+  border: 1px solid #dcbca9;
   border-radius: 12px;
 }
 .customgrid > div > .note { margin: 12px 6px 3px; }
@@ -44,7 +44,7 @@
   align-content: start;
   gap: 14px;
   padding: clamp(20px, 2.5vw, 30px);
-  border: 1px solid #dce3dc;
+  border: 1px solid #ead8cc;
   border-radius: 20px;
   background: #fff;
   box-shadow: var(--home-shadow);
@@ -55,14 +55,14 @@
   min-width: 0;
   min-height: 44px;
   padding: 10px 12px;
-  border: 1px solid #b9c9c1;
+  border: 1px solid #d9bbaa;
   border-radius: 9px;
   background: #fff;
   color: var(--ink);
   font-size: 16px;
 }
 .cform input[type=range] { width: 100%; min-height: 32px; accent-color: var(--sea); }
-.cform .seg { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #edf2ed; }
+.cform .seg { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #f6e9df; }
 .cform .seg button {
   flex: 1;
   min-height: 40px;
@@ -78,18 +78,57 @@
 
 .custom-results { margin-top: 38px; }
 .custom-results > .answers {
-  overflow: hidden;
+  gap: 12px;
+  overflow: visible;
   margin: 0 0 24px;
-  border: 1px solid #d6e1dc;
+  border: 0;
+  background: transparent;
+}
+.custom-results > .answers > div, .custom-results > .answers > div:first-child {
+  padding: 22px;
+  border: 1px solid #e8c8b7;
   border-radius: 16px;
-  background: #fff;
+  background: #fff1e5;
   box-shadow: var(--home-shadow);
 }
-.custom-results > .answers > div, .custom-results > .answers > div:first-child { padding: 20px; }
+.custom-results > .answers > div:nth-child(2) { background: #f9e1d2; }
+.custom-results > .answers > div:nth-child(3) { background: #f7e8df; }
 .custom-results > .answers dt { color: var(--ink-2); line-height: 1.4; }
-.custom-results > .answers .fig { margin: 10px 0; }
+.custom-results > .answers .fig { margin: 10px 0; color: #8b321e; }
 .custom-results > .tools { margin: 20px 0; }
-.custom-results > .tools button { min-height: 44px; padding: 10px 14px; border: 1px solid #b9c9c1; border-radius: 9px; background: #fff; }
+.custom-results > .tools button { min-height: 44px; padding: 10px 14px; border: 1px solid #d9bbaa; border-radius: 9px; background: #fff; }
+.custom-results .rawhot {
+  margin: 24px 0 0;
+  padding: clamp(20px, 2.5vw, 30px);
+  border: 1px solid #ead1c2;
+  border-radius: 20px;
+  background: #fffaf6;
+  box-shadow: var(--home-shadow);
+}
+.custom-results .rawhot h3 { margin: 0 0 10px; font-size: 1.3rem; }
+.custom-results .rawhot > .note { margin: 10px 0; }
+.custom-results .rawhot .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 20px 0; }
+.custom-results .rawhot label { min-width: 0; gap: 6px; color: var(--ink-2); font-size: 15px; font-weight: 600; }
+.custom-results .rawhot input:not([type=file]), .custom-results .rawhot select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d9bbaa;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 16px;
+}
+.custom-results .rawhot .tools { margin: 0 0 16px; }
+.custom-results .rawhot .tools button { min-height: 44px; padding: 10px 16px; border-radius: 9px; }
+.custom-results .custom-method-note {
+  margin: 16px 0 0;
+  padding: 20px 24px;
+  border: 1px solid #ead1c2;
+  border-radius: 16px;
+  background: #f9eee5;
+}
 
 .cmp .row {
   display: grid;
@@ -98,27 +137,27 @@
   align-items: center;
   margin: 12px 0 28px;
   padding: 20px;
-  border: 1px solid #d6e1dc;
+  border: 1px solid #e8cfc0;
   border-radius: 16px;
-  background: #e4ede8;
+  background: #f6e6da;
 }
 .cmp .row > span { color: var(--mute); font-weight: 600; }
 .cmp-table-wrap {
   max-width: 100%;
   overflow-x: auto;
-  border: 1px solid #d6e1dc;
+  border: 1px solid #e8cfc0;
   border-radius: 16px;
   background: #fff;
   box-shadow: var(--home-shadow);
 }
 .cmp table { min-width: 590px; margin: 0; border: 0; }
-.cmp th, .cmp td { padding: 15px 18px; border-color: #e1e9e3; overflow-wrap: anywhere; }
-.cmp thead th { background: #f0f5f1; font-size: 14px; line-height: 1.4; }
+.cmp th, .cmp td { padding: 15px 18px; border-color: #ead8cc; overflow-wrap: anywhere; }
+.cmp thead th { background: #f9eee5; font-size: 14px; line-height: 1.4; }
 .cmp tbody th { width: 34%; }
 .cmp tbody tr:last-child th, .cmp tbody tr:last-child td { border-bottom: 0; }
 .cmp > [role=img], .custom-results > [role=img] {
   padding: 8px;
-  border: 1px solid #dce3dc;
+  border: 1px solid #ead8cc;
   border-radius: 16px;
   background: #fff;
 }
@@ -126,7 +165,6 @@
 @media (max-width: 760px) {
   .customgrid { grid-template-columns: minmax(0, 1fr); }
   .custom .map { height: 360px; }
-  .custom-results > .answers > div:nth-child(3) { border-top: 1px solid #d6e1dc; }
   .cmp .row { grid-template-columns: minmax(0, 1fr); padding: 16px; }
   .cmp .row > span { padding: 0 2px; }
   .cmp .cta { width: 100%; }
@@ -135,6 +173,5 @@
   .custom > h1, .cmp > h1 { font-size: 2.35rem; }
   .custom .map { height: 300px; }
   .custom-results > .answers { grid-template-columns: minmax(0, 1fr); }
-  .custom-results > .answers > div, .custom-results > .answers > div:nth-child(3) { grid-column: auto; border-left: 0; border-top: 1px solid #d6e1dc; }
-  .custom-results > .answers > div:first-child { border-top: 0; }
+  .custom-results > .answers > div, .custom-results > .answers > div:nth-child(3) { grid-column: auto; }
 }

@@ -7,7 +7,7 @@ import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
 import { shortNum } from "./num";
 
 /** Chart colours mirror the tokens in styles.css (--ink, --mute). */
-const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
+const INK = "#39231e", MUTE = "#6b5148", FONT = '"Archivo Variable", system-ui, sans-serif';
 const GRID = { left: 90, right: 96, top: 38, bottom: 82 }, ROW = 22;
 
 /** Index of the 7-day block that holds the 1st of each month (week 1 starts 1 Jan). */
@@ -30,7 +30,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     const pyi = pv ? pv.year - area.start_year : -1;
     M.forEach((row, yi) => row.forEach((v, w) => {
       const k = pv && yi === pyi ? pv.weeks.findIndex((x) => x.week === w + 1) : -1;
-      if (v == null && k >= 0) { const pw = pv!.weeks[k]; data.push({ value: [w, yi, pw.value], itemStyle: { ...(pw.days < 7 ? { borderColor: "#16212b", borderWidth: 1.6, borderType: "dashed" } : {}), decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pw.value); return; }
+      if (v == null && k >= 0) { const pw = pv!.weeks[k]; data.push({ value: [w, yi, pw.value], itemStyle: { ...(pw.days < 7 ? { borderColor: "#39231e", borderWidth: 1.6, borderType: "dashed" } : {}), decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(57,35,30,.6)" } } } as any); vals.push(pw.value); return; }
       data.push([w, yi, v == null ? "-" : v]);
       if (v != null) vals.push(v);
     }));
@@ -72,7 +72,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
         {
           type: "category", data: years.map(String), inverse: true, axisLine: { lineStyle: { color: INK } }, axisTick: { show: false },
           axisLabel: {
-            interval: 0, fontSize: 13, color: "#4a5864", fontFamily: FONT,
+            interval: 0, fontSize: 13, color: "#6b5148", fontFamily: FONT,
             rich: { n: { color: "transparent" }, e: { color: INK }, l: { color: INK }, c: { color: INK, fontWeight: 800 } },
             formatter: (v: string) => {
               const o = oni?.jas?.[v];

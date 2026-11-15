@@ -81,7 +81,7 @@ export default function CustomArea() {
       const fc = await loadProvinces();
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: { "fill-color": "#f2ead3", "fill-opacity": 1 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#9aa6a0", "line-width": 0.6 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#bba393", "line-width": 0.6 } });
       map.addSource("circ", { type: "geojson", data: circle(-2.3, 114.0, 30) });
       map.addLayer({ id: "cfill", type: "fill", source: "circ", paint: { "fill-color": "#d95f0e", "fill-opacity": 0.25 } });
       map.addLayer({ id: "cline", type: "line", source: "circ", paint: { "line-color": "#993404", "line-width": 2 } });
@@ -338,7 +338,7 @@ export default function CustomArea() {
           {barOpt && <><h2>{L("The same dates in every year", "Tanggal yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days on the same dates by year", "Hari-api pada tanggal yang sama per tahun")} /></>}
           <p className="tools noprint"><button onClick={csv}>{L("Download CSV (cell × week)", "Unduh CSV (sel × minggu)")}</button></p>
           <RawHotspots shape={{ mode, lat, lon, radius, box: bx, valid }} />
-          <p className="note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
+          <p className="note custom-method-note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
         </div>
       )}
     </section>
