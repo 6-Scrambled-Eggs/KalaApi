@@ -28,14 +28,14 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - Fire-day = one 0.05 deg cell on one day with at least one detection. Daytime passes only (afternoon orbit).
 - M = Aqua MODIS fire-days (from Jul 2002; Terra scaled to Aqua before that). V = S-NPP VIIRS fire-days (from 20 Jan 2012).
 - Weekly slots: 52 7-day blocks per year; week 52 absorbs the last 8-9 days.
-- Back-cast before 2012: V = alpha_stratum x M^b (b about 0.88 shared; Poisson fit on the overlap). Stratum = province if it has >= 3000 Aqua fire-days on the overlap, else its island group (x peat flag when known). From 2012 the series is observed V. (Mean ratio k = sum V / sum M is only reported in the strata table.)
+- Back-cast before 2012: V = alpha_stratum x M^b (b = 0.875 shared; Poisson fit on the overlap). Stratum = province if it has >= 3000 Aqua fire-days on the overlap, else its island group (x peat flag when known). From 2012 the series is observed V. (Mean ratio k = sum V / sum M is only reported in the strata table.)
 - 90% band: 1000 bootstrap draws resampling years.
 - Anomaly = weekly percentile rank vs the same week in 2001-2025 ("elevated" >= 90, "extreme" >= 97.5). Sensitivity baseline 2012-2025.
 - Data end: 2 Nov 2026 (last S-NPP NRT day). After S-NPP stops, chain NOAA-20 to S-NPP (not needed in this build).
 
 ## Findings so far (keep honest in the UI and pitch)
 - 2012 step: raw detections jump about 6.5x; harmonized fire-days about 1.2x (national, 2012-14 vs 2009-11).
-- Back-cast: power law V = alpha*M^b (b about 0.88), replaced the fixed per-stratum ratio on 14 Nov 2026.
+- Back-cast: power law V = alpha*M^b (b = 0.875), replaced the fixed per-stratum ratio on 14 Nov 2026.
 - V-1 holdout (2019, 2023): national annual error +1.8% / +3.2%; 80% of province-years within +-20%; weekly r 0.90. V-6 reverse holdout: 84% within +-20%, weekly r 0.95. In-sample back-cast check 2013-2025: median -2.4%, 79/90/95% of province-years within +-20/30/40%.
 - Known events: Kalteng and Sumsel in 2015 reach a weekly percentile of 98 (5 of 9 weeks in weeks 36-44 are >= 90; 2 of 9 are >= 97.5). 2019 reaches 94. The PRD check says the peaks must "stand out" in the calendar. They do, but not in every week. Report this honestly.
 - NRT files have no `type` column; static/offshore sources are not filtered after Jul-Aug 2026.
@@ -70,3 +70,9 @@ Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 - Live strip (14 Nov 2026): `pipeline/11_live_fire.py` runs in the deploy workflow with secret FIRMS_MAP_KEY and writes public/data/live.json (gitignored). It is separate from the calibrated series. Never print or commit the key; local .env is gitignored. The sandbox cannot reach the FIRMS API, so the script was only self-tested with fake rows (`--selftest`; delete the live.json it writes).
 
 - Flags (15 Nov): `pipeline/12_flag_baseline.py` shows the weekly percentile flags agree with a VIIRS-only 2012-2025 baseline (Spearman 0.94; all elevated weeks >= 80th, all extreme >= 90th). Weeks with a low base are labelled "(low base)". Briefs and cards say "Not an official product".
+
+## PRD v4 sprint (15 Nov 2026, evening)
+- Task A: `pipeline/18_provisional_noaa20.py` bridges NOAA-20 to S-NPP per province (fit 2019 to 21 Oct 2026, b = 0.975). Adds a separate `prov` array to each area file plus `public/data/bridge.json`. Shown hatched (week 44, 29 Oct to 4 Nov; the 5 to 11 Nov week is out because NOAA-20 has a gap on 6 Nov). Never in h, the baseline, flags, validation or the CSV. Overlap check 27 Oct to 2 Nov: +3.1% nationally.
+- Task B: `pipeline/17_drift_sensitivity.py` refits with the overlap 2012-2021: b = 0.875 again, back-cast 2001-2011 +2.9% nationally. Model unchanged. Method Q8.
+- Task C: box mode on `#/custom` (two clicks or W/S/E/N, 3 x 3 degree limit). Circle stays the default.
+- Task D (province hectares) not done: no machine-readable SiPongi province table could be fetched (see HUMAN-TODO H-5).
