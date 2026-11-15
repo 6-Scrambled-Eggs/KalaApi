@@ -36,17 +36,23 @@ export default function AreaPicker({ index, onPick }: { index: AreaIndex[]; onPi
     onPick(id);
   }
   return (
-    <div className="picker" onBlur={(e) => {
+    <form className="picker" role="search" onSubmit={(e) => e.preventDefault()} onBlur={(e) => {
       if (!e.currentTarget.contains(e.relatedTarget)) { setV(""); setOpen(false); setActive(-1); }
     }}>
-      <input ref={inputRef} value={v} placeholder={t("search")} aria-label={t("search")}
+      <input ref={inputRef} type="search" name="area-search" value={v} placeholder={t("search")} aria-label={t("search")}
         role="combobox" aria-autocomplete="list" aria-expanded={open}
         aria-controls={open && matches.length ? listId : undefined}
         aria-activedescendant={open && active >= 0 && matches[active] ? `${listId}-${active}` : undefined}
         autoComplete="off"
         onFocus={() => setOpen(true)}
         onClick={() => setOpen(true)}
-        onChange={(e) => { setV(e.target.value); setActive(-1); setOpen(true); }}
+        onChange={(e) => {
+          if (document.activeElement !== e.currentTarget) {
+            e.currentTarget.value = v;
+            return;
+          }
+          setV(e.target.value); setActive(-1); setOpen(true);
+        }}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             e.preventDefault();
@@ -73,6 +79,6 @@ export default function AreaPicker({ index, onPick }: { index: AreaIndex[]; onPi
           ))}
         </ul>
       ) : <div className="picker-empty" role="status">{names.length ? t("searchEmpty") : t("loading")}</div>)}
-    </div>
+    </form>
   );
 }

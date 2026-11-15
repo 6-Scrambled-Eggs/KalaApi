@@ -41,7 +41,7 @@ Use the EN/ID button in the header to change the language.
 
 The home page pairs the interactive province map with the sensor comparison and links to comparison, custom areas, and the El Niño view. On the method page, use the grouped contents sidebar to jump to sections on the data, validation, limits and references; it highlights the section currently in view and can be collapsed. On narrow screens, use **Menu** to open navigation and switch languages; the province list below the map is available for keyboard navigation.
 
-The navigation search filters provinces and kabupaten as you type. Its results scroll after five rows; use the arrow keys and Enter to select an area, or Escape to close the list. Changing pages clears the search and closes its results.
+The navigation search filters provinces and kabupaten as you type. Its results scroll after five rows; use the arrow keys and Enter to select an area, or Escape to close the list. Changing pages clears the search and closes its results. Browser autofill does not start a search while the field is unfocused.
 
 On narrow screens, scroll the weekly and monthly calendars horizontally to read all labels and totals. Print layouts keep their compact A4 typography.
 
