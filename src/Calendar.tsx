@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import Chart from "./Chart";
 import { Area, Oni, WPY, dateLocale, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
+import { buildPieces } from "./pieces";
 
 /** Chart colours mirror the tokens in styles.css (--ink, --mute). */
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
@@ -29,16 +30,8 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     vals.sort((a, b) => a - b);
     const anom = mode === "a";
     const vmax = anom ? 100 : Math.max(5, vals[Math.floor(vals.length * 0.99)] || 5);
-    // Quantile colour classes (non-zero values) so quiet and busy weeks look different.
-    const nz = vals.filter((v) => v > 0);
-    const q = (f: number) => Math.round(nz[Math.min(nz.length - 1, Math.floor(nz.length * f))] ?? 1);
-    const cuts = Array.from(new Set([1, q(0.2), q(0.4), q(0.6), q(0.8), q(0.95)].filter((c) => c >= 1))).sort((a, b) => a - b);
-    const COLS = ["#fffbe6", "#fee391", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"];
-    const pieces: any[] = [{ min: 0, max: 0, label: "0", color: COLS[0] }];
-    cuts.forEach((c, i) => {
-      const hi = i + 1 < cuts.length ? cuts[i + 1] - 1 : null;
-      pieces.push(hi == null ? { min: c, label: `${c}+`, color: COLS[Math.min(i + 1, COLS.length - 1)] } : { min: c, max: hi, label: hi > c ? `${c}–${hi}` : `${c}`, color: COLS[Math.min(i + 1, COLS.length - 1)] });
-    });
+    // Quantile colour classes (non-zero values) so quiet and busy weeks look different; half-open ranges (src/pieces.ts).
+    const pieces = buildPieces(vals);
     const lastBack = Math.floor(area.back_cast_end_slot / WPY);
     const weeks = Array.from({ length: WPY }, (_, i) => String(i + 1));
     const months = MONTH_START.map((_, m) => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" }).slice(0, 3));

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "check:pieces": "esbuild scripts/check-pieces.ts --bundle --platform=node --format=esm --outfile=_to_delete/check-pieces.mjs --log-level=error && node _to_delete/check-pieces.mjs",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"

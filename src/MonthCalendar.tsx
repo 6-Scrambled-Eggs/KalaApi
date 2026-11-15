@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import Chart from "./Chart";
 import { Area, dateLocale } from "./data";
 import { useL } from "./i18n";
+import { buildPieces } from "./pieces";
 
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
-const COLS = ["#fffbe6", "#fee391", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"];
 const GRID = { left: 58, right: 62, top: 30, bottom: 66 }, ROW = 20;
 
 /** Months with fewer days than this in the data are left out of the grid (the tile shows month-to-date instead). */
@@ -26,15 +26,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
       data.push([m, y, v == null ? "-" : v]);
       if (v != null) vals.push(v);
     }
-    const nz = vals.filter((v) => v > 0).sort((a, b) => a - b);
-    const q = (f: number) => Math.round(nz[Math.min(nz.length - 1, Math.floor(nz.length * f))] ?? 1);
-    const cuts = Array.from(new Set([1, q(0.2), q(0.4), q(0.6), q(0.8), q(0.95)].filter((c) => c >= 1))).sort((a, b) => a - b);
-    const pieces: any[] = [{ min: 0, max: 0, label: "0", color: COLS[0] }];
-    cuts.forEach((c, i) => {
-      const h = i + 1 < cuts.length ? cuts[i + 1] - 1 : null;
-      const f = (n: number) => n.toLocaleString(dateLocale.v);
-      pieces.push(h == null ? { min: c, label: `${f(c)}+`, color: COLS[Math.min(i + 1, 6)] } : { min: c, max: h, label: h > c ? `${f(c)}–${f(h)}` : f(c), color: COLS[Math.min(i + 1, 6)] });
-    });
+    const pieces: any[] = buildPieces(vals, (n) => n.toLocaleString(dateLocale.v));
     const mname = (m: number, style: "short" | "long" = "short") => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: style, timeZone: "UTC" });
     const totals = Array.from({ length: nYears }, (_, y) => Math.round(Array.from({ length: 12 }, (_, m) => val(y * 12 + m) ?? 0).reduce((a, b) => a + b, 0)).toLocaleString(dateLocale.v));
     const lastBack = Math.floor(area.back_cast_end_slot / 52);
