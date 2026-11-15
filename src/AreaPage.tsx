@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Calendar, { Mode } from "./Calendar";
 import Analog from "./Analog";
 import EnsoPanel from "./EnsoPanel";
-import Readiness from "./Readiness";
+import Readiness, { LEAD } from "./Readiness";
+import SheetMargin from "./SheetMargin";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Oni, WPY, analogYears, loadArea, loadEnso, loadOni, matrix, readiness, seasonal, weekLabel } from "./data";
 import { fmt, useT } from "./i18n";
 import { ensoLabel } from "./EnsoPanel";
 
@@ -64,38 +65,41 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   };
   const exportPng = () => {
     const c = chart.current; if (!c) return;
-    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#fffdf9" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
+    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#ffffff" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
   };
   const copyLink = () => { navigator.clipboard?.writeText(window.location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined); };
 
+  const rd = readiness(area);
+  const an = analogYears(area, 1)[0];
+  const tools = (
+    <div className="tools noprint" role="group" aria-label={t("actions")}>
+      <button onClick={() => go(`/brief/${id}`)}><Icon d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5" />{t("brief")}</button>
+      <button onClick={() => go(`/card/${id}`)}><Icon d="M4 5h16v14H4zM8 10h8M8 14h5" />{t("card")}</button>
+      <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}><Icon d="M8 3v18M16 3v18M3 8h5M16 16h5" />{t("compare")}</button>
+      <button onClick={() => go(`/story/${id}`)}><Icon d="M4 19 9 12l4 3 7-9M4 4v15h16" />{t("story")}</button>
+      <button onClick={exportCsv}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("csv")}</button>
+      <button onClick={exportPng}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("png")}</button>
+      <button onClick={copyLink} aria-live="polite"><Icon d={copied ? "M5 12l5 5 9-10" : "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"} />{copied ? t("copied") : t("copyLink")}</button>
+    </div>
+  );
+
   return (
-    <section>
-      <div className="head">
-        <div>
-          <h1>{area.name}</h1>
-          <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
-        </div>
+    <section className="sheet">
+      <div className="sheethead">
+        <h1 className="sheettitle">{area.name}</h1>
+        <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
+        <dl className="answers">
+          <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd><dd>{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")}</dd></div>
+          <div><dt>{t("readyBy")}</dt><dd className="fig">{rd ? weekLabel(Math.max(1, rd.p10 - LEAD)) : "n/a"}</dd><dd>{rd ? fmt(t("readyBySub"), LEAD, rd.p10) : ""}</dd></div>
+          <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
+          <div><dt>{t("mostLike")}</dt><dd className="fig">{an ? an.year : "n/a"}</dd><dd>{an && Number.isFinite(an.ratio) ? fmt(t("mostLikeSub"), an.ratio.toFixed(2)) : ""}</dd></div>
+        </dl>
+        <div className="quick noprint"><button className="cta" onClick={() => go(`/brief/${id}`)}>{t("brief")}</button><button className="cta alt" onClick={() => go(`/card/${id}`)}>{t("card")}</button></div>
+        {summary && <p className="summary">{summary}</p>}
+        {area.low_data && <div className="warn">{t("lowData")}</div>}
       </div>
-      <div className="tools noprint" role="group" aria-label={t("actions")}>
-        <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}><Icon d="M8 3v18M16 3v18M3 8h5M16 16h5" />{t("compare")}</button>
-        <button onClick={() => go(`/brief/${id}`)}><Icon d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5" />{t("brief")}</button>
-        <button onClick={() => go(`/card/${id}`)}><Icon d="M4 5h16v14H4zM8 10h8M8 14h5" />{t("card")}</button>
-        <button onClick={() => go(`/story/${id}`)}><Icon d="M4 19 9 12l4 3 7-9M4 4v15h16" />{t("story")}</button>
-        <span className="sep" aria-hidden="true" />
-        <button onClick={exportCsv}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("csv")}</button>
-        <button onClick={exportPng}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("png")}</button>
-        <button onClick={copyLink} aria-live="polite"><Icon d={copied ? "M5 12l5 5 9-10" : "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"} />{copied ? t("copied") : t("copyLink")}</button>
-      </div>
-      {summary && <p className="summary">{summary}</p>}
-      {area.low_data && <div className="warn">{t("lowData")}</div>}
-      <div className="tiles">
-        <div className="tile"><div className="k">{t("ytd")}</div><div className="v">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</div><div className="s">{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</div><div className="s">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")} · {t("pctile")} {Math.round(area.ytd_pct_recent)}</div></div>
-        <div className="tile"><div className="k">{t("typicalPeak")}</div><div className="v">{tp.peak}</div><div className="s">{weekLabel(tp.peak)} · {t("onsetWord")} {weekLabel(tp.onset)} · {t("endWord")} {weekLabel(tp.end)}</div></div>
-        <div className="tile"><div className="k">{t("onset")}</div><div className="v">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</div><div className="s">{area.last_year}: {cur ? `${t("week")} ${cur[0]}` : "n/a"} {fmt(t("vsTypical"), tp.onset)}</div></div>
-      </div>
-      <Readiness area={area} />
-      <Analog area={area} />
-      <EnsoPanel area={area} enso={enso} oni={oni} />
+      <SheetMargin area={area} index={index} tools={tools} />
+      <div className="sheetbody">
       <div className="sechead">
         <h2>{t("calendar")}</h2>
         <div className="seg noprint" role="group" aria-label={t("dataView")}>
@@ -113,7 +117,11 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
             <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span>
             <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
       )}
+      <Readiness area={area} />
+      <Analog area={area} />
+      <EnsoPanel area={area} enso={enso} oni={oni} />
       {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
+      </div>
     </section>
   );
 }

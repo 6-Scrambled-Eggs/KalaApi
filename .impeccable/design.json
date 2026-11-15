@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T12:00:00+07:00",
+  "title": "Design System: KalaApi",
+  "extensions": {
+    "colorMeta": {
+      "sea": { "role": "primary", "displayName": "Survey Sea", "canonical": "#0f4c6e", "tonalRamp": ["#06202f", "#0b3a55", "#0f4c6e", "#136089", "#3f86ad", "#7fc4e8", "#b9d3e1", "#d4e6f0"] },
+      "sea-hover": { "role": "primary", "displayName": "Sea Hover", "canonical": "#136089" },
+      "sea-deep": { "role": "primary", "displayName": "Sea Deep", "canonical": "#0b3a55" },
+      "sea-tint": { "role": "primary", "displayName": "Water Tint", "canonical": "#d4e6f0" },
+      "sea-line": { "role": "primary", "displayName": "Collar Line", "canonical": "#7fc4e8" },
+      "on-sea": { "role": "primary", "displayName": "On-Sea", "canonical": "#e8f1f6" },
+      "on-sea-2": { "role": "primary", "displayName": "On-Sea Muted", "canonical": "#b9d3e1" },
+      "fire-0": { "role": "secondary", "displayName": "Fire Ramp 0 (quiet)", "canonical": "#fff7bc", "tonalRamp": ["#4d1a02", "#993404", "#d95f0e", "#fe9929", "#fec44f", "#fee391", "#fff7bc", "#fffbe0"] },
+      "fire-1": { "role": "secondary", "displayName": "Fire Ramp 1", "canonical": "#fec44f" },
+      "fire-mid": { "role": "secondary", "displayName": "Fire Ramp Mid", "canonical": "#fe9929" },
+      "fire-2": { "role": "secondary", "displayName": "Fire Ramp 2", "canonical": "#d95f0e" },
+      "fire-3": { "role": "secondary", "displayName": "Fire Ramp 3", "canonical": "#993404" },
+      "fire-deep": { "role": "secondary", "displayName": "Fire Ramp Deep (busiest)", "canonical": "#4d1a02" },
+      "fire-ink": { "role": "secondary", "displayName": "Fire Ink", "canonical": "#a8430a" },
+      "extreme": { "role": "secondary", "displayName": "Extreme Oxide", "canonical": "#7b241c" },
+      "ground": { "role": "neutral", "displayName": "Land Ground", "canonical": "#f2f4ef", "tonalRamp": ["#16212b", "#2c3a45", "#4a5864", "#9aa6a0", "#c5cdc8", "#dfe4dd", "#f2f4ef", "#ffffff"] },
+      "sheet": { "role": "neutral", "displayName": "Sheet White", "canonical": "#ffffff" },
+      "hair": { "role": "neutral", "displayName": "Hair", "canonical": "#c5cdc8" },
+      "hair-2": { "role": "neutral", "displayName": "Hair Light", "canonical": "#dfe4dd" },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#16212b" },
+      "ink-2": { "role": "neutral", "displayName": "Ink Second", "canonical": "#2c3a45" },
+      "mute": { "role": "neutral", "displayName": "Mute", "canonical": "#4a5864" },
+      "land": { "role": "neutral", "displayName": "Land Fill", "canonical": "#c9d3c4" },
+      "warn-bg": { "role": "neutral", "displayName": "Notice Paper", "canonical": "#fbf1cf" },
+      "warn-line": { "role": "neutral", "displayName": "Notice Line", "canonical": "#e0c46c" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Sheet Title", "purpose": "The area name at sheet-title scale; page h1 uses the same voice smaller." },
+      "headline": { "displayName": "Section Head", "purpose": "Section headings, 40px above." },
+      "figure": { "displayName": "Answer Figure", "purpose": "Answer figures and figure tiles, tabular lining numerals." },
+      "title": { "displayName": "Sub-section", "purpose": "Sub-section heads." },
+      "body": { "displayName": "Text", "purpose": "Reading text at normal width." },
+      "label": { "displayName": "Sheet Label", "purpose": "Condensed tracked uppercase labels: margin, answers, table heads, legends." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "KalaApi in the header only, at 112% width." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "control-color", "value": "background-color 0.12s, color 0.12s", "purpose": "Hover colour change on controls and locator neighbours." },
+      { "name": "press", "value": "transform: translateY(1px)", "purpose": "Active state on buttons and segments." },
+      { "name": "reduced-motion", "value": "transition-duration: 0.01ms", "purpose": "All transitions collapse under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "brand-tagline", "value": "1180px" },
+      { "name": "sheet-stack", "value": "960px" },
+      { "name": "header-wrap", "value": "700px" },
+      { "name": "phone", "value": "600px" },
+      { "name": "narrow", "value": "520px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled sea action: open the brief, view the area.",
+      "html": "<a class=\"ds-cta\" href=\"#\">Open BPBD brief</a>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--sea, #0f4c6e); border-radius: 2px; padding: 8px 14px; line-height: 1.25; font: 600 14px 'Archivo Variable', system-ui, sans-serif; text-decoration: none; background: var(--sea, #0f4c6e); color: #fff; transition: background-color 0.12s, color 0.12s; } .ds-cta:hover { background: var(--sea-hover, #136089); } .ds-cta:focus-visible { outline: 2px solid var(--sea, #0f4c6e); outline-offset: 2px; } .ds-cta:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined sea action on a sheet.",
+      "html": "<a class=\"ds-cta-alt\" href=\"#\">Compare</a>",
+      "css": ".ds-cta-alt { display: inline-flex; align-items: center; border: 1px solid var(--sea, #0f4c6e); border-radius: 2px; padding: 8px 14px; line-height: 1.25; font: 600 14px 'Archivo Variable', system-ui, sans-serif; text-decoration: none; background: #fff; color: var(--sea, #0f4c6e); transition: background-color 0.12s, color 0.12s; } .ds-cta-alt:hover { background: var(--sea-tint, #d4e6f0); color: var(--sea-deep, #0b3a55); } .ds-cta-alt:focus-visible { outline: 2px solid var(--sea, #0f4c6e); outline-offset: 2px; } .ds-cta-alt:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Segmented Data-View Control",
+      "kind": "chip",
+      "refersTo": "segment",
+      "description": "Joined sea-outlined buttons beside the calendar heading; selected view filled sea.",
+      "html": "<div class=\"ds-seg\"><button class=\"on\">Harmonized</button><button>Anomaly (percentile)</button><button>Raw MODIS</button><button>Raw VIIRS</button></div>",
+      "css": ".ds-seg { display: inline-flex; flex-wrap: wrap; } .ds-seg button { border: 1px solid var(--sea, #0f4c6e); border-radius: 2px; background: #fff; color: var(--sea, #0f4c6e); padding: 6px 12px; font: 600 13px 'Archivo Variable', system-ui, sans-serif; margin-left: -1px; cursor: pointer; transition: background-color 0.12s; } .ds-seg button:first-child { margin-left: 0; } .ds-seg button:hover { background: var(--sea-tint, #d4e6f0); } .ds-seg button.on { background: var(--sea, #0f4c6e); color: #fff; position: relative; } .ds-seg button:focus-visible { outline: 2px solid var(--sea, #0f4c6e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Header Bar",
+      "kind": "nav",
+      "refersTo": "header-bar",
+      "description": "Sea shell with wordmark, nav (current item underlined in collar blue), language button and search.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\"><b>KalaApi</b></a><nav class=\"ds-nav\"><a class=\"on\" href=\"#\">Map</a><a href=\"#\">Sensor step (2012)</a><a href=\"#\">Method and data</a><button>ID</button></nav><input class=\"ds-search\" placeholder=\"Search province or kabupaten\"></header>",
+      "css": ".ds-top { display: flex; align-items: center; gap: 8px 32px; min-height: 56px; padding: 0 24px; background: var(--sea, #0f4c6e); color: var(--on-sea, #e8f1f6); font-family: 'Archivo Variable', system-ui, sans-serif; } .ds-brand { color: #fff; text-decoration: none; } .ds-brand b { font-size: 21px; font-weight: 800; font-stretch: 112%; letter-spacing: 0.01em; } .ds-nav { display: flex; gap: 2px 24px; align-items: center; } .ds-nav a { color: var(--on-sea-2, #b9d3e1); text-decoration: none; font-size: 14px; font-weight: 500; padding: 17px 0 15px; border-bottom: 3px solid transparent; } .ds-nav a:hover { color: #fff; } .ds-nav a.on { color: #fff; border-color: var(--sea-line, #7fc4e8); } .ds-nav a:focus-visible, .ds-nav button:focus-visible, .ds-search:focus-visible { outline: 2px solid var(--sea-line, #7fc4e8); outline-offset: 2px; } .ds-nav button { border: 1px solid var(--on-sea-2, #b9d3e1); background: transparent; color: #fff; border-radius: 2px; padding: 2px 9px; font: 700 12px 'Archivo Variable', system-ui, sans-serif; letter-spacing: 0.06em; } .ds-nav button:hover { background: var(--sea-deep, #0b3a55); } .ds-search { margin-left: auto; width: 260px; height: 36px; padding: 0 12px; border: 1px solid transparent; border-radius: 2px; background: var(--sea-deep, #0b3a55); color: #fff; font: inherit; } .ds-search::placeholder { color: var(--on-sea-2, #b9d3e1); } .ds-search:hover { border-color: var(--on-sea-2, #b9d3e1); }"
+    },
+    {
+      "name": "Sheet Margin",
+      "kind": "card",
+      "refersTo": "sheet-margin",
+      "description": "The map-sheet margin: sheet number over a 2px rule, index disclosure, margin facts and sea tool rows inside a 1px ink neat-line.",
+      "html": "<aside class=\"ds-margin\"><div class=\"ds-mk\">Sheet 15 of 38 · Province</div><p class=\"ds-basis\">KalaApi index, alphabetical. Not a BPS code.</p><h4>Edition</h4><p>Week 43, 2026</p><h4>Unit</h4><p>Fire-day: a 0.05° cell with at least one daytime detection</p><h4>Tools</h4><button class=\"ds-tool\">BPBD brief</button><button class=\"ds-tool\">Download CSV</button></aside>",
+      "css": ".ds-margin { width: 252px; border: 1px solid var(--ink, #16212b); background: #fff; padding: 12px 14px 14px; font: 13px/1.45 'Archivo Variable', system-ui, sans-serif; color: var(--ink-2, #2c3a45); } .ds-mk, .ds-margin h4 { font-size: 11px; font-weight: 600; font-stretch: 75%; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink, #16212b); } .ds-mk { font-size: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--ink, #16212b); } .ds-margin h4 { color: var(--mute, #4a5864); margin: 12px 0 2px; } .ds-margin p { margin: 0; } .ds-basis { margin-top: 5px !important; font-size: 11px; color: var(--mute, #4a5864); } .ds-tool { display: block; border: 0; background: none; color: var(--sea, #0f4c6e); padding: 4px 6px; margin-left: -6px; font: 600 13.5px 'Archivo Variable', system-ui, sans-serif; cursor: pointer; } .ds-tool:hover { background: var(--sea-tint, #d4e6f0); color: var(--sea-deep, #0b3a55); } .ds-tool:focus-visible { outline: 2px solid var(--sea, #0f4c6e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Answer Figures",
+      "kind": "custom",
+      "refersTo": "answer-figure",
+      "description": "Four answers across one row between a 2px and a 1px ink rule, hair dividers between cells.",
+      "html": "<dl class=\"ds-answers\"><div><dt>This year vs normal</dt><div class=\"fig\">×2.14</div><dd>percentile 80 of 2001–2025</dd></div><div><dt>Be ready by</dt><div class=\"fig\">2 Apr</div><dd>4 weeks before the early onset</dd></div><div><dt>Onset vs typical</dt><div class=\"fig\">2 wk late</div><dd>week 32, typically 30</dd></div><div><dt>Most similar year</dt><div class=\"fig\">2003</div><dd>×1.16 up to the same week</dd></div></dl>",
+      "css": ".ds-answers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 2px solid var(--ink, #16212b); border-bottom: 1px solid var(--ink, #16212b); font-family: 'Archivo Variable', system-ui, sans-serif; } .ds-answers > div { padding: 9px 14px 12px; border-left: 1px solid var(--hair, #c5cdc8); min-width: 0; } .ds-answers > div:first-child { border-left: 0; padding-left: 0; } .ds-answers dt { font-size: 11px; font-weight: 600; font-stretch: 75%; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink, #16212b); } .ds-answers .fig { font-size: 2.4rem; font-weight: 700; font-stretch: 85%; line-height: 1.08; color: var(--ink, #16212b); margin: 2px 0 4px; font-variant-numeric: tabular-nums lining-nums; } .ds-answers dd { margin: 0; font-size: 12.5px; color: var(--mute, #4a5864); line-height: 1.4; }"
+    },
+    {
+      "name": "Data Table",
+      "kind": "custom",
+      "refersTo": "table",
+      "description": "Open white table under a 2px ink rule; hair row rules; tabular numerals.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Year</th><th>Fire-days</th></tr></thead><tbody><tr><th>2015</th><td>24,876</td></tr><tr><th>2026</th><td>15,877</td></tr></tbody></table>",
+      "css": ".ds-table { border-collapse: collapse; width: 100%; font: 14px 'Archivo Variable', system-ui, sans-serif; font-variant-numeric: tabular-nums; background: #fff; border-top: 2px solid var(--ink, #16212b); } .ds-table th, .ds-table td { border-bottom: 1px solid var(--hair, #c5cdc8); padding: 8px 10px; text-align: left; } .ds-table thead th { border-bottom: 1px solid var(--ink, #16212b); font-size: 11px; font-weight: 600; font-stretch: 75%; letter-spacing: 0.08em; text-transform: uppercase; } .ds-table tbody th { font-weight: 600; color: var(--ink-2, #2c3a45); } .ds-table tbody tr:hover td { background: #f7f9f5; }"
+    },
+    {
+      "name": "Badges",
+      "kind": "chip",
+      "refersTo": "badge-extreme",
+      "description": "Elevated and extreme week flags: condensed caps on fire-ink or extreme oxide.",
+      "html": "<span class=\"ds-badge e\">Elevated</span> <span class=\"ds-badge x\">Extreme</span>",
+      "css": ".ds-badge { font: 700 11px 'Archivo Variable', system-ui, sans-serif; font-stretch: 80%; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; color: #fff; white-space: nowrap; } .ds-badge.e { background: var(--fire-ink, #a8430a); } .ds-badge.x { background: var(--extreme, #7b241c); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Lembar Peta",
+    "overview": "Every area in KalaApi reads as one numbered sheet of Indonesia's Peta Rupabumi national map series. The fire record sits inside a surveyed neat-line, the sheet margin on the left carries the facts a map margin would (sheet number, locator inset, adjoining sheets, edition, source, unit, tools), and the area name stands at sheet-title scale. The world is borrowed from the public-sector cartography an Indonesian BPBD officer already trusts, so the page reads as a document, not a dashboard.\n\nThe mode is Operate: a working officer on a phone or a desk scans for three answers and leaves. Density is high but quiet. Hierarchy comes from type size and from rules (a heavy 2px ink rule over a light 1px rule), never from cards, fills or shadows. Colour carries meaning only: sea-blue means \"you can act here\", the yellow-to-brown ramp means \"this is fire data\", and bold ink means \"this year\".\n\nIt refuses the dark fire dashboard with KPI cards and glowing accents, the cream editorial magazine page, and any alarmist register. Hotspots are heat detections, and the page states its numbers the way a survey sheet states contours: plainly, with the method in the margin.",
+    "keyCharacteristics": [
+      "Sea-blue shell and controls on a pale cool land ground; white sheets framed by 1px ink neat-lines.",
+      "One family, Archivo, used across its width axis: 75% labels, 80% display, 85% headings and figures, 100% text, 112% wordmark.",
+      "The fire ramp appears only on data marks; this year rides in bold ink on every chart.",
+      "Graticule ticks and labels sit outside the frame, the way a map collar carries them.",
+      "Flat throughout: depth comes from frames and rules, never shadow."
+    ],
+    "rules": [
+      { "name": "The Sea Is the Instrument Rule", "body": "Sea-blue appears only on navigation, controls, links, focus and the \"you are here\" mark. Never use it to encode a data value.", "section": "colors" },
+      { "name": "The Fire Is the Record Rule", "body": "The yellow-to-brown ramp appears only on data marks and their legend. Never use it for buttons, headings, icons or decoration.", "section": "colors" },
+      { "name": "The This-Year-in-Ink Rule", "body": "The current year is drawn in bold ink on every chart: a 3px ink line on the seasonal profile, an 800-weight ink year label on the calendar. It never takes a hue of its own.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Every role is Archivo; contrast comes from the width axis, weight and size, never from a second typeface.", "section": "typography" },
+      { "name": "The Tabular Figures Rule", "body": "Every number in figures, tables, lists, tooltips, flags and graticule labels sets in tabular numerals so columns of years and totals align.", "section": "typography" },
+      { "name": "The Neat-Line Rule", "body": "Content is framed with a 1px ink border or bounded by 2px/1px ink rules. No content shadows, no tinted card backgrounds, no inset panels.", "section": "elevation" },
+      { "name": "The Two-Pixel Rule", "body": "A 2px radius belongs to controls only. Anything that holds content is square.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do reserve sea (#0f4c6e) for navigation, controls, links, focus and the \"you are here\" mark.",
+      "Do reserve the yellow-to-brown ramp for data marks and their legends.",
+      "Do draw the current year in bold ink on every chart (3px line, 800-weight label).",
+      "Do frame content in 1px ink neat-lines and separate figure rows with a 2px ink rule above and a 1px ink rule below.",
+      "Do set every number in tabular numerals, and every label in Archivo at 75% width, uppercase, 0.08em tracking.",
+      "Do place ticks and graticule labels outside the frame, as a map collar does.",
+      "Do build hierarchy from type size and rules; keep sections apart with space and a headline."
+    ],
+    "donts": [
+      "Don't use shadows, tinted cards or rounded containers on content; a 2px radius is for controls only.",
+      "Don't use sea-blue to encode data, or fire colours on buttons, headings or decoration.",
+      "Don't introduce a second typeface; use Archivo's width axis instead.",
+      "Don't use an alarmist register: no red glows, flashing marks, dark \"war room\" grounds or warning chrome beyond the single notice box.",
+      "Don't add the generic SaaS dashboard look (KPI cards with icons, gradient headers, pill buttons).",
+      "Don't add decoration that slows phone scanning or adds load.",
+      "Don't present KalaApi's sheet index as an official BPS code; it is disclosed as KalaApi's own alphabetical index."
+    ]
+  }
+}

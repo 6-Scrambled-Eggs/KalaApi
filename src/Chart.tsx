@@ -6,22 +6,22 @@ import { CanvasRenderer } from "echarts/renderers";
 
 echarts.use([BarChart, HeatmapChart, LineChart, GridComponent, LegendComponent, MarkAreaComponent, MarkLineComponent, TitleComponent, TooltipComponent, VisualMapComponent, CanvasRenderer]);
 
-/** Chart theme: matches the page tokens in styles.css (paper, ink, Public Sans). */
-const INK = "#1d1a17", INK2 = "#3b3631", MUTE = "#635d56", LINE = "#e3dcd0", LINE2 = "#cbc1b1";
+/** Chart theme: matches the page tokens in styles.css (map-sheet ground, ink, Archivo). */
+const INK = "#16212b", INK2 = "#2c3a45", MUTE = "#4a5864", LINE = "#dfe4dd", LINE2 = "#9aa6a0";
 const axis = {
   axisLine: { lineStyle: { color: LINE2 } }, axisTick: { lineStyle: { color: LINE2 } },
   axisLabel: { color: MUTE }, nameTextStyle: { color: MUTE }, splitLine: { lineStyle: { color: LINE } },
 };
 echarts.registerTheme("kala", {
-  textStyle: { fontFamily: '"Public Sans Variable", system-ui, sans-serif', color: INK2 },
+  textStyle: { fontFamily: '"Archivo Variable", system-ui, sans-serif', color: INK2 },
   title: { textStyle: { color: INK, fontWeight: 600 } },
   legend: { textStyle: { color: INK2 }, itemGap: 14 },
   categoryAxis: { ...axis, splitLine: { show: false } },
   valueAxis: axis,
   tooltip: {
-    backgroundColor: "rgba(29,26,23,0.94)", borderWidth: 0, padding: [8, 11],
-    textStyle: { color: "#f7f4ee", fontSize: 13 },
-    extraCssText: "border-radius:8px;box-shadow:0 6px 20px -6px rgba(29,26,23,.35);font-variant-numeric:tabular-nums;",
+    backgroundColor: "#ffffff", borderColor: INK, borderWidth: 1, padding: [8, 11],
+    textStyle: { color: INK, fontSize: 13 },
+    extraCssText: "border-radius:0;box-shadow:0 6px 16px -6px rgba(22,33,43,.3);font-variant-numeric:tabular-nums;",
   },
   visualMap: { textStyle: { color: MUTE } },
 });

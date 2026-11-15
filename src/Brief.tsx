@@ -7,7 +7,7 @@ import { Area, Enso, Oni, WPY, loadArea, loadEnso, loadOni, matrix, upto } from 
 import { useT } from "./i18n";
 
 const YEARS = [2015, 2019, 2026];
-const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2026: "#000000" };
+const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2026: "#16212b" };
 
 /** One-page A4 brief for a local disaster agency (BPBD): where we stand, when to be ready, what the numbers cannot say. */
 export default function Brief({ id }: { id: string }) {

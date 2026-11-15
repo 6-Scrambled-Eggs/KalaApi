@@ -55,6 +55,9 @@ export type FlagCheck = { n_weeks: number; spearman: number; elevated_n: number;
 export const loadFlagCheck = () => load<FlagCheck>("flag_check.json");
 export const loadValidation = () => load<Validation>("validation.json");
 export const loadProvinces = () => load<GeoJSON.FeatureCollection>("provinces.geojson");
+/** Simplified province outlines (SVG paths in a Mercator viewBox) and land neighbours, from pipeline/13_locator.py. */
+export type Locator = { width: number; height: number; frame: [number, number, number, number]; provinces: Record<string, { name: string; d: string; bbox: [number, number, number, number]; near: string[] }> };
+export const loadLocator = () => load<Locator>("locator.json");
 
 /** years x 52 matrix from a flat series */
 export function matrix(s: Series): (number | null)[][] {

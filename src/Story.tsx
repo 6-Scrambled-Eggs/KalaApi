@@ -3,7 +3,7 @@ import Chart from "./Chart";
 import { Area, WPY, loadArea, matrix } from "./data";
 
 const YEARS = [2015, 2019, 2023, 2026];
-const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2023: "#2e86c1", 2026: "#000000" };
+const COL: Record<number, string> = { 2015: "#7b241c", 2019: "#e67e22", 2023: "#2e86c1", 2026: "#16212b" };
 
 /** FR-15: cumulative fire-days for the four reference years, with narrated cards. */
 export default function Story({ id }: { id: string }) {
