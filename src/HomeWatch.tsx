@@ -27,14 +27,14 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
     const c = document.createElement("canvas"); c.width = 1200; c.height = 630;
     const g = c.getContext("2d"); if (!g) return;
     const SANS = '"Archivo Variable", system-ui, sans-serif', SERIF = SANS;
-    g.fillStyle = "#f2f4ef"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#0f4c6e"; g.fillRect(0, 0, 1200, 64); g.strokeStyle = "#16212b"; g.lineWidth = 2; g.strokeRect(40, 96, 1120, 474);
-    g.fillStyle = "#ffffff"; g.font = `800 34px ${SERIF}`; g.fillText(lines[0], 60, 44); g.fillStyle = "#16212b";
+    g.fillStyle = "#faf6f1"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#a64025"; g.fillRect(0, 0, 1200, 64); g.strokeStyle = "#39231e"; g.lineWidth = 2; g.strokeRect(40, 96, 1120, 474);
+    g.fillStyle = "#ffffff"; g.font = `800 34px ${SERIF}`; g.fillText(lines[0], 60, 44); g.fillStyle = "#39231e";
     g.font = `32px ${SANS}`;
     let y = 160;
     lines.slice(1).forEach((l) => { const words = l.split(" "); let cur = "";
       words.forEach((w) => { if (g.measureText(cur + w).width > 1080) { g.fillText(cur, 60, y); y += 46; cur = ""; } cur += w + " "; });
       g.fillText(cur, 60, y); y += 70; });
-    g.fillStyle = "#4a5864"; g.font = `22px ${SANS}`;
+    g.fillStyle = "#6b5148"; g.font = `22px ${SANS}`;
     g.fillText(L ? "Bukan produk resmi · data NASA FIRMS · 6 Scrambled Eggs · NASA Space Apps 2026" : "Not an official product · NASA FIRMS data · 6 Scrambled Eggs · NASA Space Apps 2026", 40, 608);
     const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = `kalaapi_week${week}.png`; a.click();
   };

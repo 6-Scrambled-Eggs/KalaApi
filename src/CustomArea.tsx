@@ -6,6 +6,7 @@ import Chart from "./Chart";
 import MonthCalendar from "./MonthCalendar";
 import { dateLocale, loadProvinces, nf } from "./data";
 import { useL, useT } from "./i18n";
+import "./tool-pages.css";
 
 const base = import.meta.env.BASE_URL;
 const WPY = 52;
@@ -80,7 +81,7 @@ export default function CustomArea() {
       const fc = await loadProvinces();
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: { "fill-color": "#f2ead3", "fill-opacity": 1 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#9aa6a0", "line-width": 0.6 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#bba393", "line-width": 0.6 } });
       map.addSource("circ", { type: "geojson", data: circle(-2.3, 114.0, 30) });
       map.addLayer({ id: "cfill", type: "fill", source: "circ", paint: { "fill-color": "#d95f0e", "fill-opacity": 0.25 } });
       map.addLayer({ id: "cline", type: "line", source: "circ", paint: { "line-color": "#993404", "line-width": 2 } });
@@ -137,7 +138,7 @@ export default function CustomArea() {
 
   const run = async () => {
     if (!idx || !valid || !rangeOk) return;
-    setBusy(true); setErr(""); setRows(null);
+    setBusy(true); setErr("");
     try {
       const dlat = radius / 110.57 + 0.05, dlon = radius / (111.32 * Math.cos((lat * Math.PI) / 180)) + 0.05;
       const [la0, la1, lo0, lo1] = mode === "circle" ? [lat - dlat, lat + dlat, lon - dlon, lon + dlon] : [bx.s, bx.n, bx.w, bx.e];
@@ -158,7 +159,7 @@ export default function CustomArea() {
         }
       }
       setRows(out);
-    } catch (e) { setErr(String(e)); }
+    } catch (e) { setRows(null); setErr(String(e)); }
     setBusy(false);
   };
   useEffect(() => { if (idx && from && to) void run(); /* first run when the page opens */ }, [idx, from === "" ? 0 : 1]);
@@ -243,11 +244,11 @@ export default function CustomArea() {
     const labels = Array.from({ length: result.n }, (_, i) => { const d = slotStart(s1 + i); return `${d.getUTCFullYear()} w${(s1 + i) % WPY + 1}`; });
     const raw = (a: number[], first: number) => a.map((v, i) => (s1 + i < first ? null : Math.round(v)));
     return {
-      grid: { left: 48, right: 14, top: 34, bottom: 84 },
-      legend: { bottom: 0, itemGap: 10, textStyle: { fontSize: 11 } },
+      grid: { left: 16, right: 16, top: 38, bottom: 100, containLabel: true },
+      legend: { bottom: 0, left: 8, right: 8, itemGap: 10, textStyle: { fontSize: 13 } },
       tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: labels, axisLabel: { hideOverlap: true, fontSize: 10 } },
-      yAxis: { type: "value", name: L("fire-days / week", "hari-api / minggu"), nameTextStyle: { fontSize: 10 } },
+      xAxis: { type: "category", data: labels, axisLabel: { hideOverlap: true, fontSize: 12 } },
+      yAxis: { type: "value", name: L("fire-days / week", "hari-api / minggu"), nameTextStyle: { fontSize: 12 }, axisLabel: { fontSize: 12 } },
       series: [
         { name: L("Harmonized", "Harmonisasi"), type: "line", showSymbol: false, data: result.H.map((v) => Math.round(v * 10) / 10), lineStyle: { width: 2.4, color: "#993404" }, itemStyle: { color: "#993404" } },
         { name: L("Raw MODIS (Aqua)", "MODIS mentah (Aqua)"), type: "line", showSymbol: false, data: raw(result.M, idx.a0), lineStyle: { width: 1.2, type: "dashed", color: "#2b6cb0" }, itemStyle: { color: "#2b6cb0" } },
@@ -258,10 +259,10 @@ export default function CustomArea() {
   const barOpt = useMemo(() => {
     if (!result) return null;
     return {
-      grid: { left: 48, right: 14, top: 14, bottom: 30 },
+      grid: { left: 16, right: 16, top: 14, bottom: 12, containLabel: true },
       tooltip: { trigger: "axis" },
-      xAxis: { type: "category", data: result.years.map(String), axisLabel: { fontSize: 10, interval: 2 } },
-      yAxis: { type: "value", axisLabel: { fontSize: 10 } },
+      xAxis: { type: "category", data: result.years.map(String), axisLabel: { fontSize: 12, interval: 2, hideOverlap: true } },
+      yAxis: { type: "value", axisLabel: { fontSize: 12 } },
       series: [{ type: "bar", data: result.yv.map((v, i) => ({ value: v ?? "-", itemStyle: { color: result.years[i] === result.selY ? "#993404" : "#fec44f" } })) }],
     } as any;
   }, [result]);
@@ -280,12 +281,25 @@ export default function CustomArea() {
     <section className="custom">
       <h1>{L("Your own area", "Area pilihan Anda")}</h1>
       <p className="lead">{L("Pick a point on the map and a radius. KalaApi sums the harmonized fire-days of all 0.05° grid cells (about 5.5 km) inside the circle, for the dates you choose.", "Pilih satu titik di peta dan radius. KalaApi menjumlahkan hari-api terharmonisasi semua sel grid 0,05° (sekitar 5,5 km) di dalam lingkaran, untuk tanggal yang Anda pilih.")} {t("boxLead")}</p>
+      {result && monthArea && (
+        <div className="custom-calendar" aria-live="polite">
+          <h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
+          <div className="custom-calendar-frame">
+            <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
+            <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p>
+          </div>
+        </div>
+      )}
       <div className="customgrid">
         <div>
           <div ref={el} className="map" role="img" aria-label={L("Map: click to place the centre of your area", "Peta: klik untuk menaruh pusat area Anda")} />
           <p className="note">{mode === "circle" ? L("Click the map to move the centre.", "Klik peta untuk memindahkan pusat.") : (pend ? t("boxPick") : t("boxHint"))}</p>
         </div>
-        <form className="cform" onSubmit={(e) => { e.preventDefault(); void run(); }}>
+        <form className="cform" onSubmit={(e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+          void run();
+        }}>
           <div className="seg" role="group" aria-label={L("Shape of the area", "Bentuk area")}>
             <button type="button" className={mode === "circle" ? "on" : ""} aria-pressed={mode === "circle"} onClick={() => setMode("circle")}>{t("modeCircle")}</button>
             <button type="button" className={mode === "box" ? "on" : ""} aria-pressed={mode === "box"} onClick={() => setMode("box")}>{t("modeBox")}</button>
@@ -312,22 +326,19 @@ export default function CustomArea() {
       </div>
       {err && <p className="error">{err}</p>}
       {result && (
-        <div aria-live="polite">
+        <div className="custom-results" aria-live="polite">
           <dl className="answers three">
             <div><dt>{L("Harmonized fire-days", "Hari-api terharmonisasi")}</dt><dd className="fig">{f(result.cur)}</dd><dd>{from} → {to} · {L("exact dates", "tanggal tepat")}. {L("Chart and CSV use whole 7-day weeks:", "Grafik dan CSV memakai minggu penuh 7 hari:")} {result.n} {L("weeks", "minggu")}, {f(result.total)}.</dd></div>
             <div><dt>{mode === "box" ? t("boxCells") : L("Grid cells in circle", "Sel grid dalam lingkaran")}</dt><dd className="fig">{nf(nCells)}</dd><dd>≈ {f(nCells * 30)} km²</dd></div>
             <div><dt>{L("Is this period unusual?", "Apakah periode ini tidak biasa?")}</dt><dd className="fig">{result.med > 0 ? `×${nf((result.cur / result.med), 2)}` : "n/a"}</dd><dd>{L("Selected period:", "Periode terpilih:")} {f(result.cur)} {L("fire-days. Same dates in 2001–2025: median", "hari-api. Tanggal sama pada 2001–2025: median")} {f(result.med)} · {L("percentile", "persentil")} {Math.round(result.pct)} {L("of", "dari")} {result.nBase} {L("years", "tahun")}</dd></div>
           </dl>
           {result.total === 0 && <p className="note">{mode === "box" ? t("boxNone") : L("No detections in this circle for these dates. A zero means no heat detection by the satellites, not proof that nothing burned.", "Tidak ada deteksi di lingkaran ini untuk tanggal tersebut. Nol berarti satelit tidak mendeteksi panas, bukan bukti tidak ada yang terbakar.")}</p>}
-          {monthArea && <><h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
-            <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
-            <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p></>}
           <h2>{L("Weekly fire-days", "Hari-api mingguan")}</h2>
           <Chart option={lineOpt} height={300} label={L("Weekly fire-days in your area", "Hari-api mingguan di area Anda")} />
           {barOpt && <><h2>{L("The same dates in every year", "Tanggal yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days on the same dates by year", "Hari-api pada tanggal yang sama per tahun")} /></>}
           <p className="tools noprint"><button onClick={csv}>{L("Download CSV (cell × week)", "Unduh CSV (sel × minggu)")}</button></p>
           <RawHotspots shape={{ mode, lat, lon, radius, box: bx, valid }} />
-          <p className="note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
+          <p className="note custom-method-note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
         </div>
       )}
     </section>

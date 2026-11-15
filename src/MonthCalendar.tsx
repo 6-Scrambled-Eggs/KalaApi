@@ -6,8 +6,8 @@ import { buildPieces } from "./pieces";
 import { shortNum } from "./num";
 import { PieceLegend as Legend, useLegendRef } from "./PieceLegend";
 
-const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
-const GRID = { left: 58, right: 62, top: 30, bottom: 66 }, ROW = 20;
+const INK = "#39231e", MUTE = "#6b5148", FONT = '"Archivo Variable", system-ui, sans-serif';
+const GRID = { left: 74, right: 96, top: 38, bottom: 66 }, ROW = 22;
 
 
 /** Year x month calendar of harmonized fire-days. Same colour logic as the weekly calendar. */
@@ -28,7 +28,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
     for (let y = 0; y < nYears; y++) for (let m = 0; m < 12; m++) {
       const i = y * 12 + m, v = val(i);
       if (v != null) vals.push(v);
-      if (i === pidx && pm) { data.push({ value: [m, y, pm.value], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed", decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(22,33,43,.6)" } } } as any); vals.push(pm.value); }
+      if (i === pidx && pm) { data.push({ value: [m, y, pm.value], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed", decal: { symbol: "rect", symbolSize: 1, rotation: Math.PI / 4, dashArrayX: [1, 0], dashArrayY: [2, 3], color: "rgba(57,35,30,.6)" } } } as any); vals.push(pm.value); }
       else if (i === pidx && v != null) data.push({ value: [m, y, v], itemStyle: { borderColor: INK, borderWidth: 1.6, borderType: "dashed" } });
       else data.push([m, y, v == null ? "-" : v]);
     }
@@ -40,7 +40,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
     const med = area.mstat?.med ?? [];
     return {
       grid: GRID,
-      title: { text: L("Fire-days per month", "Hari-api per bulan"), right: 2, top: 10, textStyle: { fontSize: 10, fontWeight: 600, color: MUTE, fontFamily: FONT } },
+      title: { text: L("Fire-days per month", "Hari-api per bulan"), right: 2, top: 10, textStyle: { fontSize: 12, fontWeight: 600, color: MUTE, fontFamily: FONT } },
       tooltip: {
         formatter: (p: any) => {
           const [m, yi] = p.value as number[];
@@ -56,11 +56,11 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
         },
       },
       xAxis: [
-        { type: "category", data: Array.from({ length: 12 }, (_, m) => mname(m)), axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { color: MUTE, fontSize: 11, interval: 0 } },
+        { type: "category", data: Array.from({ length: 12 }, (_, m) => mname(m)), axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { color: MUTE, fontSize: 13, interval: 0 } },
       ],
       yAxis: [
-        { type: "category", data: Array.from({ length: nYears }, (_, i) => String(area.start_year + i)), inverse: true, axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 11, color: MUTE, fontFamily: FONT, formatter: (v: string) => (v === String(area.last_year) ? `{c|${v}}` : v), rich: { c: { color: INK, fontWeight: 800 } } } },
-        { type: "category", data: totals, inverse: true, position: "right", axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 10.5, color: INK, fontFamily: FONT } },
+        { type: "category", data: Array.from({ length: nYears }, (_, i) => String(area.start_year + i)), inverse: true, axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 13, color: MUTE, fontFamily: FONT, formatter: (v: string) => (v === String(area.last_year) ? `{c|${v}}` : v), rich: { c: { color: INK, fontWeight: 800 } } } },
+        { type: "category", data: totals, inverse: true, position: "right", axisLine: { lineStyle: { color: INK } }, axisTick: { show: false }, axisLabel: { interval: 0, fontSize: 13, color: INK, fontFamily: FONT } },
       ],
       visualMap: { type: "piecewise", pieces, show: false },
       series: [{
@@ -76,7 +76,7 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / 52), nYears);
   const pmShown = !!(area.prov && area.prov.weeks.length && area.mpartial && area.prov.month);
   return (
-    <><div className="calscroll"><div style={{ position: "relative" }}>
+    <><div className="calscroll"><div style={{ position: "relative", minWidth: 760 }}>
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: ROW * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${L("Monthly calendar", "Kalender bulanan")}: ${area.name}`} />
       {area.mpartial && <p className="partialkey"><i aria-hidden="true" />{L("dashed border = partial month", "garis putus-putus = bulan belum lengkap")}</p>}

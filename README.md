@@ -31,13 +31,21 @@ npm run preview    # serve dist/ locally
 | Page (hash route) | What it shows |
 |---|---|
 | `#/` | Map of Indonesia. Click a province, then a kabupaten. |
-| `#/area/<id>` | Calendar, seasonal chart and anomaly for one area. Use `?m=h` (harmonized), `m` (MODIS) or `v` (VIIRS). |
+| `#/area/<id>` | Calendar, seasonal chart and anomaly for one area. The calendar link in the navigation opens Indonesia; search for a province or kabupaten to open its record. Use `?m=h` (harmonized), `m` (MODIS) or `v` (VIIRS). |
 | `#/surge/<id>` | The 2012 "sensor step" hero: raw detections rise about 6.5x in 2012. Harmonized fire-days rise about 1.2x. |
 | `#/story/<id>` | Story mode for key years. |
 | `#/card/<id>` | One-page print card (A4). |
 | `#/method` | Method and validation numbers. |
 
 Use the EN/ID button in the header to change the language.
+
+The home page pairs the interactive province map with the sensor comparison and links to comparison, custom areas, and the El Niño view. On the method page, use the grouped contents sidebar to jump to sections on the data, validation, limits and references; it highlights the section currently in view and can be collapsed. On narrow screens, use **Menu** to open navigation and switch languages; the province list below the map is available for keyboard navigation.
+
+The navigation search filters provinces and kabupaten as you type. Its results scroll after five rows; use the arrow keys and Enter to select an area, or Escape to close the list. Changing pages clears the search and closes its results. Browser autofill does not start a search while the field is unfocused.
+
+On narrow screens, scroll the weekly and monthly calendars horizontally to read all labels and totals. Print layouts keep their compact A4 typography.
+
+The interface uses a warm fire-inspired palette; map water and contrasting data-series colors remain distinct for readability. On **Your area**, the summary cards, raw-hotspot download controls and data notes share the same visual system.
 
 ### Please test these things
 - Pick 3 areas (one on Sumatra, one on Kalimantan, one on Papua). Do the charts load?

@@ -3,6 +3,13 @@ import { createContext, useContext } from "react";
 export type Lang = "en" | "id";
 const dict = {
   en: {
+    methodContents: "On this page", methodGroupBasics: "The method", methodGroupEvidence: "Evidence and limits", methodGroupSources: "Sources and references", methodReferences: "References",
+    menu: "Menu", homeCustom: "Pick your own area", homeSource: "NASA FIRMS data · MODIS and VIIRS",
+    navCalendar: "Fire calendar", navCustom: "Your area",
+    homeMapTitle: "Explore Indonesia",
+    homeStoryTitle: "A clearer view across two sensors", homeStoryBody: "MODIS and VIIRS see fires differently. KalaApi brings their observations together so the fire record can be compared across years.",
+    homeProofTitle: "The 2012 sensor change", homeExploreTitle: "Explore the fire record",
+    homeCompareBody: "See two places side by side.", homeCustomBody: "Explore an area beyond administrative boundaries.", homeEnsoBody: "Explore the historical relationship between El Niño and fire.",
     lead: "25 years of MODIS and VIIRS hotspot detections turned into one comparable burning-activity calendar for any area in Indonesia.",
     ctaNational: "Open the national calendar", ctaStep: "See the 2012 sensor step", ctaEnso: "Check the El Niño link", ctaCompare: "Compare two places",
     heroRaw: "raw hotspot counts, 2012–14 vs 2009–11", heroH: "harmonized fire-days, same years", heroNow: "this year vs normal for the same weeks (up to week {0})", heroRecent: "vs the last 10 years (VIIRS only)",
@@ -22,6 +29,7 @@ const dict = {
     actions: "Tools and export",
     tagline: "One fire record for Indonesia, from MODIS to VIIRS.",
     home: "Map", surge: "Sensor step (2012)", method: "Method and data", pick: "Pick an area",
+    searchEmpty: "No matching areas",
     search: "Search province or kabupaten", harmonized: "Harmonized", rawModis: "Raw MODIS", rawViirs: "Raw VIIRS",
     ytd: "This year vs normal", typicalPeak: "Typical peak weeks", onset: "Onset vs typical",
     calendar: "Burning-activity calendar", profile: "Seasonal profile", anomalies: "Flagged weeks",
@@ -40,6 +48,13 @@ const dict = {
     sheet: "Sheet", sheetOf: "of {0}", sheetBasis: "KalaApi index, alphabetical. Not a BPS code.", medianName: "median 2001–2025", bandName: "10–90% of years", sheetProv: "Province", sheetKab: "Kabupaten", sheetNation: "Nation", adjoining: "Adjoining sheets", edition: "Edition", editionLine: "Week {0}, {1}", source: "Source", sourceLine: "NASA FIRMS · MODIS Aqua/Terra, VIIRS S-NPP", unit: "Unit", unitLine: "Fire-day: a 0.05° cell with at least one daytime detection", tools: "Tools", readyBy: "Be ready by", readyBySub: "{0} weeks before the early onset (week {1})", mostLike: "Most similar year", mostLikeSub: "×{0} up to the same week", onsetSub: "week {0}, typically {1} · peak week {2}", locatorLabel: "Location of {0} in Indonesia", allIndonesia: "All of Indonesia", inProvince: "in {0}",
   },
   id: {
+    methodContents: "Daftar isi", methodGroupBasics: "Metode", methodGroupEvidence: "Bukti dan batasan", methodGroupSources: "Sumber dan referensi", methodReferences: "Daftar pustaka",
+    menu: "Menu", homeCustom: "Pilih area sendiri", homeSource: "Data NASA FIRMS · MODIS dan VIIRS",
+    navCalendar: "Kalender api", navCustom: "Area sendiri",
+    homeMapTitle: "Jelajahi Indonesia",
+    homeStoryTitle: "Melihat lebih jelas melalui dua sensor", homeStoryBody: "MODIS dan VIIRS melihat api secara berbeda. KalaApi menyatukan pengamatannya agar catatan api dapat dibandingkan antar tahun.",
+    homeProofTitle: "Pergantian sensor pada 2012", homeExploreTitle: "Jelajahi rekam jejak api",
+    homeCompareBody: "Lihat dua wilayah secara berdampingan.", homeCustomBody: "Jelajahi area di luar batas administratif.", homeEnsoBody: "Jelajahi hubungan historis antara El Niño dan api.",
     lead: "25 tahun deteksi titik panas MODIS dan VIIRS diubah menjadi satu kalender aktivitas pembakaran yang bisa dibandingkan untuk wilayah mana pun di Indonesia.",
     ctaNational: "Buka kalender nasional", ctaStep: "Lihat lompatan sensor 2012", ctaEnso: "Lihat kaitan El Niño", ctaCompare: "Bandingkan dua tempat",
     heroRaw: "hitungan titik panas mentah, 2012–14 vs 2009–11", heroH: "hari-api terharmonisasi, tahun yang sama", heroNow: "tahun ini vs normal untuk minggu yang sama (sampai minggu {0})", heroRecent: "vs 10 tahun terakhir (hanya VIIRS)",
@@ -59,6 +74,7 @@ const dict = {
     actions: "Alat dan ekspor",
     tagline: "Satu rekam jejak api untuk Indonesia, dari MODIS ke VIIRS.",
     home: "Peta", surge: "Lompatan sensor (2012)", method: "Metode dan data", pick: "Pilih wilayah",
+    searchEmpty: "Tidak ada wilayah yang cocok",
     search: "Cari provinsi atau kabupaten", harmonized: "Harmonisasi", rawModis: "MODIS mentah", rawViirs: "VIIRS mentah",
     ytd: "Tahun ini vs normal", typicalPeak: "Minggu puncak biasanya", onset: "Awal musim vs biasanya",
     calendar: "Kalender aktivitas pembakaran", profile: "Profil musiman", anomalies: "Minggu yang ditandai",

@@ -8,6 +8,7 @@ import SheetMargin, { Neighbours } from "./SheetMargin";
 import Seasonal from "./Seasonal";
 import { Area, AreaIndex, Enso, Meta, Oni, WPY, dateLocale, loadMeta, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel, nf } from "./data";
 import { fmt, useL, useT } from "./i18n";
+import "./area-page.css";
 
 const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
 
@@ -108,7 +109,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   );
 
   return (
-    <section className="sheet">
+    <section className="sheet area-page">
       <div className="sheethead">
         <h1 className="sheettitle">{area.name}</h1>
         <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {endLine2}</div>
