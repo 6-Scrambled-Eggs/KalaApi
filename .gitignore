@@ -78,3 +78,6 @@ _to_delete/
 
 # Claude Code project settings (local plugins)
 .claude/
+
+# Internal product documents
+*KalaApi-judge-review-PRD*

@@ -217,7 +217,7 @@ tbody th { font-weight: 600; color: var(--ink-2); }
 tbody tr:hover td { background: #f7f9f5; }
 
 /* ---------- home ---------- */
-.homehero { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 18px 0 6px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.homehero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 18px 0 6px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
 .hh { display: flex; flex-direction: column; gap: 3px; padding: 10px 16px 14px; border-left: 1px solid var(--hair); font-size: 13.5px; color: var(--ink-2); min-height: 118px; }
 .hh:first-child { border-left: 0; padding-left: 0; }
 .hh .big { font-size: clamp(2.3rem, 1.8rem + 1.6vw, 3.1rem); font-weight: 800; font-stretch: 80%; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; margin-bottom: 4px; }
@@ -356,4 +356,19 @@ tbody tr:hover td { background: #f7f9f5; }
   .brief .tile { padding: 6px 8px; } .brief .tile .v { font-size: 18px; } .brief .tile .s, .brief .tile .k { font-size: 10px; }
   .brief table { font-size: 11px; margin: 4px 0; } .brief th, .brief td { padding: 3px 6px; }
   .brief .note { font-size: 10.5px; margin: 2px 0; } .brief .foot { margin-top: 8px; }
+}
+
+.answers.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.answers.two > div:nth-child(3), .answers.two > div:nth-child(4) { border-top: 0; }
+details.more { margin: 36px 0 8px; border-top: 2px solid var(--ink); padding-top: 4px; }
+details.more > summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; padding: 10px 0; }
+details.more > summary:focus-visible { outline: 2px solid var(--sea); outline-offset: 2px; }
+details.more .tools { flex-direction: row; flex-wrap: wrap; margin: 4px 0 10px -6px; }
+
+.answers.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.answers.three > div:nth-child(3), .answers.three > div:nth-child(4) { border-top: 0; }
+.sechead { flex-wrap: wrap; gap: 8px 14px; }
+@media (max-width: 760px) {
+  .answers.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .answers.three > div:nth-child(3) { grid-column: 1 / -1; border-left: 0; padding-left: 0; border-top: 1px solid var(--hair); }
 }

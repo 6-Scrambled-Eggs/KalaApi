@@ -24,7 +24,7 @@ Python (only to rebuild data): Python 3.10 or newer, `pip install -r requirement
 2. **Do not commit** raw data, `*.csv`, `*.parquet`, `*.nc`, `*.tif`, `node_modules/`, `dist/`. Do not use `git add -f` to get around `.gitignore`.
 3. **Do not hand-edit `public/data/`.** Change `pipeline/` and run it again. If you change the method, say so in the pull request.
 4. **No live API calls in the demo path.** The app reads only static files from `public/data/`. Keep each `areas/<id>.json` under 2 MB.
-5. **Do not change the method silently.** The method follows the team PRD (fixed ratio k per stratum, weekly slots, percentile anomaly). Ask the team before you change the formula, the thresholds, or the filters.
+5. **Do not change the method silently.** The method follows the team PRD (back-cast V = alpha_stratum x M^b with one shared exponent b, weekly slots, percentile anomaly). Ask the team before you change the formula, the thresholds, or the filters.
 6. **Do not claim more than the data supports.** Hotspots are heat detections. They are not area burned. Do not write "burned area" next to fire-day numbers.
 7. **Text for users goes in `src/i18n.ts`** in both EN and ID. Do not put hard-coded text in components.
 8. **Work on a branch.** Open a pull request. Do not push to `main`.

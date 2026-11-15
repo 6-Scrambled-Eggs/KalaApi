@@ -76,5 +76,7 @@ const dict = {
 export type Key = keyof typeof dict.en;
 export const LangCtx = createContext<{ lang: Lang; t: (k: Key) => string }>({ lang: "en", t: (k) => dict.en[k] });
 export const useT = () => useContext(LangCtx);
+/** Inline EN/ID picker for page-specific text. */
+export const useL = () => { const { lang } = useT(); return (en: string, id: string) => (lang === "id" ? id : en); };
 export const fmt = (s: string, ...a: (string | number)[]) => s.replace(/\{(\d)\}/g, (_, i) => String(a[Number(i)]));
 export const makeT = (lang: Lang) => (k: Key) => dict[lang][k];

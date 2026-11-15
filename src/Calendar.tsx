@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Chart from "./Chart";
 import { Area, Oni, WPY, dateLocale, matrix, weekLabel } from "./data";
 import { useT } from "./i18n";
@@ -29,6 +29,16 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
     vals.sort((a, b) => a - b);
     const anom = mode === "a";
     const vmax = anom ? 100 : Math.max(5, vals[Math.floor(vals.length * 0.99)] || 5);
+    // Quantile colour classes (non-zero values) so quiet and busy weeks look different.
+    const nz = vals.filter((v) => v > 0);
+    const q = (f: number) => Math.round(nz[Math.min(nz.length - 1, Math.floor(nz.length * f))] ?? 1);
+    const cuts = Array.from(new Set([1, q(0.2), q(0.4), q(0.6), q(0.8), q(0.95)].filter((c) => c >= 1))).sort((a, b) => a - b);
+    const COLS = ["#fffbe6", "#fee391", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"];
+    const pieces: any[] = [{ min: 0, max: 0, label: "0", color: COLS[0] }];
+    cuts.forEach((c, i) => {
+      const hi = i + 1 < cuts.length ? cuts[i + 1] - 1 : null;
+      pieces.push(hi == null ? { min: c, label: `${c}+`, color: COLS[Math.min(i + 1, COLS.length - 1)] } : { min: c, max: hi, label: hi > c ? `${c}–${hi}` : `${c}`, color: COLS[Math.min(i + 1, COLS.length - 1)] });
+    });
     const lastBack = Math.floor(area.back_cast_end_slot / WPY);
     const weeks = Array.from({ length: WPY }, (_, i) => String(i + 1));
     const months = MONTH_START.map((_, m) => new Date(Date.UTC(2001, m, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" }).slice(0, 3));
@@ -70,7 +80,9 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
           axisLabel: { interval: 0, fontSize: 10.5, color: INK, fontFamily: FONT },
         },
       ],
-      visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: anom ? [t("busiest"), t("quietest")] : [`${vmax}+ ${t("fireDays")}`, "0"], inRange: { color: anom ? ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] : ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
+      visualMap: anom
+        ? { type: "continuous", min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: [t("busiest"), t("quietest")], inRange: { color: ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] } }
+        : { type: "piecewise", pieces, orient: "horizontal", left: 56, bottom: 4, itemWidth: 22, itemHeight: 12, itemGap: 10, textStyle: { fontSize: 11, color: INK, fontFamily: FONT }, showLabel: true },
       series: [{
         type: "heatmap", data, progressive: 0,
         itemStyle: { borderColor: "#ffffff", borderWidth: 0.5 },
@@ -79,13 +91,20 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       }],
     } as any;
   }, [area, mode, t, oni, dateLocale.v]);
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = scroller.current, peak = area.typical_period?.peak;
+    if (!el || !peak || el.scrollWidth <= el.clientWidth + 4) return;
+    const tm = setTimeout(() => { el.scrollLeft = Math.max(0, ((peak - 0.5) / WPY) * el.scrollWidth - el.clientWidth / 2); }, 60);
+    return () => clearTimeout(tm);
+  }, [area.id]);
   const onClick = useMemo(() => (p: any) => { if (p?.value) onYear(area.start_year + (p.value as number[])[1]); }, [area, onYear]);
   // Back-cast years carry a drawn bracket in the year collar, so "estimated" is visible without a hover.
   const nYears = area.last_year - area.start_year + 1;
   const nBack = Math.min(Math.floor(area.back_cast_end_slot / WPY), nYears);
   const rowH = (HEIGHT - GRID.top - GRID.bottom) / nYears;
   return (
-    <div className="calscroll"><div className="calinner">
+    <div className="calscroll" ref={scroller}><div className="calinner">
       {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: rowH * nBack - 4 }}><span>{t("estimate")}</span></div>}
       <Chart option={option} height={HEIGHT} onClick={onClick} onReady={onReady} label={`${t("calendar")}: ${area.name}`} />
     </div></div>

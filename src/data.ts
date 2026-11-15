@@ -12,6 +12,11 @@ export type Area = AreaIndex & {
   periods: Record<string, [number, number, number]>;
   h: Series; lo: Series; hi: Series; chk: Series; m: Series; v: Series; cnt: Series; pct: Series; pct12: Series;
   frp: Series; h_peat?: Series; h_min?: Series;
+  /** Monthly harmonized fire-days (year x 12, start_year first); null where not available. */
+  mh?: Series; mlo?: Series; mhi?: Series;
+  mstat?: { med: number[]; p25: number[]; p75: number[] };
+  mcur?: { year: number; month: number; days: number; days_in_month: number; value: number; median: number; ratio: number | null; pct: number; partial: boolean };
+  mpartial?: { index: number; days: number; days_in_month: number } | null;
 };
 export type Meta = {
   generated: string; data_end: string; start_year: number; end_year: number; last_complete_year: number;

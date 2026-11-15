@@ -17,23 +17,24 @@ KalaApi turns 25 years of MODIS and VIIRS hotspot detections into one comparable
 Run in order. Set `KALAAPI_DATA_DIR` in `.env` if the data folder differs.
 1. `01_load_firms.py`: 8 CSVs (archive + NRT) -> `processed/cell_days.parquet` (sensor, local solar date, 0.05 deg cell, day/night, detections, max FRP). Filters: type 0, MODIS conf >= 30, VIIRS n/h.
 2. `02_first_hour_checks.py`: counts, the 2012 step, S-NPP/Aqua ratio by year.
-3. `03_calibration_spike.py`: fixed-ratio vs log-log test (fixed ratio won).
+3. `03_calibration_spike.py`: HISTORICAL early test of a fixed ratio vs a log-log fit. It is no longer the method. The live model is the power law V = alpha_stratum x M^b (see 05_harmonize.py).
 4. `04_tag_cells.py`: cells -> kabupaten, province (38; Papua split by kabupaten), island, peat flag (`unknown` until a peat polygon file is in `DATA/peat/`).
 5. `05_harmonize.py`: harmonize + anomalies + critical periods; exports `public/data/` (areas.json, meta.json, provinces.geojson, areas/<id>.json). ~100 s.
 6. `06_validate.py`: V-1 holdout, V-6 reverse holdout, V-4 drift, V-5 known events, V-2 small areas -> `public/data/validation.json`.
+7. `14_monthly.py` (run after 05): shares each weekly value out to days (back-cast: by daily MODIS-equivalent fire-days; observed: daily VIIRS), sums by calendar month, and adds `mh`, `mlo`, `mhi`, `mstat`, `mcur` to each area file. Monthly totals equal weekly totals. ~35 s.
 `harmonize_lib.py` holds the method; `geo_lib.py` the admin boundaries.
 
 ## Method (PRD: Harmonization method)
 - Fire-day = one 0.05 deg cell on one day with at least one detection. Daytime passes only (afternoon orbit).
 - M = Aqua MODIS fire-days (from Jul 2002; Terra scaled to Aqua before that). V = S-NPP VIIRS fire-days (from 20 Jan 2012).
 - Weekly slots: 52 7-day blocks per year; week 52 absorbs the last 8-9 days.
-- k = sum V / sum M on the overlap, per stratum. Stratum = province if it has >= 3000 Aqua fire-days on the overlap, else its island group (x peat flag when known). Back-cast before 2012 = k * M. From 2012 the series is observed V.
+- Back-cast before 2012: V = alpha_stratum x M^b (b about 0.88 shared; Poisson fit on the overlap). Stratum = province if it has >= 3000 Aqua fire-days on the overlap, else its island group (x peat flag when known). From 2012 the series is observed V. (Mean ratio k = sum V / sum M is only reported in the strata table.)
 - 90% band: 1000 bootstrap draws resampling years.
 - Anomaly = weekly percentile rank vs the same week in 2001-2025 ("elevated" >= 90, "extreme" >= 97.5). Sensitivity baseline 2012-2025.
 - Data end: 2 Nov 2026 (last S-NPP NRT day). After S-NPP stops, chain NOAA-20 to S-NPP (not needed in this build).
 
 ## Findings so far (keep honest in the UI and pitch)
-- 2012 step: raw detections jump about 5-6x; harmonized fire-days about 1.2x (national, 2012-14 vs 2009-11).
+- 2012 step: raw detections jump about 6.5x; harmonized fire-days about 1.2x (national, 2012-14 vs 2009-11).
 - Back-cast: power law V = alpha*M^b (b about 0.88), replaced the fixed per-stratum ratio on 14 Nov 2026.
 - V-1 holdout (2019, 2023): national annual error +1.8% / +3.2%; 80% of province-years within +-20%; weekly r 0.90. V-6 reverse holdout: 84% within +-20%, weekly r 0.95. In-sample back-cast check 2013-2025: median -2.4%, 79/90/95% of province-years within +-20/30/40%.
 - Known events: Kalteng and Sumsel in 2015 reach a weekly percentile of 98 (5 of 9 weeks in weeks 36-44 are >= 90; 2 of 9 are >= 97.5). 2019 reaches 94. The PRD check says the peaks must "stand out" in the calendar. They do, but not in every week. Report this honestly.

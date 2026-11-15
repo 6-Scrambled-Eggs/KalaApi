@@ -65,6 +65,7 @@ def build() -> Data:
     cd = drop_static_nrt(cd, snpp_end)
     cd["slot"] = slot_of(cd["date"])
     cd["sensor"] = cd["sensor"].astype(str)
+    gd = cd.groupby(["kab_id", "peat", "sensor", "date"], as_index=False).size().rename(columns={"size": "fd"})  # daily fire-days (monthly export)
     g = cd.groupby(["kab_id", "peat", "sensor", "slot"], as_index=False).agg(fd=("n", "size"), cnt=("n", "sum"), frp=("max_frp", "sum"))
 
     combos = cells[["kab_id", "kab", "prov", "island"]].drop_duplicates("kab_id")
@@ -73,6 +74,7 @@ def build() -> Data:
     cidx = {(a, b): i for i, (a, b) in enumerate(zip(combos["kab_id"], combos["peat"]))}
     D = Data()
     D.combos = combos
+    D.gd = gd
     D.fd, D.cnt, D.frp = {}, {}, {}
     for s in ["aqua", "terra", "snpp"]:
         D.fd[s] = np.zeros((len(combos), NSLOT))

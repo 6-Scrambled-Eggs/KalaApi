@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Calendar, { Mode } from "./Calendar";
+import MonthCalendar, { MIN_DAYS } from "./MonthCalendar";
 import Analog from "./Analog";
 import EnsoPanel from "./EnsoPanel";
-import Readiness, { LEAD } from "./Readiness";
+import Readiness from "./Readiness";
 import SheetMargin from "./SheetMargin";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Oni, WPY, analogYears, loadArea, loadEnso, loadOni, matrix, readiness, seasonal, weekLabel } from "./data";
-import { fmt, useT } from "./i18n";
+import { Area, AreaIndex, Enso, Oni, WPY, dateLocale, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
+import { fmt, useL, useT } from "./i18n";
 import { ensoLabel } from "./EnsoPanel";
 
 const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
@@ -15,10 +16,12 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   id: string; index: AreaIndex[]; year: number | null; mode: Mode; setYear: (y: number) => void; setMode: (m: Mode) => void; go: (path: string) => void;
 }) {
   const { t } = useT();
+  const L = useL();
   const [area, setArea] = useState<Area | null>(null);
   const [err, setErr] = useState("");
   const [oni, setOni] = useState<Oni | null>(null);
   const [copied, setCopied] = useState(false);
+  const [grain, setGrain] = useState<"m" | "w">("m");
   const [enso, setEnso] = useState<Enso | null>(null);
   const chart = useRef<any>(null);
   useEffect(() => { loadOni().then(setOni).catch(() => setOni(null)); loadEnso().then(setEnso).catch(() => setEnso(null)); }, []);
@@ -43,6 +46,8 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const tp = area.typical_period;
   const hasSplit = !!(area.h_peat && area.h_min);
   const e0 = enso?.areas[area.id];
+  const mc = area.mcur;
+  const monthName = mc ? new Date(Date.UTC(2001, mc.month - 1, 1)).toLocaleDateString(dateLocale.v, { month: "long", timeZone: "UTC" }) : "";
   const summary = (() => {
     const bits: string[] = [];
     if (area.ytd_ratio != null) {
@@ -53,7 +58,19 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     if (e0 && ensoLabel(e0) === "clear" && e0.ratio_el_neu != null && e0.ratio_el_neu > 1) bits.push(fmt(t("sumEl"), e0.ratio_el_neu));
     return bits.length ? `${area.name}: ${bits.join("; ")}.` : "";
   })();
+  const exportMonthCsv = () => {
+    const mh = area.mh ?? [], lo = area.mlo ?? [], hi = area.mhi ?? [];
+    const hide = area.mpartial && area.mpartial.days < MIN_DAYS ? area.mpartial.index : -1;
+    const rows = ["year,month,harmonized_fire_days,low90,high90,median_2001_2025_same_month"];
+    mh.forEach((v, i) => {
+      if (v == null || i === hide) return;
+      rows.push([area.start_year + Math.floor(i / 12), (i % 12) + 1, v, lo[i] ?? "", hi[i] ?? "", area.mstat?.med[i % 12] ?? ""].join(","));
+    });
+    const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `kalaapi_${area.id}_monthly.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
   const exportCsv = () => {
+    if (grain === "m" && area.mh) return exportMonthCsv();
     const rows = ["year,week,harmonized,low90,high90,raw_modis_fire_days,raw_viirs_fire_days,percentile_vs_2001_2025,frp_mw"];
     const g = (a: (number | null)[], i: number) => (a[i] == null ? "" : String(a[i]));
     for (let i = 0; i < area.h.length; i++) {
@@ -69,17 +86,20 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   };
   const copyLink = () => { navigator.clipboard?.writeText(window.location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined); };
 
-  const rd = readiness(area);
-  const an = analogYears(area, 1)[0];
   const tools = (
+    <div className="tools noprint" role="group" aria-label={t("actions")}>
+      <button onClick={exportCsv}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("csv")}</button>
+      <button onClick={exportPng}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("png")}</button>
+      <button onClick={copyLink} aria-live="polite"><Icon d={copied ? "M5 12l5 5 9-10" : "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"} />{copied ? t("copied") : t("copyLink")}</button>
+    </div>
+  );
+  const more = (
     <div className="tools noprint" role="group" aria-label={t("actions")}>
       <button onClick={() => go(`/brief/${id}`)}><Icon d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5" />{t("brief")}</button>
       <button onClick={() => go(`/card/${id}`)}><Icon d="M4 5h16v14H4zM8 10h8M8 14h5" />{t("card")}</button>
       <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}><Icon d="M8 3v18M16 3v18M3 8h5M16 16h5" />{t("compare")}</button>
       <button onClick={() => go(`/story/${id}`)}><Icon d="M4 19 9 12l4 3 7-9M4 4v15h16" />{t("story")}</button>
-      <button onClick={exportCsv}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("csv")}</button>
-      <button onClick={exportPng}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("png")}</button>
-      <button onClick={copyLink} aria-live="polite"><Icon d={copied ? "M5 12l5 5 9-10" : "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"} />{copied ? t("copied") : t("copyLink")}</button>
+      <button onClick={() => go("/surge")}><Icon d="M4 19 9 12l4 3 7-9M4 4v15h16" />{t("surge")}</button>
     </div>
   );
 
@@ -88,13 +108,11 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <div className="sheethead">
         <h1 className="sheettitle">{area.name}</h1>
         <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
-        <dl className="answers">
-          <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd><dd>{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent}` : "n/a"} {t("vsRecent")}</dd></div>
-          <div><dt>{t("readyBy")}</dt><dd className="fig">{rd ? weekLabel(Math.max(1, rd.p10 - LEAD)) : "n/a"}</dd><dd>{rd ? fmt(t("readyBySub"), LEAD, rd.p10) : ""}</dd></div>
+        <dl className="answers three">
+          {mc && <div><dt>{monthName} {mc.year}{mc.partial ? ` (${mc.days}/${mc.days_in_month} ${L("days", "hari")})` : ""}</dt><dd className="fig">{mc.ratio != null ? `×${mc.ratio}` : "n/a"}</dd><dd>{Math.round(mc.value).toLocaleString(dateLocale.v)} {t("fireDays")} {L("vs median", "vs median")} {Math.round(mc.median).toLocaleString(dateLocale.v)} · {t("pctile")} {Math.round(mc.pct)} {t("pctOf")}</dd></div>}
+          <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
           <div><dt>{t("onset")}</dt><dd className="fig">{onsetDiff == null ? "n/a" : onsetDiff === 0 ? t("onTime") : fmt(t(onsetDiff < 0 ? "earlyN" : "lateN"), Math.abs(onsetDiff))}</dd><dd>{cur ? fmt(t("onsetSub"), cur[0], tp.onset, tp.peak) : `${t("typicalPeak")}: ${tp.peak}`}</dd></div>
-          <div><dt>{t("mostLike")}</dt><dd className="fig">{an ? an.year : "n/a"}</dd><dd>{an && Number.isFinite(an.ratio) ? fmt(t("mostLikeSub"), an.ratio.toFixed(2)) : ""}</dd></div>
         </dl>
-        <div className="quick noprint"><button className="cta" onClick={() => go(`/brief/${id}`)}>{t("brief")}</button><button className="cta alt" onClick={() => go(`/card/${id}`)}>{t("card")}</button></div>
         {summary && <p className="summary">{summary}</p>}
         {area.low_data && <div className="warn">{t("lowData")}</div>}
       </div>
@@ -102,12 +120,25 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <div className="sheetbody">
       <div className="sechead">
         <h2>{t("calendar")}</h2>
-        <div className="seg noprint" role="group" aria-label={t("dataView")}>
-          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} aria-pressed={m === mode} onClick={() => setMode(m)}>{t(k)}</button>)}
+        <div className="seg noprint" role="group" aria-label={L("Time step", "Satuan waktu")}>
+          {area.mh && <button className={grain === "m" ? "on" : ""} aria-pressed={grain === "m"} onClick={() => setGrain("m")}>{L("Months", "Bulan")}</button>}
+          <button className={grain === "w" ? "on" : ""} aria-pressed={grain === "w"} onClick={() => setGrain("w")}>{L("Weeks", "Minggu")}</button>
         </div>
+        {grain === "w" && <div className="seg noprint" role="group" aria-label={t("dataView")}>
+          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} aria-pressed={m === mode} onClick={() => setMode(m)}>{t(k)}</button>)}
+        </div>}
       </div>
-      <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
-      <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
+      {grain === "m" && area.mh ? (
+        <>
+          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}</p>
+          <MonthCalendar area={area} year={y} onYear={setYear} onReady={(c) => { chart.current = c; }} />
+        </>
+      ) : (
+        <>
+          <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
+          <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
+        </>
+      )}
       <h2>{t("profile")}: {y}</h2>
       <Seasonal area={area} year={y} />
       <h2>{t("anomalies")}: {y}</h2>
@@ -117,9 +148,14 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
             <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span>
             <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
       )}
-      <Readiness area={area} />
-      <Analog area={area} />
-      <EnsoPanel area={area} enso={enso} oni={oni} />
+      <details className="more noprint">
+        <summary>{L("More analysis", "Analisis lanjutan")}</summary>
+        {more}
+        <p className="note">{area.ytd_ratio_recent != null ? `×${area.ytd_ratio_recent} ${t("vsRecent")}` : ""}</p>
+        <Readiness area={area} />
+        <Analog area={area} />
+        <EnsoPanel area={area} enso={enso} oni={oni} />
+      </details>
       {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
       </div>
     </section>
