@@ -209,8 +209,8 @@ export default function CustomArea() {
     const labels = Array.from({ length: result.n }, (_, i) => { const d = slotStart(s1 + i); return `${d.getUTCFullYear()} w${(s1 + i) % WPY + 1}`; });
     const raw = (a: number[], first: number) => a.map((v, i) => (s1 + i < first ? null : Math.round(v)));
     return {
-      grid: { left: 48, right: 14, top: 36, bottom: 38 },
-      legend: { top: 0, textStyle: { fontSize: 11 } },
+      grid: { left: 48, right: 14, top: 34, bottom: 84 },
+      legend: { bottom: 0, itemGap: 10, textStyle: { fontSize: 11 } },
       tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: labels, axisLabel: { hideOverlap: true, fontSize: 10 } },
       yAxis: { type: "value", name: L("fire-days / week", "hari-api / minggu"), nameTextStyle: { fontSize: 10 } },

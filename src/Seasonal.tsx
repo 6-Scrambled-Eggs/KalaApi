@@ -12,8 +12,8 @@ export default function Seasonal({ area, year }: { area: Area; year: number }) {
     const weeks = Array.from({ length: WPY }, (_, i) => String(i + 1));
     const r = (a: number[]) => a.map((x) => Math.round(x * 10) / 10);
     return {
-      grid: { left: 52, right: 16, top: 52, bottom: 36 },
-      legend: { top: 0, icon: "rect", itemWidth: 18, itemHeight: 4, data: [t("medianName"), t("bandName"), String(year)] },
+      grid: { left: 52, right: 16, top: 30, bottom: 84 },
+      legend: { bottom: 0, icon: "rect", itemWidth: 18, itemHeight: 4, data: [t("medianName"), t("bandName"), String(year)] },
       tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: weeks, name: t("week"), nameLocation: "middle", nameGap: 24 },
       yAxis: { type: "value", name: t("fireDays"), nameGap: 12 },
