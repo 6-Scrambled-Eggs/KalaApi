@@ -13,7 +13,7 @@ for (const f of readdirSync(dir)) {
   for (const [k, label] of keys) {
     const s: (number | null)[] | undefined = a[k];
     if (!s) continue;
-    const hide = k === "mh" && a.mpartial && a.mpartial.days < 7 ? a.mpartial.index : -1;
+    const hide = -1;
     const vals = s.map((v, i) => (v == null || i === hide ? null : v)).filter((v): v is number => v != null);
     const pieces = buildPieces(vals);
     let unmatched = 0;

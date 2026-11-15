@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Calendar, { Mode } from "./Calendar";
-import MonthCalendar, { MIN_DAYS } from "./MonthCalendar";
+import MonthCalendar from "./MonthCalendar";
 import Analog from "./Analog";
 import EnsoPanel from "./EnsoPanel";
 import Readiness from "./Readiness";
-import SheetMargin from "./SheetMargin";
+import SheetMargin, { Neighbours } from "./SheetMargin";
 import Seasonal from "./Seasonal";
-import { Area, AreaIndex, Enso, Oni, WPY, dateLocale, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
+import { Area, AreaIndex, Enso, Meta, Oni, WPY, dateLocale, loadMeta, loadArea, loadEnso, loadOni, matrix, seasonal, weekLabel } from "./data";
 import { fmt, useL, useT } from "./i18n";
 
 const modes: [Mode, "harmonized" | "anomaly" | "rawModis" | "rawViirs" | "peatOnly" | "mineralOnly"][] = [["h", "harmonized"], ["a", "anomaly"], ["m", "rawModis"], ["v", "rawViirs"], ["p", "peatOnly"], ["n", "mineralOnly"]];
@@ -20,6 +20,8 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const [err, setErr] = useState("");
   const [oni, setOni] = useState<Oni | null>(null);
   const [copied, setCopied] = useState(false);
+  const [meta, setMeta] = useState<Meta | null>(null);
+  useEffect(() => { loadMeta().then(setMeta).catch(() => setMeta(null)); }, []);
   const [grain, setGrain] = useState<"m" | "w">("m");
   const [enso, setEnso] = useState<Enso | null>(null);
   const chart = useRef<any>(null);
@@ -44,6 +46,8 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   const onsetDiff = cur ? cur[0] - area.typical_period.onset : null;
   const tp = area.typical_period;
   const hasSplit = !!(area.h_peat && area.h_min);
+  const endDate = meta ? new Date(meta.data_end + "T00:00:00Z").toLocaleDateString(dateLocale.v, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "";
+  const endLine = endDate ? `${L("Data to", "Data sampai")} ${endDate} (${L("end of S-NPP VIIRS", "akhir S-NPP VIIRS")})` : "";
   const mc = area.mcur;
   const monthName = mc ? new Date(Date.UTC(2001, mc.month - 1, 1)).toLocaleDateString(dateLocale.v, { month: "long", timeZone: "UTC" }) : "";
   const summary = (() => {
@@ -57,7 +61,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
   })();
   const exportMonthCsv = () => {
     const mh = area.mh ?? [], lo = area.mlo ?? [], hi = area.mhi ?? [];
-    const hide = area.mpartial && area.mpartial.days < MIN_DAYS ? area.mpartial.index : -1;
+    const hide = -1;
     const rows = ["year,month,harmonized_fire_days,low90,high90,median_2001_2025_same_month"];
     mh.forEach((v, i) => {
       if (v == null || i === hide) return;
@@ -104,7 +108,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     <section className="sheet">
       <div className="sheethead">
         <h1 className="sheettitle">{area.name}</h1>
-        <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
+        <div className="sub">{parent && parent.id !== "indonesia" ? `${fmt(t("inProvince"), parent.name)} · ` : ""}{area.start_year}–{area.last_year} · {endLine}</div>
         <dl className="answers three">
           {mc && <div><dt>{monthName} {mc.year}{mc.partial ? ` (${mc.days}/${mc.days_in_month} ${L("days", "hari")})` : ""}</dt><dd className="fig">{mc.ratio != null ? `×${mc.ratio}` : "n/a"}</dd><dd>{Math.round(mc.value).toLocaleString(dateLocale.v)} {t("fireDays")} {L("vs median", "vs median")} {Math.round(mc.median).toLocaleString(dateLocale.v)} · {t("pctile")} {Math.round(mc.pct)} {t("pctOf")}</dd></div>}
           <div><dt>{t("ytd")}</dt><dd className="fig">{area.ytd_ratio != null ? `×${area.ytd_ratio}` : "n/a"}</dd><dd>{t("pctile")} {Math.round(area.ytd_pct)} {t("pctOf")}</dd></div>
@@ -127,7 +131,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       {grain === "m" && area.mh ? (
         <>
           <MonthCalendar area={area} year={y} onYear={setYear} onReady={(c) => { chart.current = c; }} />
-          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}</p>
+          <p className="note">{L("One row per year, one column per month. Each cell counts harmonized fire-days: one grid cell on one day with at least one daytime detection. Monthly values add up to the weekly values.", "Satu baris per tahun, satu kolom per bulan. Setiap sel menghitung hari-api terharmonisasi: satu sel grid pada satu hari dengan sedikitnya satu deteksi siang. Nilai bulanan sama dengan jumlah nilai mingguan.")}{area.mpartial ? ` ${L("The 2026 total includes", "Total 2026 termasuk")} 1${area.mpartial.days > 1 ? `–${area.mpartial.days}` : ""} ${new Date(Date.UTC(2001, area.mpartial.index % 12, 1)).toLocaleDateString(dateLocale.v, { month: "short", timeZone: "UTC" })}.` : ""}</p>
         </>
       ) : (
         <>
@@ -136,6 +140,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
         </>
       )}
       {summary && <p className="summary">{summary}</p>}
+      <Neighbours area={area} />
       <h2>{t("profile")}: {y}</h2>
       <Seasonal area={area} year={y} />
       <h2>{t("anomalies")}: {y}</h2>

@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Area, AreaIndex, Locator, loadLocator } from "./data";
 import { fmt, useT } from "./i18n";
 
-/** The sheet margin of an area page: sheet number, locator inset with adjoining sheets, edition, source, unit, tools.
- *  Sheet numbers are KalaApi's own index (provinces in alphabetical order, kabupaten within their province), not BPS codes. */
+/** The margin of an area page: level, locator inset, source, unit, tools. */
 export default function SheetMargin({ area, index, tools }: { area: Area; index: AreaIndex[]; tools: React.ReactNode }) {
   const { lang, t } = useT();
   const [loc, setLoc] = useState<Locator | null>(null);
@@ -24,18 +23,11 @@ export default function SheetMargin({ area, index, tools }: { area: Area; index:
   const parent = area.level === "kabupaten" ? index.find((a) => a.id === area.parent) : null;
 
   return (
-    <aside className="margin" aria-label={`${t("sheet")} ${sheetNo}`}>
-      <div className="mk">{t("sheet")} {sheetNo}{area.level !== "nation" ? ` ${fmt(t("sheetOf"), area.level === "province" ? provinces.length : index.filter((a) => a.level === "kabupaten" && a.parent === provId).length)}` : ""} · {level}</div>
-      <p className="basis">{t("sheetBasis")}</p>
+    <aside className="margin" aria-label={area.name}>
+      <div className="mk">{level}</div>
       {loc && <LocatorInset loc={loc} hi={provId} near={near} label={fmt(t("locatorLabel"), area.name)} ns={lang === "id" ? ["LU", "LS"] : ["N", "S"]} />}
       {parent && <p className="mrow"><a href={`#/area/${parent.id}`}>{parent.name}</a></p>}
-      {near.length > 0 && (<>
-        <h4>{t("adjoining")}</h4>
-        <p className="mrow">{near.map((id, i) => <span key={id}>{i ? " · " : ""}<a href={`#/area/${id}`}>{loc!.provinces[id].name}</a></span>)}</p>
-      </>)}
       {area.level === "nation" && <p className="mrow">{t("allIndonesia")}</p>}
-      <h4>{t("edition")}</h4>
-      <p className="mrow">{fmt(t("editionLine"), area.last_week, area.last_year)}</p>
       <h4>{t("source")}</h4>
       <p className="mrow">{t("sourceLine")}</p>
       <h4>{t("unit")}</h4>
@@ -44,6 +36,17 @@ export default function SheetMargin({ area, index, tools }: { area: Area; index:
       {tools}
     </aside>
   );
+}
+
+/** Plain links to the neighbouring provinces (shown under the calendar). */
+export function Neighbours({ area }: { area: Area }) {
+  const { t } = useT();
+  const [loc, setLoc] = useState<Locator | null>(null);
+  useEffect(() => { loadLocator().then(setLoc).catch(() => setLoc(null)); }, []);
+  const provId = area.level === "province" ? area.id : area.level === "kabupaten" ? area.parent : null;
+  const near = provId && loc?.provinces[provId] ? loc.provinces[provId].near.filter((id) => loc.provinces[id]) : [];
+  if (!near.length) return null;
+  return <p className="note">{t("neighbours")}: {near.map((id, i) => <span key={id}>{i ? " · " : ""}<a href={`#/area/${id}`}>{loc!.provinces[id].name}</a></span>)}</p>;
 }
 
 /** Index map of Indonesia with the current sheet filled and the adjoining sheets as links. */

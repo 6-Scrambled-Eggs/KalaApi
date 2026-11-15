@@ -1,23 +1,22 @@
 import { useMemo } from "react";
 import Chart from "./Chart";
 import { Area, dateLocale } from "./data";
-import { useL } from "./i18n";
+import { useL, useT } from "./i18n";
 import { buildPieces } from "./pieces";
 
 const INK = "#16212b", MUTE = "#4a5864", FONT = '"Archivo Variable", system-ui, sans-serif';
 const GRID = { left: 58, right: 62, top: 30, bottom: 66 }, ROW = 20;
 
-/** Months with fewer days than this in the data are left out of the grid (the tile shows month-to-date instead). */
-export const MIN_DAYS = 7;
 
 /** Year x month calendar of harmonized fire-days. Same colour logic as the weekly calendar. */
 export default function MonthCalendar({ area, year, onYear, onReady }: { area: Area; year: number; onYear: (y: number) => void; onReady?: (c: any) => void }) {
   const L = useL();
+  const { t } = useT();
   const nYears = area.last_year - area.start_year + 1;
   const height = GRID.top + GRID.bottom + ROW * nYears;
   const option = useMemo(() => {
     const mh = area.mh ?? [], lo = area.mlo ?? [], hi = area.mhi ?? [];
-    const hide = area.mpartial && area.mpartial.days < MIN_DAYS ? area.mpartial.index : -1;
+    const hide = -1;  // the partial month is drawn too; its tooltip says how many days it holds
     const val = (i: number) => (i === hide || mh[i] == null ? null : mh[i]);
     const data: [number, number, number | string][] = [];
     const vals: number[] = [];
@@ -42,7 +41,8 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
           if (v == null) return `<b>${mname(m, "long")} ${y}</b><br/>–`;
           const est = y < 2012;
           const band = est && lo[i] != null ? ` (90%: ${Math.round(lo[i]!).toLocaleString(dateLocale.v)} ${L("to", "sampai")} ${Math.round(hi[i]!).toLocaleString(dateLocale.v)})` : "";
-          const partial = area.mpartial && area.mpartial.index === i ? ` (${area.mpartial.days}/${area.mpartial.days_in_month} ${L("days", "hari")})` : "";
+          const pm = area.mpartial && area.mpartial.index === i ? area.mpartial : null;
+          const partial = pm ? ` (${L("partial", "sebagian")}: ${pm.days > 1 ? `1–${pm.days}` : "1"} ${mname(m)})` : "";
           return `<b>${mname(m, "long")} ${y}</b>${partial}<br/>${L("Harmonized", "Harmonisasi")}: ${Math.round(v).toLocaleString(dateLocale.v)}${band}${est ? " *" : ""}<br/>${L("Median 2001–2025", "Median 2001–2025")}: ${Math.round(med[m] ?? 0).toLocaleString(dateLocale.v)}`;
         },
       },
@@ -63,5 +63,12 @@ export default function MonthCalendar({ area, year, onYear, onReady }: { area: A
   }, [area, nYears, L]);
   const onClick = useMemo(() => (p: any) => { if (p?.value) onYear(area.start_year + (p.value as number[])[1]); }, [area, onYear]);
   void year;
-  return <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${L("Monthly calendar", "Kalender bulanan")}: ${area.name}`} />;
+  // Years before the first full S-NPP VIIRS week are estimates: same bracket as the week view.
+  const nBack = Math.min(Math.floor(area.back_cast_end_slot / 52), nYears);
+  return (
+    <div className="calscroll"><div style={{ position: "relative" }}>
+      {nBack > 0 && <div className="estbr" style={{ top: GRID.top + 2, height: ROW * nBack - 4 }}><span>{t("estimate")}</span></div>}
+      <Chart option={option} height={height} onClick={onClick} onReady={onReady} label={`${L("Monthly calendar", "Kalender bulanan")}: ${area.name}`} />
+    </div></div>
+  );
 }
