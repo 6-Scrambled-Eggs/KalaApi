@@ -19,9 +19,9 @@ export default function Seasonal({ area, year }: { area: Area; year: number }) {
       yAxis: { type: "value", name: t("fireDays"), nameGap: 12 },
       series: [
         { name: "p10", type: "line", data: r(s.p10), stack: "band", symbol: "none", lineStyle: { opacity: 0 }, tooltip: { show: false } },
-        { name: "10-90%", type: "line", data: r(s.p90.map((x, i) => x - s.p10[i])), stack: "band", symbol: "none", lineStyle: { opacity: 0 }, areaStyle: { color: "#bbb", opacity: 0.45 } },
-        { name: "median 2001-2025", type: "line", data: r(s.med), symbol: "none", lineStyle: { color: "#555", width: 2 } },
-        { name: String(year), type: "line", data: cur, symbol: "none", lineStyle: { color: "#c0392b", width: 2.5 } },
+        { name: "10-90%", type: "line", data: r(s.p90.map((x, i) => x - s.p10[i])), stack: "band", symbol: "none", lineStyle: { opacity: 0 }, areaStyle: { color: "#bbb", opacity: 0.45 }, itemStyle: { color: "#cfc6b7" } },
+        { name: "median 2001-2025", type: "line", data: r(s.med), symbol: "none", lineStyle: { color: "#3b3631", width: 2 }, itemStyle: { color: "#3b3631" } },
+        { name: String(year), type: "line", data: cur, symbol: "none", lineStyle: { color: "#c0392b", width: 2.5 }, itemStyle: { color: "#c0392b" } },
       ],
     } as any;
   }, [area, year, t]);

@@ -35,7 +35,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
       return Array.from({ length: WPY }, (_, w) => { const c = rows.map((r) => r[w]).sort((x, y) => x - y); return c.length ? Math.round(c[Math.floor(c.length / 2)] * 100) / 100 : 0; });
     });
     const shapeOpt = {
-      grid: { left: 52, right: 12, top: 36, bottom: 34 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+      grid: { left: 52, right: 12, top: 36, bottom: 34 }, legend: { top: 0, type: "scroll" }, tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: weeks, name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 22 },
       yAxis: { type: "value", name: "%", nameGap: 10 },
       series: areas.map((a, i) => ({ name: a.name, type: "line", showSymbol: false, data: shape[i], lineStyle: { color: COLS[i], width: 2.5 }, itemStyle: { color: COLS[i] } })),
@@ -51,7 +51,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
         series.push({ name: `${a.name} 2015`, type: "line", showSymbol: false, data: cum(2015), lineStyle: { color: COLS[i], width: 1.8, type: "dashed" }, itemStyle: { color: COLS[i] } });
       });
       return {
-        grid: { left: 52, right: 12, top: 56, bottom: 34 }, legend: { top: 0 }, tooltip: { trigger: "axis" },
+        grid: { left: 52, right: 12, top: 30, bottom: 104 }, legend: { bottom: 0 }, tooltip: { trigger: "axis" },
         xAxis: { type: "category", data: weeks, name: L ? "minggu" : "week", nameLocation: "middle", nameGap: 22 },
         yAxis: { type: "value", name: L ? "% dari total 2015" : "% of own 2015 total", nameGap: 10 },
         series,
@@ -102,7 +102,7 @@ export default function Compare({ idA, idB, index, go }: { idA: string; idB: str
           <Chart option={charts.shapeOpt} height={260} label="Typical season shape of both areas" />
           <h2>{A.last_year} {L ? "dibanding 2015" : "against 2015"}</h2>
           <p className="note">{L ? "Hari-api kumulatif sebagai persen dari total 2015 wilayah itu sendiri. Garis putus-putus: 2015." : "Cumulative fire-days as a percent of each area's own 2015 total. Dashed lines: 2015."}</p>
-          <Chart option={charts.cumOpt} height={300} label="Current year against 2015 for both areas" />
+          <Chart option={charts.cumOpt} height={360} label="Current year against 2015 for both areas" />
           <p className="note">{L ? "Titik panas menunjukkan panas, bukan luas terbakar. Tahun sebelum 2012 diperkirakan dari MODIS." : "Hotspots show heat, not area burned. Years before 2012 are estimated from MODIS."} <a href={`#/area/${idA}`}>{A.name}</a> · <a href={`#/area/${idB}`}>{B.name}</a></p>
         </>
       )}

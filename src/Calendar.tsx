@@ -41,7 +41,7 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       yAxis: {
         type: "category", data: years.map(String), inverse: true,
         axisLabel: {
-          interval: 0, fontSize: 11, rich: { n: { color: "#bbb" }, e: { color: "#c0392b" }, l: { color: "#2471a3" } },
+          interval: 0, fontSize: 11, color: "#3b3631", fontFamily: '"Public Sans Variable", system-ui, sans-serif', rich: { n: { color: "#bbb" }, e: { color: "#c0392b" }, l: { color: "#2471a3" } },
           formatter: (v: string) => {
             const o = oni?.jas?.[v];
             const m = o == null ? "n" : o >= 0.5 ? "e" : o <= -0.5 ? "l" : "n";
@@ -52,10 +52,10 @@ export default function Calendar({ area, mode, year, onYear, oni, onReady }: { a
       visualMap: { min: 0, max: vmax, calculable: false, orient: "horizontal", left: 56, bottom: 0, itemWidth: 12, itemHeight: 160, text: anom ? [t("busiest"), t("quietest")] : [`${vmax}+ ${t("fireDays")}`, "0"], inRange: { color: anom ? ["#2b6cb0", "#a6cee3", "#f5f5f5", "#fdae61", "#a63603"] : ["#fff7bc", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#4d1a02"] } },
       series: [{
         type: "heatmap", data, progressive: 0,
-        itemStyle: { borderColor: "#fff", borderWidth: 0.5 },
-        markArea: { silent: true, itemStyle: { color: "rgba(255,255,255,0.35)" }, label: { show: true, position: "insideTopRight", color: "#555", fontSize: 11, formatter: t("estimate") }, data: [[{ yAxis: String(years[0]) }, { yAxis: String(years[Math.min(lastBack, years.length - 1)] - 1) }]] },
-        markLine: { silent: true, symbol: "none", lineStyle: { color: "#111", type: "dashed" }, label: { formatter: "VIIRS", position: "insideEndTop" }, data: [{ yAxis: String(area.start_year + lastBack) }] },
-        emphasis: { itemStyle: { borderColor: "#000", borderWidth: 1 } },
+        itemStyle: { borderColor: "#fffdf9", borderWidth: 0.5 },
+        markArea: { silent: true, itemStyle: { color: "rgba(255,253,249,0.35)" }, label: { show: true, position: "insideTopRight", color: "#3b3631", fontWeight: 600, fontSize: 11, formatter: t("estimate") }, data: [[{ yAxis: String(years[0]) }, { yAxis: String(years[Math.min(lastBack, years.length - 1)] - 1) }]] },
+        markLine: { silent: true, symbol: "none", lineStyle: { color: "#1d1a17", type: "dashed" }, label: { formatter: "VIIRS", position: "insideEndTop", color: "#1d1a17", fontWeight: 600 }, data: [{ yAxis: String(area.start_year + lastBack) }] },
+        emphasis: { itemStyle: { borderColor: "#1d1a17", borderWidth: 1.5 } },
       }],
     } as any;
   }, [area, mode, t, oni]);

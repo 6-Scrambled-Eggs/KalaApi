@@ -34,7 +34,7 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
     return P.map((p, w) => ({ w, p, h: H[w], p12: P12[w], low: H[w] != null && H[w] < 0.1 * peakMed })).filter((r) => r.p != null && r.p >= 90).sort((a, b) => (b.p as number) - (a.p as number)).slice(0, 8);
   }, [area, y]);
 
-  if (err) return <p className="error">Could not load this area. {err}</p>;
+  if (err) return <section><h1>{t("loadErrTitle")}</h1><p className="error">{t("loadErr")}</p><p><a href="#/">{t("home")}</a></p></section>;
   if (!area) return <p>{t("loading")}</p>;
   const parent = index.find((a) => a.id === area.parent);
   const cur = area.periods[String(area.last_year)];
@@ -60,11 +60,11 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       rows.push([area.start_year + Math.floor(i / WPY), (i % WPY) + 1, g(area.h, i), g(area.lo, i), g(area.hi, i), g(area.m, i), g(area.v, i), g(area.pct, i), g(area.frp, i)].join(","));
     }
     const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `kalaapi_${area.id}.csv`; a.click(); URL.revokeObjectURL(a.href);
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `kalaapi_${area.id}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };
   const exportPng = () => {
     const c = chart.current; if (!c) return;
-    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#fff" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
+    const a = document.createElement("a"); a.href = c.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#fffdf9" }); a.download = `kalaapi_${area.id}_calendar.png`; a.click();
   };
   const copyLink = () => { navigator.clipboard?.writeText(window.location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined); };
 
@@ -75,19 +75,16 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
           <h1>{area.name}</h1>
           <div className="sub">{parent && parent.id !== "indonesia" ? `${parent.name} · ` : ""}{area.start_year}–{area.last_year} · {fmt(t("asOfLine"), area.last_week, area.last_year)}</div>
         </div>
-        <div className="togglegrp"><div className="toggles" role="group" aria-label={t("dataView")}>
-          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} onClick={() => setMode(m)}>{t(k)}</button>)}
-          </div>
-          <div className="toggles" role="group" aria-label={t("actions")}>
-          <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}>{t("compare")}</button>
-          <button onClick={() => go(`/brief/${id}`)}>{t("brief")}</button>
-          <button onClick={() => go(`/card/${id}`)}>{t("card")}</button>
-          <button onClick={() => go(`/story/${id}`)}>{t("story")}</button>
-          <button onClick={exportCsv}>{t("csv")}</button>
-          <button onClick={exportPng}>{t("png")}</button>
-          <button onClick={copyLink}>{copied ? t("copied") : t("copyLink")}</button>
-          </div>
-        </div>
+      </div>
+      <div className="tools noprint" role="group" aria-label={t("actions")}>
+        <button onClick={() => go(`/compare/${id}/${id === "indonesia" ? "riau" : area.parent && area.parent !== id ? area.parent : "indonesia"}`)}><Icon d="M8 3v18M16 3v18M3 8h5M16 16h5" />{t("compare")}</button>
+        <button onClick={() => go(`/brief/${id}`)}><Icon d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5" />{t("brief")}</button>
+        <button onClick={() => go(`/card/${id}`)}><Icon d="M4 5h16v14H4zM8 10h8M8 14h5" />{t("card")}</button>
+        <button onClick={() => go(`/story/${id}`)}><Icon d="M4 19 9 12l4 3 7-9M4 4v15h16" />{t("story")}</button>
+        <span className="sep" aria-hidden="true" />
+        <button onClick={exportCsv}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("csv")}</button>
+        <button onClick={exportPng}><Icon d="M12 4v11M7 10l5 5 5-5M5 20h14" />{t("png")}</button>
+        <button onClick={copyLink} aria-live="polite"><Icon d={copied ? "M5 12l5 5 9-10" : "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"} />{copied ? t("copied") : t("copyLink")}</button>
       </div>
       {summary && <p className="summary">{summary}</p>}
       {area.low_data && <div className="warn">{t("lowData")}</div>}
@@ -99,7 +96,12 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <Readiness area={area} />
       <Analog area={area} />
       <EnsoPanel area={area} enso={enso} oni={oni} />
-      <h2>{t("calendar")}</h2>
+      <div className="sechead">
+        <h2>{t("calendar")}</h2>
+        <div className="seg noprint" role="group" aria-label={t("dataView")}>
+          {modes.filter(([m]) => hasSplit || (m !== "p" && m !== "n")).map(([m, k]) => <button key={m} className={m === mode ? "on" : ""} aria-pressed={m === mode} onClick={() => setMode(m)}>{t(k)}</button>)}
+        </div>
+      </div>
       <p className="note">{t("calNote")} {mode === "a" ? t("calNoteAnom") : ""} {t("oniNote")}</p>
       <Calendar area={area} mode={mode} year={y} onYear={setYear} oni={oni} onReady={(c) => { chart.current = c; }} />
       <h2>{t("profile")}: {y}</h2>
@@ -107,11 +109,16 @@ export default function AreaPage({ id, index, year, mode, setYear, setMode, go }
       <h2>{t("anomalies")}: {y}</h2>
       {flagged.length === 0 ? <p className="note">{fmt(t("noFlags"), y)}</p> : (
         <ul className="flags">{flagged.map((f) => (
-          <li key={f.w}><button onClick={() => setYear(y)}>{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</button>
+          <li key={f.w}><span className="wk">{t("week")} {f.w + 1} · {t("fromWord")} {weekLabel(f.w + 1)}</span>
             <span className={`badge ${(f.p as number) >= 97.5 ? "x" : "e"}`} title={f.low ? t("lowBaseNote") : undefined}>{(f.p as number) >= 97.5 ? t(f.low ? "extremeLow" : "extreme") : t(f.low ? "elevatedLow" : "elevated")}</span>
             <span className="s">{t("pctile")} {f.p} · {f.h} {t("fireDays")}{f.p12 != null && y >= 2012 ? ` · ${fmt(t("base12"), f.p12)}` : ""}</span></li>))}</ul>
       )}
       {area.level === "province" && <p className="note">{fmt(t("kabHint"), area.name)}</p>}
     </section>
   );
+}
+
+/** Line icon, 24-unit grid, drawn with the button's text colour. */
+function Icon({ d }: { d: string }) {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>;
 }

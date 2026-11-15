@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { AreaIndex, loadProvinces } from "./data";
-import { useT } from "./i18n";
+import { fmt, useT } from "./i18n";
 import Legend from "./Legend";
 
 /** Home map: provinces shaded by this year's fire-days vs the same weeks in 2001-2025 (percentile rank). */
@@ -11,6 +11,9 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
   const el = useRef<HTMLDivElement>(null);
   const [tip, setTip] = useState<string>("");
   const [ready, setReady] = useState(false);
+  // The map is built once; read labels through a ref so a language switch reaches the hover text.
+  const tr = useRef(t);
+  tr.current = t;
   useEffect(() => {
     if (!el.current) return;
     const map = new maplibregl.Map({
@@ -29,15 +32,15 @@ export default function MapView({ index, onSelect }: { index: AreaIndex[]; onSel
       });
       map.addSource("prov", { type: "geojson", data: fc });
       map.addLayer({ id: "fill", type: "fill", source: "prov", paint: {
-        "fill-color": ["case", ["<", ["get", "pct"], 0], "#ccc", ["interpolate", ["linear"], ["get", "pct"], 0, "#fff7bc", 50, "#fe9929", 90, "#d95f0e", 100, "#4d1a02"]],
+        "fill-color": ["case", ["<", ["get", "pct"], 0], "#cccccc", ["interpolate", ["linear"], ["get", "pct"], 0, "#fff7bc", 50, "#fe9929", 90, "#d95f0e", 100, "#4d1a02"]],
         "fill-opacity": 0.92 } });
-      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fff", "line-width": 0.8 } });
+      map.addLayer({ id: "line", type: "line", source: "prov", paint: { "line-color": "#fffdf9", "line-width": 0.8 } });
       setReady(true);
       map.on("click", "fill", (e) => { const f = e.features?.[0]; if (f) onSelect((f.properties as any).id); });
       map.on("mousemove", "fill", (e) => {
         map.getCanvas().style.cursor = "pointer";
         const p = e.features?.[0]?.properties as any;
-        if (p) setTip(`${p.name}: ${t("pctile")} ${Math.round(p.pct)}${p.ratio ? `, ×${p.ratio} of normal` : ""}`);
+        if (p) setTip(p.pct < 0 ? `${p.name}: ${tr.current("legNoData")}` : `${p.name}: ${tr.current("pctile")} ${Math.round(p.pct)}${p.ratio ? `, ${fmt(tr.current("ofNormal"), p.ratio)}` : ""}`);
       });
       map.on("mouseleave", "fill", () => { map.getCanvas().style.cursor = ""; setTip(""); });
     });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Area, AreaIndex, analogYears, loadArea, loadMeta } from "./data";
 import { fmt, useT } from "./i18n";
 
@@ -21,23 +21,22 @@ export default function HomeWatch({ index }: { index: AreaIndex[] }) {
     (L ? "Provinsi untuk dipantau: " : "Provinces to watch: ") + top.slice(0, 3).map((a) => `${a.name} ×${a.ytd_ratio}`).join(", ") + ".",
     analog ? (L ? `Tahun paling mirip sejauh ini: ${analog} (kemiripan kurva, bukan prakiraan).` : `Most similar year so far: ${analog} (a likeness of the curve, not a forecast).`) : "",
   ].filter(Boolean);
-  const canvas = useRef<HTMLCanvasElement>(null);
   const download = () => {
     const c = document.createElement("canvas"); c.width = 1200; c.height = 630;
     const g = c.getContext("2d"); if (!g) return;
-    g.fillStyle = "#fff"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#993404"; g.fillRect(0, 0, 1200, 14);
-    g.fillStyle = "#111"; g.font = "bold 44px sans-serif"; g.fillText(lines[0], 60, 100);
-    g.font = "32px sans-serif";
+    const SANS = '"Public Sans Variable", system-ui, sans-serif', SERIF = '"Source Serif 4 Variable", Georgia, serif';
+    g.fillStyle = "#fffdf9"; g.fillRect(0, 0, 1200, 630); g.fillStyle = "#a8380f"; g.fillRect(0, 0, 1200, 14);
+    g.fillStyle = "#1d1a17"; g.font = `600 46px ${SERIF}`; g.fillText(lines[0], 60, 100);
+    g.font = `32px ${SANS}`;
     let y = 190;
     lines.slice(1).forEach((l) => { const words = l.split(" "); let cur = "";
       words.forEach((w) => { if (g.measureText(cur + w).width > 1080) { g.fillText(cur, 60, y); y += 46; cur = ""; } cur += w + " "; });
       g.fillText(cur, 60, y); y += 70; });
-    g.fillStyle = "#666"; g.font = "24px sans-serif";
+    g.fillStyle = "#635d56"; g.font = `24px ${SANS}`;
     g.fillText(L ? "Bukan produk resmi · data NASA FIRMS · 6 Scrambled Eggs · NASA Space Apps 2026" : "Not an official product · NASA FIRMS data · 6 Scrambled Eggs · NASA Space Apps 2026", 60, 590);
     const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = `kalaapi_week${week}.png`; a.click();
   };
   const copy = () => navigator.clipboard?.writeText(lines.join("\n")).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined);
-  void canvas;
   if (!top.length) return null;
   return (
     <div className="watch">
