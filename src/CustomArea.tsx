@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import Chart from "./Chart";
+import MonthCalendar from "./MonthCalendar";
 import { dateLocale, loadProvinces } from "./data";
 import { useL } from "./i18n";
 
@@ -29,6 +30,8 @@ const slotOfDate = (d: Date) => {
   return (d.getUTCFullYear() - 2001) * WPY + Math.min(Math.floor((doy - 1) / 7), WPY - 1);
 };
 const slotStart = (s: number) => new Date(Date.UTC(2001 + Math.floor(s / WPY), 0, 1 + 7 * (s % WPY)));
+const T0 = Date.UTC(2001, 0, 1);
+const dayIdx = (t: number) => Math.round((t - T0) / 864e5);
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const circle = (lat: number, lon: number, r: number) => {
   const pts: [number, number][] = [];
@@ -135,27 +138,70 @@ export default function CustomArea() {
     return n;
   }, [lat, lon, radius, valid]);
 
+  // Daily series of the circle (each week's value shared evenly over its days; week 52 holds the last 8-9 days of the year).
+  const daily = useMemo(() => {
+    if (!rows || !idx) return null;
+    const lastY = 2001 + Math.floor(idx.last_slot / WPY);
+    const total = dayIdx(Date.UTC(lastY + 1, 0, 1));
+    const slotSum = new Map<number, number>();
+    for (const r of rows) slotSum.set(r.slot, (slotSum.get(r.slot) ?? 0) + r.h);
+    const pref = new Float64Array(total + 1);
+    const lastDay = dayIdx(slotStart(idx.last_slot).getTime()) + 6;
+    const day = new Float64Array(total);
+    slotSum.forEach((v, slot) => {
+      const y = 2001 + Math.floor(slot / WPY), w = slot % WPY;
+      const start = dayIdx(slotStart(slot).getTime());
+      const len = w === WPY - 1 ? dayIdx(Date.UTC(y + 1, 0, 1)) - start : 7;
+      for (let d = 0; d < len; d++) day[start + d] = v / len;
+    });
+    for (let d = 0; d < total; d++) pref[d + 1] = pref[d] + (d <= lastDay ? day[d] : 0);
+    return { pref, lastDay, lastY };
+  }, [rows, idx]);
+  const sum = (d: NonNullable<typeof daily>, a: number, b: number) => d.pref[Math.min(b, d.lastDay) + 1] - d.pref[Math.max(a, 0)];
+
+  // Monthly series 2001-2026 for the circle: same calendar as an area page.
+  const monthArea = useMemo(() => {
+    if (!daily || !idx) return null;
+    const ny = daily.lastY - 2001 + 1;
+    const mh: (number | null)[] = new Array(ny * 12).fill(null);
+    let partial: { index: number; days: number; days_in_month: number } | null = null;
+    for (let y = 0; y < ny; y++) for (let m = 0; m < 12; m++) {
+      const a = dayIdx(Date.UTC(2001 + y, m, 1)), b = dayIdx(Date.UTC(2001 + y, m + 1, 1));
+      const covered = Math.min(b, daily.lastDay + 1) - a;
+      if (covered <= 0) continue;
+      mh[y * 12 + m] = Math.round(sum(daily, a, b - 1) * 10) / 10;
+      if (covered < b - a) partial = { index: y * 12 + m, days: covered, days_in_month: b - a };
+    }
+    const med = Array.from({ length: 12 }, (_, m) => {
+      const v = Array.from({ length: 25 }, (_, y) => mh[y * 12 + m] ?? 0).sort((x, z) => x - z);
+      return (v[12] + v[12]) / 2;
+    });
+    return { id: "custom", name: L("Your area", "Area Anda"), level: "kabupaten", start_year: 2001, last_year: daily.lastY, back_cast_end_slot: idx.s0,
+      mh, mlo: mh.map(() => null), mhi: mh.map(() => null), mstat: { med, p25: med, p75: med }, mpartial: partial } as any;
+  }, [daily, idx, L]);
+
+  // Selected period against the same calendar window in each year.
   const result = useMemo(() => {
-    if (!rows || !idx || !rangeOk || !valid) return null;
+    if (!rows || !idx || !daily || !rangeOk || !valid) return null;
     const n = s2 - s1 + 1;
     const H = new Array(n).fill(0), M = new Array(n).fill(0), V = new Array(n).fill(0);
-    const byYear = new Map<number, number>();
-    const w1 = s1 % WPY, w2 = s2 % WPY, wrap = n > WPY || w1 > w2;
-    for (const r of rows) {
-      if (r.slot >= s1 && r.slot <= s2) { H[r.slot - s1] += r.h; M[r.slot - s1] += r.m; V[r.slot - s1] += r.v; }
-      const y = 2001 + Math.floor(r.slot / WPY), w = r.slot % WPY;
-      if (!wrap && w >= w1 && w <= w2) byYear.set(y, (byYear.get(y) ?? 0) + r.h);
-    }
-    const total = H.reduce((a, b) => a + b, 0);
-    const lastY = 2001 + Math.floor(idx.last_slot / WPY);
+    for (const r of rows) if (r.slot >= s1 && r.slot <= s2) { H[r.slot - s1] += r.h; M[r.slot - s1] += r.m; V[r.slot - s1] += r.v; }
+    const fd = new Date(from + "T00:00:00Z"), td = new Date(to + "T00:00:00Z");
+    const fy = fd.getUTCFullYear(), dy = td.getUTCFullYear() - fy;
+    const win = (y: number) => {
+      const a = dayIdx(Date.UTC(y, fd.getUTCMonth(), fd.getUTCDate())), b = dayIdx(Date.UTC(y + dy, td.getUTCMonth(), td.getUTCDate()));
+      return b <= daily.lastDay ? sum(daily, a, b) : null;
+    };
     const years: number[] = [];
-    for (let y = 2001; y <= lastY; y++) years.push(y);
-    const yv = years.map((y) => Math.round((byYear.get(y) ?? 0) * 10) / 10);
-    const selY = 2001 + Math.floor(s2 / WPY);
-    const baseV = years.filter((y) => y <= 2025).map((y) => byYear.get(y) ?? 0).sort((a, b) => a - b);
-    const med = baseV.length ? (baseV[Math.floor((baseV.length - 1) / 2)] + baseV[Math.ceil((baseV.length - 1) / 2)]) / 2 : 0;
-    return { n, H, M, V, total, years, yv, selY, med, wrap, cur: byYear.get(selY) ?? 0 };
-  }, [rows, s1, s2, idx, rangeOk, valid]);
+    for (let y = 2001; y <= daily.lastY; y++) years.push(y);
+    const yv = years.map((y) => { const w = win(y); return w == null ? null : Math.round(w * 10) / 10; });
+    const total = H.reduce((a, b) => a + b, 0);
+    const cur = win(fy) ?? total;
+    const base = years.filter((y) => y <= 2025).map((y) => win(y)).filter((v): v is number => v != null).sort((a, b) => a - b);
+    const med = base.length ? (base[Math.floor((base.length - 1) / 2)] + base[Math.ceil((base.length - 1) / 2)]) / 2 : 0;
+    const pct = base.length ? (100 * (base.filter((v) => v < cur).length + 0.5 * base.filter((v) => v === cur).length)) / base.length : 0;
+    return { n, H, M, V, total, years, yv, selY: fy, med, pct, cur, nBase: base.length };
+  }, [rows, daily, s1, s2, idx, rangeOk, valid, from, to]);
 
   const f = (x: number) => Math.round(x).toLocaleString(dateLocale.v);
   const lineOpt = useMemo(() => {
@@ -176,13 +222,13 @@ export default function CustomArea() {
     } as any;
   }, [result, idx, s1, L]);
   const barOpt = useMemo(() => {
-    if (!result || result.wrap) return null;
+    if (!result) return null;
     return {
       grid: { left: 48, right: 14, top: 14, bottom: 30 },
       tooltip: { trigger: "axis" },
       xAxis: { type: "category", data: result.years.map(String), axisLabel: { fontSize: 10, interval: 2 } },
       yAxis: { type: "value", axisLabel: { fontSize: 10 } },
-      series: [{ type: "bar", data: result.yv.map((v, i) => ({ value: v, itemStyle: { color: result.years[i] === result.selY ? "#993404" : "#fec44f" } })) }],
+      series: [{ type: "bar", data: result.yv.map((v, i) => ({ value: v ?? "-", itemStyle: { color: result.years[i] === result.selY ? "#993404" : "#fec44f" } })) }],
     } as any;
   }, [result]);
 
@@ -222,12 +268,15 @@ export default function CustomArea() {
           <dl className="answers three">
             <div><dt>{L("Harmonized fire-days", "Hari-api terharmonisasi")}</dt><dd className="fig">{f(result.total)}</dd><dd>{from} → {to} · {result.n} {L("weeks", "minggu")}</dd></div>
             <div><dt>{L("Grid cells in circle", "Sel grid dalam lingkaran")}</dt><dd className="fig">{nCells.toLocaleString(dateLocale.v)}</dd><dd>≈ {f(nCells * 30)} km²</dd></div>
-            {!result.wrap && <div><dt>{L("Same weeks, other years", "Minggu sama, tahun lain")}</dt><dd className="fig">{result.med > 0 ? `×${(result.cur / result.med).toFixed(2)}` : "n/a"}</dd><dd>{L("vs median 2001–2025:", "vs median 2001–2025:")} {f(result.med)}</dd></div>}
+            <div><dt>{L("Is this period unusual?", "Apakah periode ini tidak biasa?")}</dt><dd className="fig">{result.med > 0 ? `×${(result.cur / result.med).toFixed(2)}` : "n/a"}</dd><dd>{L("Selected period:", "Periode terpilih:")} {f(result.cur)} {L("fire-days. Same dates in 2001–2025: median", "hari-api. Tanggal sama pada 2001–2025: median")} {f(result.med)} · {L("percentile", "persentil")} {Math.round(result.pct)} {L("of", "dari")} {result.nBase} {L("years", "tahun")}</dd></div>
           </dl>
           {result.total === 0 && <p className="note">{L("No detections in this circle for these dates. A zero means no heat detection by the satellites, not proof that nothing burned.", "Tidak ada deteksi di lingkaran ini untuk tanggal tersebut. Nol berarti satelit tidak mendeteksi panas, bukan bukti tidak ada yang terbakar.")}</p>}
+          {monthArea && <><h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
+            <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
+            <p className="note">{L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p></>}
           <h2>{L("Weekly fire-days", "Hari-api mingguan")}</h2>
           <Chart option={lineOpt} height={300} label={L("Weekly fire-days in your area", "Hari-api mingguan di area Anda")} />
-          {barOpt && <><h2>{L("The same weeks in every year", "Minggu yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days in the same weeks by year", "Hari-api pada minggu yang sama per tahun")} /></>}
+          {barOpt && <><h2>{L("The same dates in every year", "Tanggal yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days on the same dates by year", "Hari-api pada tanggal yang sama per tahun")} /></>}
           <p className="tools noprint"><button onClick={csv}>{L("Download CSV (cell × week)", "Unduh CSV (sel × minggu)")}</button></p>
           <p className="note">{L("Before 2012 the values are estimates: the province-level back-cast is shared out to cells by their own MODIS detections. Small circles (under about 100 km²) are noisy. Fire-days are heat detections, not burned area. Data end: last complete week of S-NPP VIIRS (to 2 Nov 2026).", "Sebelum 2012 nilainya perkiraan: hasil hitung-mundur tingkat provinsi dibagi ke sel menurut deteksi MODIS sel itu sendiri. Lingkaran kecil (di bawah sekitar 100 km²) berisik. Hari-api adalah deteksi panas, bukan luas terbakar. Data berakhir pada minggu lengkap terakhir S-NPP VIIRS (sampai 2 Nov 2026).")}</p>
         </div>
