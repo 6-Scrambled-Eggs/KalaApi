@@ -15,6 +15,7 @@
 .custom > .lead { max-width: none; margin-bottom: 28px; }
 .custom h2, .cmp h2 { margin-top: 42px; font-stretch: 100%; }
 .custom .note, .cmp .note { max-width: none; line-height: 1.6; }
+.custom-calendar { margin-bottom: 28px; }
 
 .customgrid {
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr);

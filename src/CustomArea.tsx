@@ -281,6 +281,13 @@ export default function CustomArea() {
     <section className="custom">
       <h1>{L("Your own area", "Area pilihan Anda")}</h1>
       <p className="lead">{L("Pick a point on the map and a radius. KalaApi sums the harmonized fire-days of all 0.05° grid cells (about 5.5 km) inside the circle, for the dates you choose.", "Pilih satu titik di peta dan radius. KalaApi menjumlahkan hari-api terharmonisasi semua sel grid 0,05° (sekitar 5,5 km) di dalam lingkaran, untuk tanggal yang Anda pilih.")} {t("boxLead")}</p>
+      {result && monthArea && (
+        <div className="custom-calendar" aria-live="polite">
+          <h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
+          <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
+          <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p>
+        </div>
+      )}
       <div className="customgrid">
         <div>
           <div ref={el} className="map" role="img" aria-label={L("Map: click to place the centre of your area", "Peta: klik untuk menaruh pusat area Anda")} />
@@ -320,9 +327,6 @@ export default function CustomArea() {
             <div><dt>{L("Is this period unusual?", "Apakah periode ini tidak biasa?")}</dt><dd className="fig">{result.med > 0 ? `×${nf((result.cur / result.med), 2)}` : "n/a"}</dd><dd>{L("Selected period:", "Periode terpilih:")} {f(result.cur)} {L("fire-days. Same dates in 2001–2025: median", "hari-api. Tanggal sama pada 2001–2025: median")} {f(result.med)} · {L("percentile", "persentil")} {Math.round(result.pct)} {L("of", "dari")} {result.nBase} {L("years", "tahun")}</dd></div>
           </dl>
           {result.total === 0 && <p className="note">{mode === "box" ? t("boxNone") : L("No detections in this circle for these dates. A zero means no heat detection by the satellites, not proof that nothing burned.", "Tidak ada deteksi di lingkaran ini untuk tanggal tersebut. Nol berarti satelit tidak mendeteksi panas, bukan bukti tidak ada yang terbakar.")}</p>}
-          {monthArea && <><h2>{L("Monthly calendar of your area, 2001 to now", "Kalender bulanan area Anda, 2001 sampai sekarang")}</h2>
-            <MonthCalendar area={monthArea} year={result.selY} onYear={() => undefined} />
-            <p className="note">{mode === "box" ? t("boxCal") : L("This calendar does not change with the dates above. One cell = harmonized fire-days in the circle in that month; weekly values are shared evenly over their days. Years before 2012 are estimates.", "Kalender ini tidak berubah mengikuti tanggal di atas. Satu sel = hari-api terharmonisasi di dalam lingkaran pada bulan itu; nilai mingguan dibagi rata ke hari-harinya. Tahun sebelum 2012 adalah perkiraan.")}</p></>}
           <h2>{L("Weekly fire-days", "Hari-api mingguan")}</h2>
           <Chart option={lineOpt} height={300} label={L("Weekly fire-days in your area", "Hari-api mingguan di area Anda")} />
           {barOpt && <><h2>{L("The same dates in every year", "Tanggal yang sama di setiap tahun")}</h2><Chart option={barOpt} height={220} label={L("Fire-days on the same dates by year", "Hari-api pada tanggal yang sama per tahun")} /></>}
